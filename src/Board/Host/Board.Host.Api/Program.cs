@@ -1,11 +1,25 @@
+using Board.Application.AppData.Contexts.Posts.Services;
+using Board.Contracts.Posts;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+//для документации
+
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc(name: "v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Posts Api", Version = "V1" });
+        options.IncludeXmlComments(Path.Combine(Path.Combine(AppContext.BaseDirectory,
+            $"{typeof(CreatePostDto).Assembly.GetName().Name}.xml")));
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Documentation.xml"));
+    });
+
 
 var app = builder.Build();
 

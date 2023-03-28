@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <Folder Include="Contexts\Comments\" />
-    <Folder Include="Contexts\Posts\" />
     <Folder Include="Contexts\Favorites\" />
     <Folder Include="Contexts\Users\Services\" />
     <Folder Include="Contexts\Users\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contracts\Board.Contracts\Board.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
