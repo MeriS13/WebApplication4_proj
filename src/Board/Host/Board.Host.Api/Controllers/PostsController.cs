@@ -12,7 +12,7 @@ namespace Board.Host.Api.Controllers;
 ///</summary>
 
 [ApiController]
-[Route(template: "controller")]
+[Route(template: "posts-controller")]
 public class PostsController : ControllerBase
 {
     private readonly IPostService _postService;
@@ -57,4 +57,17 @@ public class PostsController : ControllerBase
         return await Task.Run(function: ()=> Created(uri: string.Empty, result));
     }
 
+    /// <summary>
+    /// Удаление объявления по параметру id?
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]    
+    public async Task<IActionResult> DeletePost()
+    {
+        
+        _logger.LogInformation(message: $"Удаление объявления");
+        return await Task.Run(Ok);
+    }
+      
+    
 }

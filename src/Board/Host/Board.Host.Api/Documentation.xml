@@ -31,5 +31,11 @@
              <param name="cancellationToken">Токен отмены операции</param>
             <returns> Модель созданного объявления </returns>
         </member>
+        <member name="M:Board.Host.Api.Controllers.PostsController.DeletePost">
+            <summary>
+            Удаление объявления по параметру id?
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
