@@ -7,28 +7,30 @@ using System.Threading.Tasks;
 
 namespace Board.Application.AppData.Contexts.Posts.Services;
 
-/// <inheritdoc />
+/// <summary>
+/// Сервис для работы с постами
+/// </summary>
 
 public class PostService : IPostService
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Метод для создания поста
+    /// </summary>
+    /// <param name="dto">Модель поста</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Модель созданного объявления</returns>
     public async Task<CreatePostDto> AddPost(CreatePostDto dto, CancellationToken cancellationToken)
     {
-        if( IsValid(dto))
-        {
+        
             //вызов репозитория для сохранения в бд
 
             //возврат результата
-            return await Task.Run( () => dto, cancellationToken);
-        }
+            await Task.Run( () => dto, cancellationToken);
+        
 
-        return new CreatePostDto();
+            return new CreatePostDto();
     }
 
-    private bool IsValid(CreatePostDto dto)
-    {
-        //логика валидации
-        return true;
-    }
+    
 }
 
