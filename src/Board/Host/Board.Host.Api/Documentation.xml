@@ -4,6 +4,31 @@
         <name>Board.Host.Api</name>
     </assembly>
     <members>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Получить список категорий.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetById(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить категорию по идентификатору.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.Create(Board.Contracts.Category.CreateCategoryDto,System.Threading.CancellationToken)">
+            <summary>
+            Создать новую категорию.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.Update(System.Guid,Board.Contracts.Category.CreateCategoryDto,System.Threading.CancellationToken)">
+            <summary>
+            Обновить категорию.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.DeleteById(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удалить категорию по идентификатору.
+            </summary>
+        </member>
         <member name="T:Board.Host.Api.Controllers.PostsController">
             <summary>
             Api-контроллер для работы с постами(объявлениями) 

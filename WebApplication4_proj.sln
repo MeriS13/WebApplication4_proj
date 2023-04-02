@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D6994C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{41C24731-7392-4204-9EB3-BD87E2598382}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Application.AppData", "src\Board\Application\Board.Application.AppData\Board.Application.AppData.csproj", "{AE584552-FDEE-458A-A6EF-D7098E21D14D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Application.AppData", "src\Board\Application\Board.Application.AppData\Board.Application.AppData.csproj", "{AE584552-FDEE-458A-A6EF-D7098E21D14D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{61F70C0B-5BD8-4016-AC10-02B93D60199F}"
 EndProject
@@ -21,15 +21,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{B5F38926-1B14-43D6-ACC2-405742B394A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Contracts", "src\Board\Contracts\Board.Contracts\Board.Contracts.csproj", "{1FEC4BC0-FC30-42CA-80CE-BFDDD2D15511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Contracts", "src\Board\Contracts\Board.Contracts\Board.Contracts.csproj", "{1FEC4BC0-FC30-42CA-80CE-BFDDD2D15511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Domain", "src\Board\Domain\Board.Domain\Board.Domain.csproj", "{588C0D53-EC52-45A9-B32B-AD002B393D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Domain", "src\Board\Domain\Board.Domain\Board.Domain.csproj", "{588C0D53-EC52-45A9-B32B-AD002B393D8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Infrastructure", "src\Board\Infrastructure\Board.Infrastructure\Board.Infrastructure.csproj", "{4CEBB375-2795-4BCC-BEF9-3C7C7F3EF150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Infrastructure", "src\Board\Infrastructure\Board.Infrastructure\Board.Infrastructure.csproj", "{4CEBB375-2795-4BCC-BEF9-3C7C7F3EF150}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Infrastructure.DataAccess", "src\Board\Infrastructure\Board.Infrastructure.DataAccess\Board.Infrastructure.DataAccess.csproj", "{49FD1509-B3FC-487C-AE5B-56DF85D35CB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Infrastructure.DataAccess", "src\Board\Infrastructure\Board.Infrastructure.DataAccess\Board.Infrastructure.DataAccess.csproj", "{49FD1509-B3FC-487C-AE5B-56DF85D35CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Board.Host.Api", "src\Board\Host\Board.Host.Api\Board.Host.Api.csproj", "{6B38A474-0AC4-4976-A0C0-941884F77A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Board.Host.Api", "src\Board\Host\Board.Host.Api\Board.Host.Api.csproj", "{6B38A474-0AC4-4976-A0C0-941884F77A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

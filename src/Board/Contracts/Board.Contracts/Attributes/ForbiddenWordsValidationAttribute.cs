@@ -10,7 +10,7 @@ namespace Board.Contracts.Attributes
     /// <summary>
     /// Атрибут для валидации наименования поста
     /// </summary>
-    public class NameValidationAttributes : ValidationAttribute
+    public class ForbiddenWordsValidationAttribute : ValidationAttribute
     {
         
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -22,7 +22,7 @@ namespace Board.Contracts.Attributes
             var forbiddenWords = service.GetForbiddenWords();
 
             return forbiddenWords.Contains(valueAsString)
-                ? new ValidationResult("Наименование содержит запрещенные слова")
+                ? new ValidationResult("Введенная строка содержит запрещенные слова")
                 : ValidationResult.Success;
 
         }

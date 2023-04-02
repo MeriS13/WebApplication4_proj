@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contexts\Comments\" />
-    <Folder Include="Contexts\Favorites\" />
     <Folder Include="Contexts\Users\Services\" />
     <Folder Include="Contexts\Users\Repositories\" />
+    <Folder Include="Contexts\Account\" />
+    <Folder Include="Contexts\Files\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ public class CreatePostDto
     /// </summary>
     [Required(ErrorMessage ="Наименование не указано")]
     [StringLength(50, ErrorMessage = "Наименование слишком длинное")]
-    [NameValidationAttributes]
+    [ForbiddenWordsValidation]
     public string Name { get; set; }
 
     /// <summary>
@@ -31,7 +32,7 @@ public class CreatePostDto
     /// <summary>
     /// ID товара (поста)
     /// </summary>
-    //public string PostId { get; set; } //= Guid.NewGuid().ToString();
+    public Guid Id { get; set; } 
 
     /// <summary>
     ///  Список тегов для объявления
@@ -43,8 +44,16 @@ public class CreatePostDto
     /// <summary>
     /// Дата создания объявления
     /// </summary>
-    [DateValidationAttribute]
+    [DateValidation]
     public DateTime CreationDate { get; set; }
 
+    /// <summary>
+    /// Идентификатор категории
+    /// </summary>
+   
+    public Guid CategoryId { get; set; }
+
+
+    public bool Favorite { get; set; }
     
 }
