@@ -3,25 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
- namespace Board.Contracts.Posts;
+namespace Board.Contracts.Posts;
 
 /// <summary>
-/// Модель создания объявления
+/// Модель объявления для обновления
 /// </summary>
-public class CreatePostDto 
+public class UpdatePostDto
 {
-    /// <summary>
-    /// Наименование
-    /// </summary>
-    [Required(ErrorMessage ="Наименование не указано")]
-    [StringLength(50, ErrorMessage = "Наименование слишком длинное")]
-    [ForbiddenWordsValidation]
-    public string Name { get; set; }
-
     /// <summary>
     /// Описание товара
     /// </summary>
@@ -30,16 +21,11 @@ public class CreatePostDto
     public string Description { get; set; }
 
     /// <summary>
-    /// ID товара (поста)
-    /// </summary>
-    public Guid Id { get; set; } 
-
-    /// <summary>
     ///  Список тегов для объявления
     /// </summary>
     [Required(ErrorMessage = "Отсутсвуют теги")]
     [MaxLength(10, ErrorMessage = "Много тегов")]
-    public  string[] Tags { get; set; }
+    public string[] Tags { get; set; }
 
     /// <summary>
     /// Дата создания объявления
@@ -51,6 +37,4 @@ public class CreatePostDto
     /// Идентификатор категории
     /// </summary>
     public Guid CategoryId { get; set; }
-
-    
 }

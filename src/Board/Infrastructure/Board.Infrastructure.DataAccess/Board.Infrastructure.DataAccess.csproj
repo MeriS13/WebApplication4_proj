@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Contexts\Posts\Repositories\" />
     <Folder Include="Contexts\Users\Repositories\" />
   </ItemGroup>
 
@@ -18,6 +19,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Board.Application.AppData\Board.Application.AppData.csproj" />
+    <ProjectReference Include="..\..\Domain\Board.Domain\Board.Domain.csproj" />
+    <ProjectReference Include="..\Board.Infrastructure\Board.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

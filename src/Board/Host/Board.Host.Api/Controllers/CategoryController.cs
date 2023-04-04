@@ -1,7 +1,7 @@
 ﻿using Board.Application.AppData.Contexts.Posts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Board.Contracts.Category;
-using Board.Application.AppData.Contexts.Categories;
+using Board.Application.AppData.Contexts.Categories.Services;
 
 namespace Board.Host.Api.Controllers;
 
@@ -29,7 +29,7 @@ public class CategoryController : ControllerBase
     {
         _logger.LogInformation("Запрос категорий");
 
-        return await Task.Run(() => Ok(Enumerable.Empty<CreateCategoryDto>()), cancellationToken);
+        return await Task.Run(() => Ok(Enumerable.Empty<CategoryDto>()), cancellationToken);
     }
 
     /// <summary>
@@ -39,7 +39,8 @@ public class CategoryController : ControllerBase
     [HttpGet("{id:Guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return await Task.Run(() => Ok(new CreateCategoryDto()), cancellationToken);
+        var result = await _categoryService.GetByIdAsync(id, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
@@ -49,7 +50,8 @@ public class CategoryController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
     {
-        return await Task.Run(() => CreatedAtAction(nameof(GetById), new { Guid.Empty }), cancellationToken);
+        var result = await _categoryService.CreateAsync(dto, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
@@ -57,9 +59,9 @@ public class CategoryController : ControllerBase
     /// </summary>
     
     [HttpPut("{id:Guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdatecategoryDto dto, CancellationToken cancellationToken)
     {
-        return await Task.Run(() => Ok(new CreateCategoryDto()), cancellationToken);
+        return await Task.Run(() => Ok(new CategoryDto()), cancellationToken);
     }
 
     /// <summary>

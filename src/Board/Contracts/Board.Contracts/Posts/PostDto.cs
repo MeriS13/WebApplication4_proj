@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Board.Domain.Categories;
-//using Board.Domain.Favorites;
-
-namespace Board.Domain.Posts;
+﻿
+namespace Board.Contracts.Posts;
 
 /// <summary>
-/// Доменная модель постов
+/// Модель объявления 
 /// </summary>
-
-public class Post
+public class PostDto
 {
-
     /// <summary>
     /// Наименование.
     /// </summary>
@@ -47,18 +37,7 @@ public class Post
     public Guid CategoryId { get; set; }
 
     /// <summary>
-    /// Показатель принадлежности к разделу "Избранное".
+    /// Показатель принадлежности к разделу "Избранное"
     /// </summary>
     public bool Favorite { get; set; }
-
-    /// <summary>
-    /// Категория.
-    /// </summary>
-    public virtual Category Category { get; set; }
-
-    /// <summary>
-    /// Принадлежность к избранному
-    /// </summary>
-    //public virtual Favorite IsFavorite { get; set; }
-
 }
