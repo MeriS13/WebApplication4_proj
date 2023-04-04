@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Board.Contracts.Favotites;
 
-public class CreateFavoriteDto
+/// <summary>
+/// Модель раздела избранное
+/// </summary>
+public class FavoriteDto
 {
+    //public string Name { get; set; }
     public Guid[] PostsId { get; set; }
 
 }

@@ -8,54 +8,62 @@ using System.Threading.Tasks;
 
 namespace Board.Infrastructure.Repository;
 
+/// <inheritdoc />
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     protected DbContext DbContext { get; }
     protected DbSet<TEntity> DbSet { get; }
 
+    /// <inheritdoc />
     public Repository(DbContext context)
     {
         DbContext = context;
         DbSet = DbContext.Set<TEntity>();
     }
 
-    public async Task AddAsync(TEntity model)
-    {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-
-        await DbSet.AddAsync(model);
-        await DbContext.SaveChangesAsync();
-
-    }
-
-    public async Task DeleteAsync(TEntity model)
-    {
-        if(model == null) throw new ArgumentNullException( nameof(model));
-        DbSet.Remove(model);
-        await DbContext.SaveChangesAsync();
-    }
-
+    /// <inheritdoc />
     public IQueryable<TEntity> GetAll()
     {
         return DbSet;
     }
 
+    /// <inheritdoc />
     public IQueryable<TEntity> GetAllFiltered(Expression<Func<TEntity, bool>> predicat)
     {
-        if(predicat == null) throw new ArgumentNullException(nameof(predicat));
+        if (predicat == null) throw new ArgumentNullException(nameof(predicat));
         return DbSet.Where(predicat);
     }
 
-    public async Task<TEntity> GetByIdAsync(Guid id)
+    /// <inheritdoc />
+    public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
     {
-        return await DbSet.FindAsync(id);
+        if (model == null) throw new ArgumentNullException(nameof(model));
+
+        await DbSet.AddAsync(model, cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
+
     }
 
-    public async Task UpdateAsync(TEntity model)
+    /// <inheritdoc />
+    public async Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await DbSet.FindAsync(id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateAsync(TEntity model, CancellationToken cancellationToken)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
         DbSet.Update(model);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteAsync(TEntity model, CancellationToken cancellationToken)
+    {
+        if (model == null) throw new ArgumentNullException(nameof(model));
+        DbSet.Remove(model);
+        await DbContext.SaveChangesAsync(cancellationToken);
     }
 }

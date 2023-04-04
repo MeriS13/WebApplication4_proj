@@ -30,14 +30,27 @@ public class PostsController : ControllerBase
     }
 
     ///<summary>
-    /// Гет-запрос. получение данных 
+    /// Получение списка обьявлений
     /// template - для определения маршрута
     ///</summary>
     [HttpGet(template: "get-posts")]
-    public async Task<IActionResult> Get() // возвр результат задачи? типа делегата айэкшнрезалт
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        _logger.LogInformation(message: $"Запрос объявления"); //для получ логов в консоли
-        return await Task.Run(Ok); //возвращает код 200 -ок
+        _logger.LogInformation("Запрос объявлений");
+
+        return await Task.Run(() => Ok(Enumerable.Empty<PostDto>()), cancellationToken);
+    }
+
+    /// <summary>
+    /// Получить объявление по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns>Модель объявления.</returns>
+    [HttpGet("{id:Guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        return await Task.Run(() => Ok(new PostDto()), cancellationToken);
     }
 
     ///<summary>
@@ -58,16 +71,27 @@ public class PostsController : ControllerBase
     }
 
     /// <summary>
-    /// Удаление объявления по параметру id?
+    /// Частично обновить объявление.
+    /// </summary>
+    /// <param name="id">Идентификатор.</param>
+    /// <param name="dto">Модель обновления объявления.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns>Модель обновлённого объявления.</returns>
+    [HttpPatch("{id:Guid}")]
+    public async Task<IActionResult> Patch(Guid id, [FromBody] UpdatePostDto dto, CancellationToken cancellationToken)
+    {
+        return await Task.Run(() => Ok(new PostDto()), cancellationToken);
+    }
+
+    /// <summary>
+    /// Удаление объявления по параметру id
     /// </summary>
     /// <returns></returns>
-    [HttpDelete]    
-    public async Task<IActionResult> DeletePost()
+    [HttpDelete("{id:Guid}")]
+    public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        
-        _logger.LogInformation(message: $"Удаление объявления");
-        return await Task.Run(Ok);
+        return await Task.Run(NoContent, cancellationToken);
     }
-      
+
     
 }

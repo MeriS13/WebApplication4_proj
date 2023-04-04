@@ -19,7 +19,7 @@ public class FavoritesService : IFavoritesService
     /// <param name="dto"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<CreateFavoriteDto> AddFavorite(CreateFavoriteDto dto, CancellationToken cancellationToken)
+    public async Task<FavoriteDto> AddFavorite(FavoriteDto dto, CancellationToken cancellationToken)
     {
 
         //вызов репозитория для сохранения в бд
@@ -28,7 +28,7 @@ public class FavoritesService : IFavoritesService
         await Task.Run(() => dto, cancellationToken);
 
 
-        return new CreateFavoriteDto();
+        return new FavoriteDto();
     }
 
 }

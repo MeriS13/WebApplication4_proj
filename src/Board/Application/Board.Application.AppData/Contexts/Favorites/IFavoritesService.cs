@@ -11,6 +11,6 @@ namespace Board.Application.AppData.Contexts.Favorites;
 
 public interface IFavoritesService
 {
-    Task<CreateFavoriteDto> AddFavorite(CreateFavoriteDto dto, CancellationToken cancellationToken);
+    Task<FavoriteDto> AddFavorite(FavoriteDto dto, CancellationToken cancellationToken);
 }
 

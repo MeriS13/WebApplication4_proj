@@ -15,11 +15,11 @@ public interface IRepository<TEntity> where TEntity : class
 
     IQueryable<TEntity> GetAllFiltered(Expression<Func<TEntity, bool>> filter);
 
-    Task<TEntity> GetByIdAsync(Guid id);
+    Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    Task AddAsync(TEntity model);
+    Task AddAsync(TEntity model, CancellationToken cancellationToken);
 
-    Task UpdateAsync(TEntity model);
+    Task UpdateAsync(TEntity model, CancellationToken cancellationToken);
 
-    Task DeleteAsync(TEntity model);
+    Task DeleteAsync(TEntity model, CancellationToken cancellationToken);
 }
