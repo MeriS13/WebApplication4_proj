@@ -22,7 +22,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     }
 
     /// <inheritdoc />
-    public IQueryable<TEntity> GetAll()
+    public IQueryable<TEntity> GetAll(CancellationToken cancellationToken)
     {
         return DbSet;
     }
@@ -51,19 +51,21 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(TEntity model, CancellationToken cancellationToken)
+    public async Task<TEntity> UpdateAsync(TEntity model, CancellationToken cancellationToken)
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
-
         DbSet.Update(model);
         await DbContext.SaveChangesAsync(cancellationToken);
+        return model;
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync(TEntity model, CancellationToken cancellationToken)
+    public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        var model = await DbSet.FindAsync(id, cancellationToken);
         if (model == null) throw new ArgumentNullException(nameof(model));
         DbSet.Remove(model);
         await DbContext.SaveChangesAsync(cancellationToken);
     }
+
 }

@@ -46,7 +46,7 @@
             Создать новую категорию.
             </summary>
         </member>
-        <member name="M:Board.Host.Api.Controllers.CategoryController.Update(System.Guid,Board.Contracts.Category.UpdatecategoryDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CategoryController.Update(Board.Contracts.Category.UpdateCategoryDto,System.Threading.CancellationToken)">
             <summary>
             Обновить категорию.
             </summary>
@@ -55,38 +55,6 @@
             <summary>
             Удалить категорию по идентификатору.
             </summary>
-        </member>
-        <member name="T:Board.Host.Api.Controllers.FavoritesController">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Board.Host.Api.Controllers.FavoritesController.#ctor(Board.Application.AppData.Contexts.Favorites.IFavoritesService,Microsoft.Extensions.Logging.ILogger{Board.Host.Api.Controllers.FavoritesController})">
-            <summary>
-            Инициализация.
-            </summary>
-            <param name="favoritesService">Сервис для работы с Избранным</param>
-            <param name="logger">Логгер</param>
-        </member>
-        <member name="M:Board.Host.Api.Controllers.FavoritesController.AddToFavorites(System.Guid,System.Threading.CancellationToken)">
-            <summary>
-            Добавление объявления в Избранное
-            </summary>
-            <param name="id">Идентификатор</param>
-            <param name="cancellationToken">Токен отмены операции</param>
-            <returns></returns>
-        </member>
-        <member name="M:Board.Host.Api.Controllers.FavoritesController.GetAll(System.Threading.CancellationToken)">
-            <summary>
-             Получение списка обьявлений в избранном
-             template - для определения маршрута
-            </summary>
-        </member>
-        <member name="M:Board.Host.Api.Controllers.FavoritesController.DeleteFavoriteById(System.Guid,System.Threading.CancellationToken)">
-            <summary>
-            Удаление объявления из избранного по параметру id
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:Board.Host.Api.Controllers.FileController">
             <summary>

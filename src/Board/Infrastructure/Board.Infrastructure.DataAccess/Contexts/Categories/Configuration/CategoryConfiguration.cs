@@ -1,4 +1,5 @@
 ﻿using Board.Domain.Categories;
+using Board.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -22,4 +23,5 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.HasMany(s => s.Posts).WithOne(s => s.Category).
             HasForeignKey(c => c.CategoryId).IsRequired().OnDelete(DeleteBehavior.Cascade);
     }
+
 }
