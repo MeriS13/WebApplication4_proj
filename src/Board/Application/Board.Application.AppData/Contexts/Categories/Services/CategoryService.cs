@@ -18,7 +18,7 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
     }
 
-    ///<inheritdoc />
+    ///<inheritdoc /> все ок
     public Task<Guid> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Тут происходит маппинг. в сущность записывается дом.модель и заполняются ее поля
@@ -32,54 +32,58 @@ public class CategoryService : ICategoryService
         return _categoryRepository.AddAsync(entity, cancellationToken);
     }
 
-    ///<inheritdoc />
+    ///<inheritdoc /> все ок
     public Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         //return Task.FromResult(_categoryRepository.DeleteByIdAsync(id, cancellationToken));
         return _categoryRepository.DeleteByIdAsync(id, cancellationToken);
     }
 
-    ///<inheritdoc />
-    public IQueryable<CategoryDto> GetAll(CancellationToken cancellationToken)
+    ///<inheritdoc /> все ок но вопрос с эвэйтом
+    public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        //Получаем список доменных моделей, создаем список dto-моделей, в цикле маппим первые ко вторым и возвращаем 
-        List<Category> entities = (List<Category>)_categoryRepository.GetAll(cancellationToken);
-        List<CategoryDto> result = new List<CategoryDto>();
-        for (int i = 0; i < entities.Count; i++)
+        //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
+        //элементы списка - смаппленные модели к dto и возвращаем 
+        List<Category> entities = _categoryRepository.GetAll(cancellationToken).ToList();
+        List<CategoryDto> result = new();
+        int i = 0;
+        foreach (var entity in entities)
         {
-            result[i] = new CategoryDto
+            result.Add(new CategoryDto
             {
-                Id = entities[i].Id,
-                Name = entities[i].Name,
-                ParentId = (Guid)entities[i].ParentId,
+                Id = entity.Id,
+                Name = entity.Name,
+                ParentId = (Guid)entity.ParentId,
 
-            };
+            });
         }
-        return (IQueryable<CategoryDto>)result;
+        return result;
     }
 
-
-    public IQueryable<PostDto> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
+    ///<inheritdoc /> хз
+    //подлежит проверке и все связанное с этим методом
+    public async Task<List<PostDto>> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
     {
         //получаем список домен.моделек постов
-        List<Post> entities = (List<Post>)_categoryRepository.GetAllPosts(CategoryId, cancellationToken);
-        List<PostDto> result = new List<PostDto>();
-        for (int i = 0; i < entities.Count; i++)
+        List<Post> entities = _categoryRepository.GetAllPosts(CategoryId, cancellationToken).ToList();
+        List<PostDto> result = new();
+        int i = 0;
+        foreach (var entity in entities)
         {
-            result[i] = new PostDto
+            result.Add(new PostDto
             {
-                Id = entities[i].Id,
-                Name = entities[i].Name,
-                CreationDate = entities[i].CreationDate,
-                Description = entities[i].Description,
-                CategoryId = entities[i].CategoryId,
-                IsFavorite = entities[i].IsFavorite,
-            };
+                Id = entity.Id,
+                Name = entity.Name,
+                CreationDate = entity.CreationDate,
+                Description = entity.Description,
+                CategoryId = entity.CategoryId,
+                IsFavorite = entity.IsFavorite,
+            });
         }
-        return (IQueryable<PostDto>)result;
+        return result;
     }
 
-    ///<inheritdoc />
+    ///<inheritdoc /> все ок
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
@@ -95,6 +99,7 @@ public class CategoryService : ICategoryService
         return result;
     }
 
+    ///<inheritdoc /> все ок
     public async Task<CategoryDto> UpdateAsync( UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Преобразуем модель обновления к доменной

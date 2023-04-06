@@ -39,19 +39,17 @@ public class CategoryRepository : ICategoryRepository
         await _repository.DeleteByIdAsync(id, cancellationToken);    
     }
 
-    ///<inheritdoc/> все ок
+    ///<inheritdoc/> все ок супер
     public IQueryable<Category> GetAll(CancellationToken cancellationToken)
     {
         return  _repository.GetAll(cancellationToken);
     }
 
-    ///<inheritdoc/> ????????????? мб неправильно
+    ///<inheritdoc/> подлежит проверке
     public IQueryable<Post> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
     {
-        //return await _repository.GetAllFiltered(); тут по примеру изэктив
         //получаем связанные данные по навигацион.св-ву. Получаем список доменных моделек постов
-        var resultList =  _repository.GetAll(cancellationToken).Include(u => u.Posts).ToList();
-        return (IQueryable<Post>)resultList;
+        return (IQueryable<Post>)_repository.GetAll(cancellationToken).Include(u => u.Posts);
     }
 
     ///<inheritdoc/> все ок
@@ -60,7 +58,7 @@ public class CategoryRepository : ICategoryRepository
         return await _repository.GetByIdAsync(id, cancellationToken);
     }
 
-    ///<inheritdoc/> все ок (вроде)
+    ///<inheritdoc/> все ок 
     public async Task<Category> UpdateAsync(Category dto, CancellationToken cancellationToken)
     {
         var model = await _repository.UpdateAsync(dto, cancellationToken);

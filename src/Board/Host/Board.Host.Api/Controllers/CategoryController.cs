@@ -29,8 +29,8 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос категорий");
-
-        return await Task.Run(() => Ok(Enumerable.Empty<CategoryDto>()), cancellationToken);
+        var result = _categoryService.GetAllAsync(cancellationToken);
+        return await Task.Run(() => Ok(result));
     }
 
     /// <summary>

@@ -30,7 +30,7 @@ public interface ICategoryService
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список категорий </returns>
-    IQueryable<CategoryDto> GetAll(CancellationToken cancellationToken);
+    Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Обновление категории.
@@ -53,6 +53,6 @@ public interface ICategoryService
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    IQueryable<PostDto> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken);
+    Task<List<PostDto>> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken);
 }
 
