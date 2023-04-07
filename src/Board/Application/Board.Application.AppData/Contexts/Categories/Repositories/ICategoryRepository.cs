@@ -32,4 +32,36 @@ public interface ICategoryRepository
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>информация о категории</returns>
     Task<Category> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
+
+    /// <summary>
+    /// Получение списка категорий.
+    /// </summary>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список категорий </returns>
+    IQueryable<Category> GetAll(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Обновление категории.
+    /// </summary>
+    /// <param name="dto"> Модель обновления категории </param>
+    /// <param name="cancellationToken"> токен отмены операции </param>
+    /// <returns> Обновленную информацию о категории </returns>
+    Task<Category> UpdateAsync(Category model, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Удаление категории.
+    /// </summary>
+    /// <param name="id"> Идентификатор удаляемой категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns></returns>
+    Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Получение списка постов, относящихся к категории.
+    /// </summary>
+    /// <param name="CategoryId"> Идентификатор категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список постов </returns>
+    IQueryable<Post> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken);
 }

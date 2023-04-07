@@ -32,14 +32,22 @@ public class CreatePostDto
     /// <summary>
     /// ID товара (поста)
     /// </summary>
-    public Guid Id { get; set; } 
+    public Guid Id { get; set; }
 
+    /*
     /// <summary>
     ///  Список тегов для объявления
     /// </summary>
     [Required(ErrorMessage = "Отсутсвуют теги")]
     [MaxLength(10, ErrorMessage = "Много тегов")]
     public  string[] Tags { get; set; }
+    */
+
+
+    /// <summary>
+    /// Показатель принадлежности к разделу "Избранное".
+    /// </summary>
+    public bool IsFavorite { get; set; }
 
     /// <summary>
     /// Дата создания объявления

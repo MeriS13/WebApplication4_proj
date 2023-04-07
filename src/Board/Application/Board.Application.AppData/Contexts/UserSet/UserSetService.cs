@@ -11,7 +11,7 @@ namespace Board.Application.AppData.Contexts.Posts.Services;
 /// <summary>
 /// Сервис для работы с разделом "Избранное"
 /// </summary>
-public class FavoritesService : IFavoritesService
+public class UserSet : IUserSetService
 {
     /// <summary>
     /// Добавление модели в избранное (неправильно! происходит создание)
@@ -19,7 +19,7 @@ public class FavoritesService : IFavoritesService
     /// <param name="dto"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<FavoriteDto> AddFavorite(FavoriteDto dto, CancellationToken cancellationToken)
+    public async Task<UsersetDto> AddFavorite(UsersetDto dto, CancellationToken cancellationToken)
     {
 
         //вызов репозитория для сохранения в бд
@@ -28,7 +28,7 @@ public class FavoritesService : IFavoritesService
         await Task.Run(() => dto, cancellationToken);
 
 
-        return new FavoriteDto();
+        return new UsersetDto();
     }
 
 }

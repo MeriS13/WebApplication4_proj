@@ -26,10 +26,12 @@ public class PostDto
     /// </summary>
     public Guid Id { get; set; }
 
+    /*
     /// <summary>
     /// Теги.
     /// </summary>
     public string[] Tags { get; set; }
+    */
 
     /// <summary>
     /// Идентификатор категории.
@@ -39,5 +41,5 @@ public class PostDto
     /// <summary>
     /// Показатель принадлежности к разделу "Избранное"
     /// </summary>
-    public bool Favorite { get; set; }
+    public bool IsFavorite { get; set; }
 }

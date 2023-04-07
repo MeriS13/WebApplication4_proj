@@ -11,7 +11,7 @@ namespace Board.Contracts.Category;
 /// <summary>
 /// Модель обновления объявления
 /// </summary>
-public class UpdatecategoryDto
+public class UpdateCategoryDto
 {
     /// <summary>
     /// Идентификатор родительской категории.

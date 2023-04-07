@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Board.Domain.Categories;
-//using Board.Domain.Favorites;
+﻿using Board.Domain.Categories;
+using Board.Domain.Comments;
 
 namespace Board.Domain.Posts;
 
@@ -39,7 +33,7 @@ public class Post
     /// <summary>
     /// Теги.
     /// </summary>
-    public string[] Tags { get; set; }
+    //public string[] Tags { get; set; }
 
     /// <summary>
     /// Идентификатор категории.
@@ -49,16 +43,18 @@ public class Post
     /// <summary>
     /// Показатель принадлежности к разделу "Избранное".
     /// </summary>
-    public bool Favorite { get; set; }
+    public bool IsFavorite { get; set; }
 
     /// <summary>
     /// Категория.
     /// </summary>
     public virtual Category Category { get; set; }
 
+
+
     /// <summary>
-    /// Принадлежность к избранному
+    /// 
     /// </summary>
-    //public virtual Favorite IsFavorite { get; set; }
+    public virtual List<Comment> Comments { get; set; }
 
 }

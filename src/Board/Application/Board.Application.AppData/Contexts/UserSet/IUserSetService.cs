@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace Board.Application.AppData.Contexts.Favorites;
 
 
-public interface IFavoritesService
+public interface IUserSetService
 {
-    Task<FavoriteDto> AddFavorite(FavoriteDto dto, CancellationToken cancellationToken);
+    Task<UsersetDto> AddFavorite(UsersetDto dto, CancellationToken cancellationToken);
 }
 

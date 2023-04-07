@@ -9,9 +9,8 @@ namespace Board.Contracts.Favotites;
 /// <summary>
 /// Модель раздела избранное
 /// </summary>
-public class FavoriteDto
+public class UsersetDto
 {
-    //public string Name { get; set; }
-    public Guid[] PostsId { get; set; }
+    
 
 }

@@ -27,9 +27,6 @@ public class Category
     /// </summary>
     public string Name { get; set; }
 
-
-    //public List<Category> ChildCategories { get; set;}
-
     /// <summary>
     /// Объявления.
     /// </summary>

@@ -11,7 +11,7 @@ namespace Board.Infrastructure.Repository;
 public interface IRepository<TEntity> where TEntity : class
 {
 
-    IQueryable<TEntity> GetAll();
+    IQueryable<TEntity> GetAll(CancellationToken cancellationToken);
 
     IQueryable<TEntity> GetAllFiltered(Expression<Func<TEntity, bool>> filter);
 
@@ -19,7 +19,7 @@ public interface IRepository<TEntity> where TEntity : class
 
     Task AddAsync(TEntity model, CancellationToken cancellationToken);
 
-    Task UpdateAsync(TEntity model, CancellationToken cancellationToken);
+    Task<TEntity> UpdateAsync(TEntity model, CancellationToken cancellationToken);
 
-    Task DeleteAsync(TEntity model, CancellationToken cancellationToken);
+    Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 }

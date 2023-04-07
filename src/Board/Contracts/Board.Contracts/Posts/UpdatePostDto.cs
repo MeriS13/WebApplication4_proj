@@ -20,12 +20,20 @@ public class UpdatePostDto
     [StringLength(400, ErrorMessage = "Описание слишком длинное")]
     public string Description { get; set; }
 
+    /*
     /// <summary>
     ///  Список тегов для объявления
     /// </summary>
     [Required(ErrorMessage = "Отсутсвуют теги")]
     [MaxLength(10, ErrorMessage = "Много тегов")]
     public string[] Tags { get; set; }
+    */
+
+
+    /// <summary>
+    /// Показатель принадлежности к разделу "Избранное".
+    /// </summary>
+    public bool IsFavorite { get; set; }
 
     /// <summary>
     /// Дата создания объявления
