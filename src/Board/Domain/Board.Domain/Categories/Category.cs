@@ -1,9 +1,5 @@
 ﻿using Board.Domain.Posts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Board.Domain.ParentCategories;
 
 namespace Board.Domain.Categories;
 
@@ -20,7 +16,7 @@ public class Category
     /// <summary>
     /// Идентификатор родительской категории.
     /// </summary>
-    public Guid? ParentId { get; set; }
+    public Guid ParentId { get; set; }
 
     /// <summary>
     /// Наименование.
@@ -32,4 +28,8 @@ public class Category
     /// </summary>
     public virtual List<Post> Posts { get; set; }
 
+    /// <summary>
+    /// Родительская категория
+    /// </summary>
+    public virtual ParentCategory ParentCategory { get; set; }
 }

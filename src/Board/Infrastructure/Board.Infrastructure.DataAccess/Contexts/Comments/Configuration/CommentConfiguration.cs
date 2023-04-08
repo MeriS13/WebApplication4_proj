@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Board.Domain.Comments;
 
 namespace Board.Infrastructure.DataAccess.Contexts.Comments.Configuration;
+
 public class CommentConfiguration : IEntityTypeConfiguration<Comment>
 {
     public void Configure(EntityTypeBuilder<Comment> builder)

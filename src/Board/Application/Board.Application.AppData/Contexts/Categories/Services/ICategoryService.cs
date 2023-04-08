@@ -47,5 +47,12 @@ public interface ICategoryService
     /// <returns></returns>
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Получение списка категорий, относящихся к одной родительской категории по идентификатору
+    /// </summary>
+    /// <param name="id"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns></returns>
+    Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken);
 }
 

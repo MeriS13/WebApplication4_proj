@@ -51,7 +51,6 @@ public class PostService : IPostService
         //элементы списка - смаппленные модели к dto и возвращаем 
         List<Post> entities = _postRepository.GetAll(cancellationToken).ToList();
         List<PostDto> result = new();
-        int i = 0;
         foreach (var entity in entities)
         {
             result.Add(new PostDto

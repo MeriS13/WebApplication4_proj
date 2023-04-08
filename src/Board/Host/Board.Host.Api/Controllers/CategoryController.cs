@@ -80,5 +80,18 @@ public class CategoryController : ControllerBase
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
 
-    
+    /// <summary>
+    /// Получить список категорий, относящихся к заданной родительской категории.
+    /// </summary>
+    /// <param name="id"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список категорий </returns>
+    [HttpGet("lala2")]
+    public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Запрос родительской категории по идентификатору.");
+        var result = await _categoryService.GetCategoriesByParentIdAsync(id, cancellationToken);
+        return Ok(result);
+    }
+
 }
