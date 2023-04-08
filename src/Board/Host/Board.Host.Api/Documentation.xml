@@ -46,7 +46,7 @@
             Создать новую категорию.
             </summary>
         </member>
-        <member name="M:Board.Host.Api.Controllers.CategoryController.Update(Board.Contracts.Category.UpdateCategoryDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CategoryController.Update(System.Guid,Board.Contracts.Category.UpdateCategoryDto,System.Threading.CancellationToken)">
             <summary>
             Обновить категорию.
             </summary>
@@ -55,6 +55,14 @@
             <summary>
             Удалить категорию по идентификатору.
             </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CommentDto,System.Threading.CancellationToken)">
+            <summary>
+            Добавление комментария к посту по его идентификатору
+            </summary>
+            <param name="dto"> Модель комментария </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns></returns>
         </member>
         <member name="T:Board.Host.Api.Controllers.FileController">
             <summary>
@@ -132,7 +140,7 @@
              <param name="cancellationToken">Токен отмены операции</param>
             <returns> Модель созданного объявления </returns>
         </member>
-        <member name="M:Board.Host.Api.Controllers.PostsController.Patch(System.Guid,Board.Contracts.Posts.UpdatePostDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.PostsController.Update(System.Guid,Board.Contracts.Posts.UpdatePostDto,System.Threading.CancellationToken)">
             <summary>
             Частично обновить объявление.
             </summary>
@@ -145,6 +153,14 @@
             <summary>
             Удаление объявления по параметру id
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.PostsController.GetAllPostsByCategoryId(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить список постов по идентификатору категории.
+            </summary>  где-то в сервисе преобразование не происходит
+            <param name="CategoryId"> Идентификатор категории </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
             <returns></returns>
         </member>
     </members>

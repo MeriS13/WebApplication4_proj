@@ -20,15 +20,15 @@ public class UpdatePostDto
     [StringLength(400, ErrorMessage = "Описание слишком длинное")]
     public string Description { get; set; }
 
-    /*
-    /// <summary>
-    ///  Список тегов для объявления
+    
+    //// <summary>
+    /// Наименование.
     /// </summary>
-    [Required(ErrorMessage = "Отсутсвуют теги")]
-    [MaxLength(10, ErrorMessage = "Много тегов")]
-    public string[] Tags { get; set; }
-    */
-
+    [Required(ErrorMessage = "Наименование не указано")]
+    [StringLength(32, ErrorMessage = "Наименование либо слишком короткое, либо слишком длинное", MinimumLength = 3)]
+    [ForbiddenWordsValidation]
+    public string Name { get; set; }
+    
 
     /// <summary>
     /// Показатель принадлежности к разделу "Избранное".

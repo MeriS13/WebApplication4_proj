@@ -60,28 +60,7 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    ///<inheritdoc /> хз
-    //подлежит проверке и все связанное с этим методом
-    public async Task<List<PostDto>> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
-    {
-        //получаем список домен.моделек постов
-        List<Post> entities = _categoryRepository.GetAllPosts(CategoryId, cancellationToken).ToList();
-        List<PostDto> result = new();
-        int i = 0;
-        foreach (var entity in entities)
-        {
-            result.Add(new PostDto
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                CreationDate = entity.CreationDate,
-                Description = entity.Description,
-                CategoryId = entity.CategoryId,
-                IsFavorite = entity.IsFavorite,
-            });
-        }
-        return result;
-    }
+    
 
     ///<inheritdoc /> все ок
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -100,17 +79,18 @@ public class CategoryService : ICategoryService
     }
 
     ///<inheritdoc /> все ок
-    public async Task<CategoryDto> UpdateAsync( UpdateCategoryDto dto, CancellationToken cancellationToken)
+    public async Task<CategoryDto> UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Преобразуем модель обновления к доменной
         var entity = new Category
         {
+            Id = id,
             Name = dto.Name,
             ParentId = dto.ParentId,
 
         };
         //отдаем обновленную доменную в репозиторий, там она обновляется в бд, возвращается она же
-        var newModel = await _categoryRepository.UpdateAsync(entity, cancellationToken);
+        var newModel = await _categoryRepository.UpdateAsync(id, entity, cancellationToken);
         //преобразуем обновленную доменную к модели категории
         var newDto = new CategoryDto
         {

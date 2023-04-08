@@ -47,7 +47,7 @@ public interface ICategoryRepository
     /// <param name="dto"> Модель обновления категории </param>
     /// <param name="cancellationToken"> токен отмены операции </param>
     /// <returns> Обновленную информацию о категории </returns>
-    Task<Category> UpdateAsync(Category model, CancellationToken cancellationToken);
+    Task<Category> UpdateAsync(Guid id, Category model, CancellationToken cancellationToken);
 
     /// <summary>
     /// Удаление категории.
@@ -57,11 +57,5 @@ public interface ICategoryRepository
     /// <returns></returns>
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Получение списка постов, относящихся к категории.
-    /// </summary>
-    /// <param name="CategoryId"> Идентификатор категории </param>
-    /// <param name="cancellationToken"> Токен отмены операции </param>
-    /// <returns> Список постов </returns>
-    IQueryable<Post> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken);
+
 }

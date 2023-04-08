@@ -11,15 +11,19 @@ namespace Board.Domain.Comments;
 public class Comment
 {
     /// <summary>
-    /// Идентификатор юзера, оставившего комментарий.
+    /// Имя юзера, оставившего комментарий.
     /// </summary>
-
-    public Guid UserId { get; set; }
+    public string UserName { get; set; }
 
     /// <summary>
     /// Идентификатор коммента
     /// </summary>
-    public Guid CommentId { get; set; }
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Дата создания
+    /// </summary>
+    public DateTime CreationDate { get; set; }
 
     /// <summary>
     /// Идентификатор поста, к которому относится коммент
@@ -32,7 +36,7 @@ public class Comment
     public string Content { get; set; }
 
     /// <summary>
-    /// Пост(объявление)
+    /// Пост(объявление) для связи в бд
     /// </summary>
     public virtual Post Post { get; set; }
 }

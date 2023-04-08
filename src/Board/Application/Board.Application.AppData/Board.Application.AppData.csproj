@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Contexts\Comments\" />
     <Folder Include="Contexts\Users\Services\" />
     <Folder Include="Contexts\Users\Repositories\" />
     <Folder Include="Contexts\Account\" />
@@ -16,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Contracts\Board.Contracts\Board.Contracts.csproj" />
     <ProjectReference Include="..\..\Domain\Board.Domain\Board.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Board.Infrastructure\Board.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

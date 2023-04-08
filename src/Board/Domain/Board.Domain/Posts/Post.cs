@@ -30,10 +30,6 @@ public class Post
     /// </summary>
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// Теги.
-    /// </summary>
-    //public string[] Tags { get; set; }
 
     /// <summary>
     /// Идентификатор категории.
@@ -49,7 +45,6 @@ public class Post
     /// Категория.
     /// </summary>
     public virtual Category Category { get; set; }
-
 
 
     /// <summary>
