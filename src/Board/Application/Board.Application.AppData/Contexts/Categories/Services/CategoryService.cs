@@ -1,4 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Categories.Repositories;
+using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Contracts.Category;
 using Board.Contracts.Posts;
 using Board.Domain.Categories;
@@ -35,7 +36,6 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> все ок
     public Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        //return Task.FromResult(_categoryRepository.DeleteByIdAsync(id, cancellationToken));
         return _categoryRepository.DeleteByIdAsync(id, cancellationToken);
     }
 
@@ -101,5 +101,21 @@ public class CategoryService : ICategoryService
         return newDto;
     }
 
+    public async Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        List<Category> entities = _categoryRepository.GetCategoriesByParentId(id, cancellationToken).ToList();
+        List<CategoryDto> result = new();
+        
+        foreach (var entity in entities)
+        {
+            result.Add(new CategoryDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                ParentId = entity.ParentId
+            });
+        }
+        return result;
 
+    }
 }

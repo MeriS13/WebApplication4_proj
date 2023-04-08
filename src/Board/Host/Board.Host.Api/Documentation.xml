@@ -56,6 +56,14 @@
             Удалить категорию по идентификатору.
             </summary>
         </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetCategoriesByParentIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить список категорий, относящихся к заданной родительской категории.
+            </summary>
+            <param name="id"> Идентификатор родительской категории </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Список категорий </returns>
+        </member>
         <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CommentDto,System.Threading.CancellationToken)">
             <summary>
             Добавление комментария к посту по его идентификатору
@@ -104,6 +112,28 @@
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.ParentCategoryController.GetAll(System.Threading.CancellationToken)">
+            <summary>
+            Получить список родительских категорий
+            </summary>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Список родительских категорий</returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.ParentCategoryController.CreateAsync(Board.Contracts.ParentCategory.CreateParentCategoryDto,System.Threading.CancellationToken)">
+            <summary>
+            Создать новую категорию.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.ParentCategoryController.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить категорию по идентификатору.
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.ParentCategoryController.DeleteByIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удалить категорию по идентификатору.
+            </summary>
         </member>
         <member name="T:Board.Host.Api.Controllers.PostsController">
             <summary>

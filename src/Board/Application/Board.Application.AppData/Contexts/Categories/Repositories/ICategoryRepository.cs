@@ -57,5 +57,11 @@ public interface ICategoryRepository
     /// <returns></returns>
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
-
+    /// <summary>
+    /// Получение доменных моделий категорий, относящихся к одной родительской категории по идентификатору
+    /// </summary>
+    /// <param name="id"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns></returns>
+    IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
 }

@@ -27,10 +27,10 @@ public class CategoryRepository : ICategoryRepository
 
 
     ///<inheritdoc/>тут все ок
-    public async Task<Guid> AddAsync(Category dto, CancellationToken cancellationToken)
+    public async Task<Guid> AddAsync(Category model, CancellationToken cancellationToken)
     {
-        await _repository.AddAsync(dto, cancellationToken);
-        return dto.Id;
+        await _repository.AddAsync(model, cancellationToken);
+        return model.Id;
     }
 
     ///<inheritdoc/> тут тоже все ок
@@ -58,4 +58,11 @@ public class CategoryRepository : ICategoryRepository
         var model = await _repository.UpdateAsync(id, dto, cancellationToken);
         return model;
     }
+
+    ///<inheritdoc/>
+    public IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken)
+    {
+        return _repository.GetAll(cancellationToken).Include(u => u.ParentCategory).Where(u => u.ParentId == id);
+    }
+
 }
