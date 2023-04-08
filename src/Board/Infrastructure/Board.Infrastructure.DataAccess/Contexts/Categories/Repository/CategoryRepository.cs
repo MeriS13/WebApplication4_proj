@@ -39,19 +39,13 @@ public class CategoryRepository : ICategoryRepository
         await _repository.DeleteByIdAsync(id, cancellationToken);    
     }
 
-    ///<inheritdoc/> все ок супер
+    ///<inheritdoc/> все ок супер (вернет dbset, являющийся реализаций IQueryable).
     public IQueryable<Category> GetAll(CancellationToken cancellationToken)
     {
         return  _repository.GetAll(cancellationToken);
     }
 
-    ///<inheritdoc/> подлежит проверке
-    public IQueryable<Post> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
-    {
-        //получаем связанные данные по навигацион.св-ву. Получаем список доменных моделек постов
-        return (IQueryable<Post>)_repository.GetAll(cancellationToken).Include(u => u.Posts);
-    }
-
+    
     ///<inheritdoc/> все ок
     public async Task<Category> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
@@ -59,9 +53,9 @@ public class CategoryRepository : ICategoryRepository
     }
 
     ///<inheritdoc/> все ок 
-    public async Task<Category> UpdateAsync(Category dto, CancellationToken cancellationToken)
+    public async Task<Category> UpdateAsync(Guid id, Category dto, CancellationToken cancellationToken)
     {
-        var model = await _repository.UpdateAsync(dto, cancellationToken);
+        var model = await _repository.UpdateAsync(id, dto, cancellationToken);
         return model;
     }
 }

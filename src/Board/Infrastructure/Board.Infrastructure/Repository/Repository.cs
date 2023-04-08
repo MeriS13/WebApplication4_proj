@@ -51,12 +51,29 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     }
 
     /// <inheritdoc />
-    public async Task<TEntity> UpdateAsync(TEntity model, CancellationToken cancellationToken)
+    public async Task<TEntity> UpdateAsync(Guid id, TEntity model, CancellationToken cancellationToken)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        // orig
+        /*if (await db.Students.FindAsync(id) is Student found)
+    {
+        db.Students.Entry(found).State = EntityState.Detached;
+        db.Students.Update(incoming);
+        await db.SaveChangesAsync();
+    }*/
+        // old
+        /*if (model == null) throw new ArgumentNullException(nameof(model));
         DbSet.Update(model);
         await DbContext.SaveChangesAsync(cancellationToken);
-        return model;
+        return model;*/
+        if (model == null) throw new ArgumentNullException(nameof(model));
+        if (await DbSet.FindAsync(id) is TEntity foundModel)
+        {
+            DbSet.Entry(foundModel).CurrentValues.SetValues(model);
+
+            await DbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        return await DbSet.FindAsync(id, cancellationToken); 
     }
 
     /// <inheritdoc />

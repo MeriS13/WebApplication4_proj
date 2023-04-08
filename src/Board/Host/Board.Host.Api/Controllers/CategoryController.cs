@@ -28,7 +28,7 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос категорий");
+        _logger.LogInformation("Запрос категорий.");
         var result = _categoryService.GetAllAsync(cancellationToken);
         return await Task.Run(() => Ok(result));
     }
@@ -40,6 +40,7 @@ public class CategoryController : ControllerBase
     [HttpGet("lalala")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Запрос категории по идентификатору.");
         var result = await _categoryService.GetByIdAsync(id, cancellationToken);
         return Ok(result);
     }
@@ -51,6 +52,7 @@ public class CategoryController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Создание новой категории.");
         var result = await _categoryService.CreateAsync(dto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
     }
@@ -60,9 +62,10 @@ public class CategoryController : ControllerBase
     /// </summary>
     
     [HttpPut("{id:Guid}")]
-    public async Task<IActionResult> Update([FromBody] UpdateCategoryDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
-        var result = await _categoryService.UpdateAsync(dto, cancellationToken);
+        _logger.LogInformation("Обновление существующей категории.");
+        var result = await _categoryService.UpdateAsync(id, dto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result); 
     }
 
@@ -72,16 +75,10 @@ public class CategoryController : ControllerBase
     [HttpDelete("lalala2")]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Удаление категории по идентификатору.");
         await _categoryService.DeleteByIdAsync(id, cancellationToken);
-        //return await Task.Run(NoContent, cancellationToken); //?status code
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
 
-    [HttpGet("{CategoryId:Guid}")]
-    public async Task<IActionResult> GetAllPosts(Guid CategoryId, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Запрос списка постов для категории");
-
-        return await Task.Run(() => Ok(Enumerable.Empty<CategoryDto>()), cancellationToken);//!!!!//?status code
-    }
+    
 }

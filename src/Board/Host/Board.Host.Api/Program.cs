@@ -10,10 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Board.Infrastructure.Repository;
 using Board.Application.AppData.Contexts.Favorites;
-using Board.Application.AppData.Contexts.Comments;
+//using Board.Application.AppData.Contexts.Comments;
 using Board.Application.AppData.Contexts.Categories.Services;
 using Board.Infrastructure.DataAccess.Contexts.Categories.Repository;
 using Board.Application.AppData.Contexts.Categories.Repositories;
+using Board.Application.AppData.Contexts.Posts.Repositories;
+using Board.Infrastructure.DataAccess.Contexts.Posts.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,12 +31,12 @@ builder.Services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequi
 //Добавления репозитория
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 //Добавление сервисов 
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-//builder.Services.AddScoped<IFavoritesService, FavoritesService>();
 //builder.Services.AddScoped<ICommentsService, CommentsService>();
 
 

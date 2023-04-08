@@ -19,7 +19,7 @@ public interface IRepository<TEntity> where TEntity : class
 
     Task AddAsync(TEntity model, CancellationToken cancellationToken);
 
-    Task<TEntity> UpdateAsync(TEntity model, CancellationToken cancellationToken);
+    Task<TEntity> UpdateAsync(Guid id, TEntity model, CancellationToken cancellationToken);
 
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 }

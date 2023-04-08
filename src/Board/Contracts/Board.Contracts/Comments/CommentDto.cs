@@ -11,18 +11,20 @@ namespace Board.Contracts.Comments;
 /// <summary>
 /// Модель создания комментария.
 /// </summary>
-public class CreateCommentDto
+public class CommentDto 
 {
     /// <summary>
-    /// Идентификатор юзера, оставившего комментарий.
+    /// Имя юзера, оставившего комментарий.
     /// </summary>
-
-    public Guid UserId { get; set; }
+    [Required(ErrorMessage = "Имя пользователя не указано")]
+    [StringLength(50, ErrorMessage = "Имя пользователя слишком длинное")]
+    [ForbiddenWordsValidation]
+    public string UserName { get; set; }
 
     /// <summary>
     /// Идентификатор коммента
     /// </summary>
-    public Guid CommentId { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Идентификатор поста, к которому относится коммент
@@ -33,7 +35,13 @@ public class CreateCommentDto
     /// Содержание комментария.
     /// </summary>
     [Required(ErrorMessage = "Отсутствует комментарий")]
-    [StringLength(600, ErrorMessage = "Комментарий слишком длинный")]
+    [StringLength(800, ErrorMessage = "Комментарий слишком длинный")]
     [ForbiddenWordsValidation]
     public string Content { get; set; }
+
+    /// <summary>
+    /// Дата создания
+    /// </summary>
+    [DateValidation]
+    public DateTime CreationDate { get; set; }
 }

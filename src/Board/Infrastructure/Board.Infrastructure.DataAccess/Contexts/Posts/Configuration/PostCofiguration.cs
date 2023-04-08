@@ -22,10 +22,10 @@ public class PostCofiguration : IEntityTypeConfiguration<Post>
         builder.Property(a => a.Description).IsRequired().HasMaxLength(1024);
         builder.Property(a => a.CreationDate).HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
         builder.Property(a => a.IsFavorite).IsRequired();
-        //builder.HasMany(s => s.Comments).WithOne(s => s.Post).
-        //HasForeignKey(c => c.PostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
-        
+        builder.HasMany(s => s.Comments).WithOne(s => s.Post).
+        HasForeignKey(c => c.PostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                
 
     }
 }
