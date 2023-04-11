@@ -19,6 +19,11 @@ using Board.Infrastructure.DataAccess.Contexts.Posts.Repositories;
 using Board.Application.AppData.Contexts.ParentCategories.Services;
 using Board.Application.AppData.Contexts.ParentCategories.Repository;
 using Board.Infrastructure.DataAccess.Contexts.ParentCategories.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +49,56 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IParentCategoryService, ParentCategoryService>();
 //builder.Services.AddScoped<ICommentsService, CommentsService>();
 
-
 builder.Services.AddControllers();
+
+#region Authentication & Authorization
+
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+/*builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.Events.OnSignedIn = context => { return Task.CompletedTask; };
+    });*/
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(
+    options =>
+    {
+        var secretKey = builder.Configuration["Jwt:Key"];
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateActor = false,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        };
+    });
+
+// Тут можно добавить политику
+/*
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Manager", policy =>
+    {
+        policy.RequireRole("Admin");
+        policy.RequireClaim("", "");
+    });
+});
+
+*/
+
+builder.Services.AddAuthorization();
+#endregion
+
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -57,10 +110,40 @@ builder.Services.AddEndpointsApiExplorer();
         options.IncludeXmlComments(Path.Combine(Path.Combine(AppContext.BaseDirectory,
             $"{typeof(CreatePostDto).Assembly.GetName().Name}.xml")));
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Documentation.xml"));
+
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = @"JWT Authorization header using the Bearer scheme.  
+                        Enter 'Bearer' [space] and then your token in the text input below.
+                        Example: 'Bearer secretKey'",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = JwtBearerDefaults.AuthenticationScheme
+        });
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme="oauth2",
+                Name= "Bearer",
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
     });
 
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -71,6 +154,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
