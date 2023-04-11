@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Contexts\Accounts\Configuration\" />
     <Folder Include="Contexts\Comments\Repository\" />
     <Folder Include="Contexts\Posts\Repositories\" />
     <Folder Include="Contexts\Users\Repositories\" />

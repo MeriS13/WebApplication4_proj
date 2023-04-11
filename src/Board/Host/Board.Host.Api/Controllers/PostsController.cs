@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Board.Application.AppData.Contexts.Posts.Services;
 using Board.Domain.Categories;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Board.Host.Api.Controllers;
 
@@ -65,6 +66,7 @@ public class PostsController : ControllerBase
     ///<returns> Модель созданного объявления </returns>
 
     [HttpPost]
+    [Authorize(Policy = "Manager")]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation(message: $"Сохранение объявления {JsonConvert.SerializeObject(dto)}");
