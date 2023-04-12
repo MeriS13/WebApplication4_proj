@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Board.Contracts.Category;
 using Board.Application.AppData.Contexts.Categories.Services;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Board.Host.Api.Controllers;
 
+/// <summary>
+/// Контроллер для работы с категориями
+/// </summary>
 
 [ApiController]
 [Route(template: "categories-controller")]
@@ -24,7 +29,7 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Получить список категорий.
     /// </summary>
-    
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
@@ -36,8 +41,8 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Получить категорию по идентификатору.
     /// </summary>
-    
-    [HttpGet("lalala")]
+    [HttpGet("GetById")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос категории по идентификатору.");
@@ -48,8 +53,8 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Создать новую категорию.
     /// </summary>
-   
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Создание новой категории.");
@@ -60,8 +65,8 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Обновить категорию.
     /// </summary>
-    
     [HttpPut("{id:Guid}")]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Обновление существующей категории.");
@@ -72,7 +77,8 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Удалить категорию по идентификатору.
     /// </summary>
-    [HttpDelete("lalala2")]
+    [HttpDelete("DeleteById")]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Удаление категории по идентификатору.");
@@ -86,7 +92,8 @@ public class CategoryController : ControllerBase
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список категорий </returns>
-    [HttpGet("lala2")]
+    [HttpGet("GetCategoriesByParentId")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос родительской категории по идентификатору.");

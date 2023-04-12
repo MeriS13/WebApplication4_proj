@@ -23,6 +23,9 @@ public class Category
     /// </summary>
     public string Name { get; set; }
 
+
+
+
     /// <summary>
     /// Объявления.
     /// </summary>

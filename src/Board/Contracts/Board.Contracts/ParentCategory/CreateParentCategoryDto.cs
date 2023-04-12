@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Board.Contracts.ParentCategory;
 
+/// <summary>
+/// Модель создания родительской категории
+/// </summary>
 public class CreateParentCategoryDto 
 {
     /// <summary>

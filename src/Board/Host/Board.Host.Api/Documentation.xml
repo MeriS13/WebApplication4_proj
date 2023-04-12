@@ -15,7 +15,7 @@
             </summary>
             <param name="logger">Сервис логирования.</param>
         </member>
-        <member name="M:Board.Host.Api.Controllers.AccountController.RegisterAccount(Board.Contracts.Account.CreateAccountDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.AccountController.RegisterAccount(Board.Contracts.Accounts.CreateAccountDto,System.Threading.CancellationToken)">
             <summary>
             Зарегистрировать новый аккаунт.
             </summary>
@@ -23,13 +23,25 @@
             <param name="cancellation">Токен отмены.</param>
             <returns>Модель зарегистрированного аккаунта.</returns>
         </member>
-        <member name="M:Board.Host.Api.Controllers.AccountController.Login(Board.Contracts.Account.LoginAccountDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.AccountController.Login(Board.Contracts.Accounts.LoginAccountDto,System.Threading.CancellationToken)">
             <summary>
             Войти в аккаунт.
             </summary>
             <param name="dto">Модель входа в аккаунт.</param>
             <param name="cancellation">Токен отмены.</param>
             <returns>Модель с данными входа.</returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.AccountController.GetUserInfo(System.Threading.CancellationToken)">
+            <summary>
+            Получить информацию о текущем пользователе
+            </summary>
+            <param name="cancellation">Токен отмены.</param>
+            <returns> Модель аккаунта </returns>
+        </member>
+        <member name="T:Board.Host.Api.Controllers.CategoryController">
+            <summary>
+            Контроллер для работы с категориями
+            </summary>
         </member>
         <member name="M:Board.Host.Api.Controllers.CategoryController.GetAll(System.Threading.CancellationToken)">
             <summary>
@@ -113,6 +125,11 @@
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
         </member>
+        <member name="T:Board.Host.Api.Controllers.ParentCategoryController">
+            <summary>
+            Контроллер для работы с родительскими категориями
+            </summary>
+        </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.GetAll(System.Threading.CancellationToken)">
             <summary>
             Получить список родительских категорий
@@ -124,16 +141,25 @@
             <summary>
             Создать новую категорию.
             </summary>
+            <param name="dto"> Модель создания родительской категории </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Идентификатор созданной категории </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Получить категорию по идентификатору.
             </summary>
+            <param name="id"> Идентификатор родительской категории </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns></returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.DeleteByIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Удалить категорию по идентификатору.
             </summary>
+            <param name="id"> Идентификатор род.категории </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Результат выполнения </returns>
         </member>
         <member name="T:Board.Host.Api.Controllers.PostsController">
             <summary>
@@ -150,9 +176,10 @@
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetAll(System.Threading.CancellationToken)">
             <summary>
-             Получение списка обьявлений
-             template - для определения маршрута
+            Получение списка обьявлений
             </summary>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Список постов </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetById(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -183,7 +210,7 @@
             <summary>
             Удаление объявления по параметру id
             </summary>
-            <returns></returns>
+            <returns> StatusCode </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetAllPostsByCategoryId(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -191,7 +218,14 @@
             </summary>  где-то в сервисе преобразование не происходит
             <param name="CategoryId"> Идентификатор категории </param>
             <param name="cancellationToken"> Токен отмены операции </param>
-            <returns></returns>
+            <returns> Список постов </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.PostsController.GetUserPostsAsync(System.Threading.CancellationToken)">
+            <summary>
+            Получить список постов текущего пользователя
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns> Список постов </returns>
         </member>
     </members>
 </doc>

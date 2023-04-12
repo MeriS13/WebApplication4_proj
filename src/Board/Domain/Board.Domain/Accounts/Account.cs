@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Board.Domain.Comments;
+using Board.Domain.Posts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Board.Domain.Account
+namespace Board.Domain.Accounts 
 {
     /// <summary>
     /// Акаунт
@@ -35,5 +37,18 @@ namespace Board.Domain.Account
         /// Дата регистрации.
         /// </summary>
         public DateTime Created { get; set; }
+
+         
+
+
+        /// <summary>
+        /// Список постов
+        /// </summary>
+        public virtual List<Post> Posts { get; set; }
+
+        /// <summary>
+        /// Список комментов
+        /// </summary>
+        public virtual List<Comment> Comments { get; set; }
     }
 }

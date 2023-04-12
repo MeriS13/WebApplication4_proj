@@ -1,4 +1,4 @@
-﻿using Board.Domain.Account;
+﻿using Board.Domain.Accounts;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,5 +21,11 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(a => a.Login).HasMaxLength(50).IsRequired();
         builder.Property(a => a.Password).HasMaxLength(50).IsRequired();
         builder.Property(a => a.Created).HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder.HasMany(s => s.Posts).WithOne(s => s.Account).
+         HasForeignKey(c => c.AccountId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(s => s.Comments).WithOne(s => s.Account).
+        HasForeignKey(c => c.AccId).IsRequired().OnDelete(DeleteBehavior.Cascade);
     }
 }

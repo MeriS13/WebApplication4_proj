@@ -1,5 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Accounts.Repositories;
-using Board.Domain.Account;
+using Board.Domain.Accounts;
 using Board.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Board.Infrastructure.DataAccess.Contexts.Accounts.Repository;
 
+/// <inheritdoc cref="IAccountRepository"/>
 public class AccountRepository : IAccountRepository
 {
     private readonly IRepository<Account> _repository;

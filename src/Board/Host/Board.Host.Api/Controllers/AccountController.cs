@@ -1,11 +1,9 @@
 ﻿using Board.Application.AppData.Contexts.Accounts.Services;
-using Board.Contracts;
-using Board.Contracts.Account;
+using Board.Contracts.Accounts;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Board.Host.Api.Controllers;
 
@@ -15,7 +13,6 @@ namespace Board.Host.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[AllowAnonymous]
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;
@@ -25,7 +22,7 @@ public class AccountController : ControllerBase
     /// Инициализирует экземпляр <see cref="AccountController"/>
     /// </summary>
     /// <param name="logger">Сервис логирования.</param>
-    public AccountController(ILogger<AccountController> logger, IAccountService accountService = null)
+    public AccountController(ILogger<AccountController> logger, IAccountService accountService)
     {
         _logger = logger;
         _accountService = accountService;
@@ -39,6 +36,7 @@ public class AccountController : ControllerBase
     /// <returns>Модель зарегистрированного аккаунта.</returns>
     [HttpPost("register")]
     [ProducesResponseType(typeof(AccountDto), StatusCodes.Status201Created)]
+    [AllowAnonymous]
     public async Task<IActionResult> RegisterAccount([FromBody] CreateAccountDto dto, CancellationToken cancellation)
     {
         _logger.LogInformation("Регистрация нового аккаунта.");
@@ -54,6 +52,7 @@ public class AccountController : ControllerBase
     /// <param name="cancellation">Токен отмены.</param>
     /// <returns>Модель с данными входа.</returns>
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginAccountDto dto, CancellationToken cancellation)
     {
         _logger.LogInformation("Вход в аккаунт.");
@@ -63,13 +62,13 @@ public class AccountController : ControllerBase
         return await Task.Run(() => Ok(result), cancellation);
     }
 
-    [HttpPost("logout")]
-    public async Task Logout(string token)
-    {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    }
-
+    /// <summary>
+    /// Получить информацию о текущем пользователе
+    /// </summary>
+    /// <param name="cancellation">Токен отмены.</param>
+    /// <returns> Модель аккаунта </returns>
     [HttpPost("GetUserInfo")]
+    [Authorize]
     public async Task<AccountDto> GetUserInfo(CancellationToken cancellation)
     {
         var result = await _accountService.GetCurrentAsync(cancellation);

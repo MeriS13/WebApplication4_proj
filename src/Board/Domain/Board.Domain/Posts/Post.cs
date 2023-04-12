@@ -1,4 +1,5 @@
-﻿using Board.Domain.Categories;
+﻿using Board.Domain.Accounts;
+using Board.Domain.Categories;
 using Board.Domain.Comments;
 
 namespace Board.Domain.Posts;
@@ -30,7 +31,6 @@ public class Post
     /// </summary>
     public Guid Id { get; set; }
 
-
     /// <summary>
     /// Идентификатор категории.
     /// </summary>
@@ -42,14 +42,26 @@ public class Post
     public bool IsFavorite { get; set; }
 
     /// <summary>
+    /// Идентификатор пользователя, добавившего объявления
+    /// </summary>
+    public Guid AccountId { get; set; }
+
+    
+
+
+    /// <summary>
     /// Категория.
     /// </summary>
     public virtual Category Category { get; set; }
 
-
     /// <summary>
-    /// 
+    /// Список комментов
     /// </summary>
     public virtual List<Comment> Comments { get; set; }
+
+    /// <summary>
+    /// Аккаунт
+    /// </summary>
+    public virtual Account Account { get; set; }
 
 }

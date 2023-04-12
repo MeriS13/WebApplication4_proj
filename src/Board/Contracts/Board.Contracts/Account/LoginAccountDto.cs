@@ -1,7 +1,7 @@
-﻿namespace Board.Contracts.Account
+﻿namespace Board.Contracts.Accounts 
 {
     /// <summary>
-    /// Модель для входа в аккаунт. (***скопировано***)
+    /// Модель для входа в аккаунт. 
     /// </summary>
     public class LoginAccountDto
     {

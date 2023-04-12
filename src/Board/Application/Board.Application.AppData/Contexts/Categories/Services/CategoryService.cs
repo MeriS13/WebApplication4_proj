@@ -19,7 +19,8 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
     }
 
-    ///<inheritdoc /> все ок
+
+    ///<inheritdoc /> 
     public Task<Guid> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Тут происходит маппинг. в сущность записывается дом.модель и заполняются ее поля
@@ -33,11 +34,13 @@ public class CategoryService : ICategoryService
         return _categoryRepository.AddAsync(entity, cancellationToken);
     }
 
-    ///<inheritdoc /> все ок
+
+    ///<inheritdoc /> 
     public Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return _categoryRepository.DeleteByIdAsync(id, cancellationToken);
     }
+
 
     ///<inheritdoc /> все ок но вопрос с эвэйтом
     public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
@@ -62,7 +65,7 @@ public class CategoryService : ICategoryService
 
     
 
-    ///<inheritdoc /> все ок
+    ///<inheritdoc /> 
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
@@ -78,7 +81,7 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    ///<inheritdoc /> все ок
+    ///<inheritdoc /> 
     public async Task<CategoryDto> UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Преобразуем модель обновления к доменной
@@ -101,6 +104,7 @@ public class CategoryService : ICategoryService
         return newDto;
     }
 
+    ///<inheritdoc /> 
     public async Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
     {
         List<Category> entities = _categoryRepository.GetCategoriesByParentId(id, cancellationToken).ToList();

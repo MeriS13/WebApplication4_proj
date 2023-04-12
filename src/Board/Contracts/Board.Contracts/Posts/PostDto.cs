@@ -26,12 +26,11 @@ public class PostDto
     /// </summary>
     public Guid Id { get; set; }
 
-    /*
     /// <summary>
-    /// Теги.
+    /// Идентификатор пользователя, добавившего объявления
     /// </summary>
-    public string[] Tags { get; set; }
-    */
+    public Guid AccountId { get; set; }
+
 
     /// <summary>
     /// Идентификатор категории.

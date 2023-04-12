@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Board.Application.AppData.Contexts.Posts.Services;
@@ -72,7 +73,14 @@ public interface IPostService
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    public Task<List<PostDto>> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken);
+    Task<List<PostDto>> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Получение списка постов для текущего аккаунта.
+    /// </summary>
+    /// <param name="cancellationToken"> токен отмены операции </param>
+    /// <returns> Список постов </returns>
+    Task<List<PostDto>> GetUserPosts(CancellationToken cancellationToken);
 
 }
 

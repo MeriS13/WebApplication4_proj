@@ -15,11 +15,11 @@ public class ParentCategoryRepository : IParentCategoryRepository
 {
     private readonly IRepository<ParentCategory> _repository;
 
-
     public ParentCategoryRepository(IRepository<ParentCategory> repository)
     {
         _repository = repository;
     }
+
 
     /// <inheritdoc/>
     public async Task<Guid> CreateAsync(ParentCategory model, CancellationToken cancellationToken)

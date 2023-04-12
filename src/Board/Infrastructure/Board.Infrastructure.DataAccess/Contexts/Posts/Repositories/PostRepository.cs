@@ -1,5 +1,6 @@
 ﻿using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Contracts.Posts;
+using Board.Domain.Categories;
 using Board.Domain.Comments;
 using Board.Domain.Posts;
 using Board.Infrastructure.Repository;
@@ -60,5 +61,11 @@ public class PostRepository : IPostRepository
     {
         var model = await _repository.UpdateAsync(id, dto, cancellationToken);
         return model;
+    }
+
+    /// <inheritdoc/>
+    public IQueryable<Post> GetUserPosts(Guid UserId, CancellationToken cancellationToken)
+    {
+        return _repository.GetAll(cancellationToken).Include(u => u.Account).Where(u => u.AccountId == UserId);
     }
 }

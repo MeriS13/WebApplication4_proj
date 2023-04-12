@@ -29,7 +29,6 @@ public class UpdatePostDto
     [ForbiddenWordsValidation]
     public string Name { get; set; }
     
-
     /// <summary>
     /// Показатель принадлежности к разделу "Избранное".
     /// </summary>
@@ -45,4 +44,9 @@ public class UpdatePostDto
     /// Идентификатор категории
     /// </summary>
     public Guid CategoryId { get; set; }
+
+    /// <summary>
+    /// Идентификатор пользователя, добавившего объявления
+    /// </summary>
+    public Guid AccountId { get; set; }
 }

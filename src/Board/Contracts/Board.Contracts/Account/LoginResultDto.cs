@@ -1,7 +1,7 @@
-﻿namespace Board.Contracts.Account
+﻿namespace Board.Contracts.Accounts 
 {
     /// <summary>
-    /// Результат входа в аккаунт.(***скопировано***)
+    /// Результат входа в аккаунт.
     /// </summary>
     public class LoginResultDto
     {

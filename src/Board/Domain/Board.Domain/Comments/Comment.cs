@@ -1,4 +1,5 @@
-﻿using Board.Domain.Posts;
+﻿using Board.Domain.Accounts;
+using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,7 +37,20 @@ public class Comment
     public string Content { get; set; }
 
     /// <summary>
-    /// Пост(объявление) для связи в бд
+    /// Идентификатор пользователя, добавившего объявления
+    /// </summary>
+    public Guid AccId { get; set; }
+
+
+
+
+    /// <summary>
+    /// Пост(объявление) 
     /// </summary>
     public virtual Post Post { get; set; }
+
+    /// <summary>
+    /// Аккаунт
+    /// </summary>
+    public virtual Account Account { get; set; }
 }
