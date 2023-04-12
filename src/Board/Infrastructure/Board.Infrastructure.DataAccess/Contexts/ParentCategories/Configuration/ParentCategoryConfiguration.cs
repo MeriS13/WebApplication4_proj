@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Board.Infrastructure.DataAccess.Contexts.ParentCategories.Configuration;
 
+/// <summary>
+/// Конфигурация сущности родительской категории
+/// </summary>
 public class ParentCategoryConfiguration : IEntityTypeConfiguration<ParentCategory>
 {
     public void Configure(EntityTypeBuilder<ParentCategory> builder)

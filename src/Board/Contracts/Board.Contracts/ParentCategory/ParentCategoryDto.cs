@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Board.Contracts.ParentCategory;
 
+/// <summary>
+/// Модель родительской категории
+/// </summary>
 public class ParentCategoryDto
 {
     /// <summary>

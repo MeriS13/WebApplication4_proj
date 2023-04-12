@@ -32,11 +32,13 @@ public class PostsController : ControllerBase
         _postService = postService;
     }
 
-    ///<summary>
+    /// <summary>
     /// Получение списка обьявлений
-    /// template - для определения маршрута
-    ///</summary>
+    /// </summary>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список постов </returns>
     [HttpGet(template: "get-posts")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос объявлений");
@@ -51,6 +53,7 @@ public class PostsController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Модель объявления.</returns>
     [HttpGet("лалала")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос получение объявления по идентификатору");
@@ -66,7 +69,7 @@ public class PostsController : ControllerBase
     ///<returns> Модель созданного объявления </returns>
 
     [HttpPost]
-    [Authorize(Policy = "Manager")]
+    [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation(message: $"Сохранение объявления {JsonConvert.SerializeObject(dto)}");
@@ -82,6 +85,7 @@ public class PostsController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Модель обновлённого объявления.</returns>
     [HttpPut("{id:Guid}")]
+    [Authorize]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostDto dto, CancellationToken cancellationToken)
     {
         var result = await _postService.UpdateAsync(id, dto, cancellationToken);
@@ -91,8 +95,9 @@ public class PostsController : ControllerBase
     /// <summary>
     /// Удаление объявления по параметру id
     /// </summary>
-    /// <returns></returns>
+    /// <returns> StatusCode </returns>
     [HttpDelete("{id:Guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
         await _postService.DeleteById(id, cancellationToken);
@@ -113,12 +118,50 @@ public class PostsController : ControllerBase
     /// </summary>  где-то в сервисе преобразование не происходит
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
-    /// <returns></returns>
+    /// <returns> Список постов </returns>
     [HttpGet("{CategoryId:Guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка постов для категории");
         var result = _postService.GetAllPostsByCategoryId(CategoryId, cancellationToken);
-        return await Task.Run(() => Ok(result));//!!!!//?status code
+        return await Task.Run(() => Ok(result));
     }
+
+    /// <summary>
+    /// Получить список постов текущего пользователя
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns> Список постов </returns>
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetUserPostsAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Запрос списка постов для текущего аккаунта");
+        var result = _postService.GetUserPosts(cancellationToken);
+        return await Task.Run(() => Ok(result));
+    }
+
+    //Либо юзер-сеты, либо вынести в отдельный контроллер и модели
+    //NEW--------------------------------------------------------------------
+    /*
+    [HttpPatch]
+    [AllowAnonymous]
+    public async Task<IActionResult> AddToFavorites(Guid postId, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Добавление поста в избранное по идентификатору");
+        var result = _postService.AddToFavorites(postId, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPatch]
+    [AllowAnonymous]
+    public async Task<IActionResult> DeleteFromFavorites(Guid postId, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Добавление поста в избранное по идентификатору");
+        var result = _postService.DeleteFromFavorites(postId, cancellationToken);
+        return Ok();
+    }
+    */
+
 }

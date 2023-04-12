@@ -24,6 +24,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Board.Application.AppData.Contexts.Accounts.Repositories;
+using Board.Infrastructure.DataAccess.Contexts.Accounts.Repository;
+using Board.Application.AppData.Contexts.Accounts.Services;
+using System.Xml.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,12 +45,14 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IParentCategoryRepository, ParentCategoryRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //ƒобавление сервисов 
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IParentCategoryService, ParentCategoryService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 //builder.Services.AddScoped<ICommentsService, CommentsService>();
 
 builder.Services.AddControllers();
@@ -55,13 +61,6 @@ builder.Services.AddControllers();
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-/*builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.SlidingExpiration = true;
-        options.Events.OnSignedIn = context => { return Task.CompletedTask; };
-    });*/
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
@@ -81,20 +80,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// “ут можно добавить политику
-/*
+// ƒобавление авторизации с использованием политики 
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Manager", policy =>
+    options.AddPolicy("Admin", policy =>
     {
-        policy.RequireRole("Admin");
-        policy.RequireClaim("", "");
+        policy.RequireUserName("Admin");
     });
 });
 
-*/
 
-builder.Services.AddAuthorization();
+
 #endregion
 
 
@@ -102,7 +99,7 @@ builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-//дл€ документации
+//дл€ документации авторизации 
 
     builder.Services.AddSwaggerGen(options =>
     {

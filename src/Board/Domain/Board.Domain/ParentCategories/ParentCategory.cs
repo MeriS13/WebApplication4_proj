@@ -22,8 +22,12 @@ public class ParentCategory
     /// </summary>
     public string Name { get; set; }
 
+
+
+
+
     /// <summary>
-    /// Список категорий у родительской категории (навигационное свойство)
+    /// Список категорий у родительской категории 
     /// </summary>
     public virtual List<Category> Categories { get; set; }
 }

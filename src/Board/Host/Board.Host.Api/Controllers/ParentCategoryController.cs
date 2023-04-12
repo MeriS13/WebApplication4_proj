@@ -2,11 +2,15 @@
 using Board.Application.AppData.Contexts.ParentCategories.Services;
 using Board.Contracts.Category;
 using Board.Contracts.ParentCategory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace Board.Host.Api.Controllers;
 
+/// <summary>
+/// Контроллер для работы с родительскими категориями
+/// </summary>
 
 [ApiController]
 [Route(template: "parent_categories-controller")]
@@ -27,6 +31,7 @@ public class ParentCategoryController : ControllerBase
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список родительских категорий</returns>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка категорий.");
@@ -34,11 +39,15 @@ public class ParentCategoryController : ControllerBase
         return await Task.Run(() => Ok(result));
     }
 
+
     /// <summary>
     /// Создать новую категорию.
     /// </summary>
-
+    /// <param name="dto"> Модель создания родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Идентификатор созданной категории </returns>
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateParentCategoryDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Создание новой категории.");
@@ -49,7 +58,11 @@ public class ParentCategoryController : ControllerBase
     /// <summary>
     /// Получить категорию по идентификатору.
     /// </summary>
+    /// <param name="id"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns></returns>
     [HttpGet("lalala")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос категории по идентификатору.");
@@ -60,7 +73,11 @@ public class ParentCategoryController : ControllerBase
     /// <summary>
     /// Удалить категорию по идентификатору.
     /// </summary>
+    /// <param name="id"> Идентификатор род.категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Результат выполнения </returns>
     [HttpDelete("lalala2")]
+    [Authorize(Policy = "Admin")]
     public async Task<IActionResult> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Удаление категории по идентификатору.");

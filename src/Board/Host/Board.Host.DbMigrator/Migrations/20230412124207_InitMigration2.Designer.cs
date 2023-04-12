@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Board.Host.DbMigrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20230410224245_AddAccountMigration")]
-    partial class AddAccountMigration
+    [Migration("20230412124207_InitMigration2")]
+    partial class InitMigration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Board.Host.DbMigrator.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Board.Domain.Account.Account", b =>
+            modelBuilder.Entity("Board.Domain.Accounts.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,6 +81,9 @@ namespace Board.Host.DbMigrator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AccId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(800)
@@ -98,6 +101,8 @@ namespace Board.Host.DbMigrator.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccId");
 
                     b.HasIndex("PostId");
 
@@ -126,6 +131,9 @@ namespace Board.Host.DbMigrator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
@@ -147,6 +155,8 @@ namespace Board.Host.DbMigrator.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Post");
@@ -165,24 +175,47 @@ namespace Board.Host.DbMigrator.Migrations
 
             modelBuilder.Entity("Board.Domain.Comments.Comment", b =>
                 {
+                    b.HasOne("Board.Domain.Accounts.Account", "Account")
+                        .WithMany("Comments")
+                        .HasForeignKey("AccId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Board.Domain.Posts.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Account");
+
                     b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Board.Domain.Posts.Post", b =>
                 {
+                    b.HasOne("Board.Domain.Accounts.Account", "Account")
+                        .WithMany("Posts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Board.Domain.Categories.Category", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Account");
+
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Board.Domain.Accounts.Account", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Board.Domain.Categories.Category", b =>

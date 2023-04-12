@@ -59,4 +59,12 @@ public interface IPostRepository
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
     IQueryable<Post> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Получение списка постов для текущего аккаунта.
+    /// </summary>
+    /// <param name="UserId"> Идентификатор текущего аккаунта </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список постов </returns>
+    IQueryable<Post> GetUserPosts(Guid UserId, CancellationToken cancellationToken);
 }

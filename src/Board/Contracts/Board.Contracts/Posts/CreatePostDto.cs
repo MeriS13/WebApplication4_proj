@@ -29,20 +29,6 @@ public class CreatePostDto
     [StringLength(400, ErrorMessage = "Описание слишком длинное")]
     public string Description { get; set; }
 
-    /// <summary>
-    /// ID товара (поста)
-    /// </summary>
-    public Guid Id { get; set; }
-
-    /*
-    /// <summary>
-    ///  Список тегов для объявления
-    /// </summary>
-    [Required(ErrorMessage = "Отсутсвуют теги")]
-    [MaxLength(10, ErrorMessage = "Много тегов")]
-    public  string[] Tags { get; set; }
-    */
-
 
     /// <summary>
     /// Показатель принадлежности к разделу "Избранное".

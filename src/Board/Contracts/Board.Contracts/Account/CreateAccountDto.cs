@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Board.Contracts.Attributes;
 
-namespace Board.Contracts.Account
+namespace Board.Contracts.Accounts 
 {
     /// <summary>
     /// Модель создания аккаунта.

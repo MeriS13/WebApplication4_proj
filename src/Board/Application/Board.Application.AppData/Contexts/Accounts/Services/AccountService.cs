@@ -1,6 +1,6 @@
 ﻿using Board.Application.AppData.Contexts.Accounts.Repositories;
-using Board.Contracts.Account;
-using Board.Domain.Account;
+using Board.Contracts.Accounts;
+using Board.Domain.Accounts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -88,12 +88,14 @@ public class AccountService : IAccountService
 
         var result = new JwtSecurityTokenHandler().WriteToken(token);
 
+        //возвращаем токен
         return result;
     }
 
     /// <inheritdoc />
     public async Task<AccountDto> GetCurrentAsync(CancellationToken cancellation)
     {
+        //Получаем клемы из контекста, получаем Id текущего пользователя
         var claims = _httpContextAccessor.HttpContext.User.Claims;
         var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -105,12 +107,9 @@ public class AccountService : IAccountService
         var id = Guid.Parse(claimId);
         var user = await _accountRepository.FindById(id, cancellation);
 
-        if (user == null)
-        {
-            throw new Exception($"Не найден пользователь с идентификатором '{id}'.");
-        }
-
-        //TODO
+        if (user == null) throw new Exception($"Не найден пользователь с идентификатором '{id}'.");
+        
+        // Полученную дом.модель маппим к Dto
         var result = new AccountDto
         {
             Id = user.Id,

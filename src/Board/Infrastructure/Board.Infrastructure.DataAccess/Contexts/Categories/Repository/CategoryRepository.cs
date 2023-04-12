@@ -26,33 +26,33 @@ public class CategoryRepository : ICategoryRepository
     }
 
 
-    ///<inheritdoc/>тут все ок
+    ///<inheritdoc/>
     public async Task<Guid> AddAsync(Category model, CancellationToken cancellationToken)
     {
         await _repository.AddAsync(model, cancellationToken);
         return model.Id;
     }
 
-    ///<inheritdoc/> тут тоже все ок
+    ///<inheritdoc/> 
     public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         await _repository.DeleteByIdAsync(id, cancellationToken);    
     }
 
-    ///<inheritdoc/> все ок супер (вернет dbset, являющийся реализаций IQueryable).
+    ///<inheritdoc/> (вернет dbset, являющийся реализаций IQueryable).
     public IQueryable<Category> GetAll(CancellationToken cancellationToken)
     {
         return  _repository.GetAll(cancellationToken);
     }
 
     
-    ///<inheritdoc/> все ок
+    ///<inheritdoc/> 
     public async Task<Category> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _repository.GetByIdAsync(id, cancellationToken);
     }
 
-    ///<inheritdoc/> все ок 
+    ///<inheritdoc/>  
     public async Task<Category> UpdateAsync(Guid id, Category dto, CancellationToken cancellationToken)
     {
         var model = await _repository.UpdateAsync(id, dto, cancellationToken);

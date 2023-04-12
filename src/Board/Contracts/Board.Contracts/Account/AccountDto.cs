@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 
-namespace Board.Contracts.Account
+namespace Board.Contracts.Accounts 
 {
     /// <summary>
-    /// Информация об аккаунте. (***скопировано***)
+    /// Информация об аккаунте. 
     /// </summary>
     public class AccountDto
     {
@@ -23,12 +23,20 @@ namespace Board.Contracts.Account
         public string Email { get; set; }
 
         /// <summary>
-        /// 
+        /// Флаг для проверки аутентификации пользователя
         /// </summary>
         public bool IsAuthenticated { get; set; }
 
+
+        /// <summary>
+        /// Схема авторизации
+        /// </summary>
         public string Scheme { get; set; }
 
+
+        /// <summary>
+        /// Список клеймов
+        /// </summary>
         public List<Claim> Claims { get; set; } = new List<Claim>();    
     }
 }

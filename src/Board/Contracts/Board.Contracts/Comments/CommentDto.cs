@@ -44,4 +44,9 @@ public class CommentDto
     /// </summary>
     [DateValidation]
     public DateTime CreationDate { get; set; }
+
+    /// <summary>
+    /// Идентификатор пользователя, добавившего объявления
+    /// </summary>
+    public Guid AccId { get; set; }
 }

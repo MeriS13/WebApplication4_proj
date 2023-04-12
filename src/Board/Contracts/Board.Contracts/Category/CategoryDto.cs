@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Board.Contracts.Category;
 
+/// <summary>
+/// Модель категории 
+/// </summary>
 public class CategoryDto
 {
     /// <summary>
