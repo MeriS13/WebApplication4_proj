@@ -1,6 +1,7 @@
 ﻿
+using Board.Domain.Categories;
 using Board.Domain.ParentCategories;
-
+using System.Linq.Expressions;
 
 namespace Board.Application.AppData.Contexts.ParentCategories.Repository;
 
@@ -40,4 +41,12 @@ public interface IParentCategoryRepository
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список категорий </returns>
     IQueryable<ParentCategory> GetAll(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Поиск категории по фильтру.
+    /// </summary>
+    /// <param name="predicate"> Предикат </param>
+    /// <param name="cancellation"> Токен отмены операции </param>
+    /// <returns> Доменную модель категории </returns>
+    Task<ParentCategory> FindWhere(Expression<Func<ParentCategory, bool>> predicate, CancellationToken cancellation);
 }

@@ -8,6 +8,7 @@ using Board.Domain.Comments;
 using Board.Domain.Posts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Security.Claims;
 
 
@@ -56,8 +57,24 @@ public class PostService : IPostService
     }
 
     /// <inheritdoc/>
-    public Task DeleteById(Guid id, CancellationToken cancellationToken)
+    public  Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
+        /*
+        //получение идентификатора пользователя из контекста 
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!!!");
+        var UserId = Guid.Parse(claimId);
+        //end
+
+        var entity = await _postRepository.GetByIdAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+        }
+
+        if (entity.AccountId != id) throw new Exception("Текущий пользователь не может удалить пост другого пользователя.");
+        */
         return _postRepository.DeleteById(id, cancellationToken);
     }
 
@@ -88,6 +105,11 @@ public class PostService : IPostService
     public async Task<PostDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _postRepository.GetByIdAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+        }
+
         var result = new PostDto
         {
             Name = entity.Name,
@@ -124,6 +146,13 @@ public class PostService : IPostService
     /// <inheritdoc/> все ок
     public async Task<PostDto> UpdateAsync(Guid id, UpdatePostDto dto, CancellationToken cancellationToken)
     {
+        //обработка исключения (проверка наличия пользователя в бд)
+        var existingPost = await _postRepository.GetByIdAsync(id, cancellationToken);
+        if (existingPost == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+        }
+
         //получение идентификатора пользователя из контекста 
         var claims = _httpContextAccessor.HttpContext.User.Claims;
         var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;

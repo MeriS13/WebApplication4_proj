@@ -80,7 +80,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var model = await DbSet.FindAsync(id, cancellationToken);
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        if (model == null) throw new ArgumentNullException($"Неверный идентификатор");
         DbSet.Remove(model);
         await DbContext.SaveChangesAsync(cancellationToken);
     }

@@ -1,10 +1,12 @@
 ﻿using Board.Contracts.Category;
 using Board.Contracts.Posts;
+using Board.Domain.Accounts;
 using Board.Domain.Categories;
 using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,4 +66,12 @@ public interface ICategoryRepository
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
     IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Поиск категории по фильтру.
+    /// </summary>
+    /// <param name="predicate"> Предикат </param>
+    /// <param name="cancellation"> Токен отмены операции </param>
+    /// <returns> Доменную модель категории </returns>
+    Task<Category> FindWhere(Expression<Func<Category, bool>> predicate, CancellationToken cancellation);
 }

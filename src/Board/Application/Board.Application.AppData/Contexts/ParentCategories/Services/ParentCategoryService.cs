@@ -4,6 +4,7 @@ using Board.Contracts.Category;
 using Board.Contracts.ParentCategory;
 using Board.Domain.Categories;
 using Board.Domain.ParentCategories;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,15 +39,27 @@ public class ParentCategoryService : IParentCategoryService
                 Name = entity.Name,
             });
         }
+
+        if (result.IsNullOrEmpty())
+        {
+            throw new Exception("Нет категорий :( ");
+        }
+
         return result;
     }
 
     /// <inheritdoc/>
     public async Task<Guid> CreateAsync(CreateParentCategoryDto dto, CancellationToken cancellationToken)
     {
+        // Обработка исключения
+        var existingCategory = await _parentCategoryRepository.FindWhere(category => category.Name == dto.Name, cancellationToken);
+        if (existingCategory != null)
+        {
+            throw new Exception($"Категория с названием '{dto.Name}' уже существует!");
+        }
+
         var entity = new ParentCategory
         {
-            //Id = dto.Id,
             Name = dto.Name
         };
         Guid id = await _parentCategoryRepository.CreateAsync(entity, cancellationToken);
@@ -63,6 +76,10 @@ public class ParentCategoryService : IParentCategoryService
     public async Task<ParentCategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _parentCategoryRepository.GetByIdAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
+        }
 
         var result = new ParentCategoryDto
         {
