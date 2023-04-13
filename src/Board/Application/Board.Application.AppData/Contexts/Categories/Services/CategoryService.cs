@@ -1,15 +1,17 @@
-﻿using Board.Application.AppData.Contexts.Categories.Repositories;
+﻿using Board.Application.AppData.Contexts.Accounts.Repositories;
+using Board.Application.AppData.Contexts.Categories.Repositories;
 using Board.Application.AppData.Contexts.Posts.Repositories;
+using Board.Contracts.Accounts;
 using Board.Contracts.Category;
 using Board.Contracts.Posts;
 using Board.Domain.Categories;
 using Board.Domain.Posts;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Board.Application.AppData.Contexts.Categories.Services;
 
 /// <inheritdoc cref="ICategoryService"/>
-/// Тут описываются методы соответствующие контроллеру
-/// 
+
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
@@ -21,17 +23,23 @@ public class CategoryService : ICategoryService
 
 
     ///<inheritdoc /> 
-    public Task<Guid> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken)
+    public async Task<Guid> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken)
     {
         //Тут происходит маппинг. в сущность записывается дом.модель и заполняются ее поля
-        //возвращаем в репозиторий доменную модель
         var entity = new Category
         {
             Name = dto.Name,
             ParentId = dto.ParentId,
-
         };
-        return _categoryRepository.AddAsync(entity, cancellationToken);
+
+        // Обработка исключения
+        var existingCategory = await _categoryRepository.FindWhere(category => category.Name == dto.Name, cancellationToken);
+        if (existingCategory != null)
+        {
+            throw new Exception($"Категория с названием '{dto.Name}' уже существует!");
+        }
+
+        return await _categoryRepository.AddAsync(entity, cancellationToken);
     }
 
 
@@ -42,24 +50,28 @@ public class CategoryService : ICategoryService
     }
 
 
-    ///<inheritdoc /> все ок но вопрос с эвэйтом
+    ///<inheritdoc /> 
     public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
         //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
         //элементы списка - смаппленные модели к dto и возвращаем 
         List<Category> entities = _categoryRepository.GetAll(cancellationToken).ToList();
         List<CategoryDto> result = new();
-        int i = 0;
         foreach (var entity in entities)
         {
             result.Add(new CategoryDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                ParentId = (Guid)entity.ParentId,
+                ParentId = entity.ParentId,
 
             });
         }
+        if (result.IsNullOrEmpty())
+        {
+            throw new Exception("Нет категорий :( ");
+        }
+
         return result;
     }
 
@@ -69,6 +81,10 @@ public class CategoryService : ICategoryService
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        if(entity == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
+        }
 
         //маппим доменную модельку в модель dto
         var result = new CategoryDto
@@ -84,6 +100,12 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> 
     public async Task<CategoryDto> UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
+        var existingCategory = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        if (existingCategory == null)
+        {
+            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
+        }
+
         //Преобразуем модель обновления к доменной
         var entity = new Category
         {
@@ -118,6 +140,11 @@ public class CategoryService : ICategoryService
                 Name = entity.Name,
                 ParentId = entity.ParentId
             });
+        }
+
+        if (result.IsNullOrEmpty())
+        {
+            throw new Exception("По указанному идентификатору родительской категории не найдены категории.");
         }
         return result;
 
