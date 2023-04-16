@@ -1,4 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Categories.Services;
+using Board.Application.AppData.Contexts.Comments.Services;
 using Board.Contracts.Category;
 using Board.Contracts.Comments;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +11,17 @@ namespace Board.Host.Api.Controllers;
 [Route(template: "comments-controller")]
 public class CommentsController : ControllerBase
 {
-    //private readonly ICommentsService _commentsService;
+    private readonly ICommentsService _commentsService;
     private readonly ILogger<CategoryController> _logger;
 
-    public CommentsController(ILogger<CategoryController> logger/* ICommentsService commentsService*/)
+    public CommentsController(ILogger<CategoryController> logger, ICommentsService commentsService)
     {
         _logger = logger;
-        //_commentsService = commentsService;
+        _commentsService = commentsService;
     }
 
     /// <summary>
-    /// Добавление комментария к посту по его идентификатору
+    /// Добавление комментария к посту по идентификатору поста
     /// </summary>
     /// <param name="dto"> Модель комментария </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
@@ -34,7 +35,23 @@ public class CommentsController : ControllerBase
         return Ok();
     }
 
+    [HttpDelete]
+    public async Task<IActionResult> DeleteByCommentId(Guid id, CancellationToken cancellationToken)
+    {
 
+    }
 
+    [HttpGet]
+    public async Task<IActionResult> GetCommentsOnPostById(Guid postId, CancellationToken cancellationToken)
+    {
 
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCommentsCarrentUserById(Guid userId, CancellationToken cancellationToken)
+    {
+
+    }
+
+    // gjkexbnm jndtns r rjvvtyne 
 }
