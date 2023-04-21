@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Board.Infrastructure.Repository;
-using Board.Application.AppData.Contexts.Favorites;
 //using Board.Application.AppData.Contexts.Comments;
 using Board.Application.AppData.Contexts.Categories.Services;
 using Board.Infrastructure.DataAccess.Contexts.Categories.Repository;
@@ -28,6 +27,12 @@ using Board.Application.AppData.Contexts.Accounts.Repositories;
 using Board.Infrastructure.DataAccess.Contexts.Accounts.Repository;
 using Board.Application.AppData.Contexts.Accounts.Services;
 using System.Xml.Linq;
+using Board.Infrastructure.DataAccess.Contexts.Comments.Repository;
+using Board.Application.AppData.Contexts.Comments.Repositories;
+using Board.Application.AppData.Contexts.Comments.Services;
+using Board.Application.AppData.Contexts.Answers.Repositories;
+using Board.Infrastructure.DataAccess.Contexts.Answers.Repositories;
+using Board.Application.AppData.Contexts.Answers.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +51,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IParentCategoryRepository, ParentCategoryRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
+builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 
 //Добавление сервисов 
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
@@ -53,7 +60,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IParentCategoryService, ParentCategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-//builder.Services.AddScoped<ICommentsService, CommentsService>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
+builder.Services.AddScoped<IAnswerService, AnswerService>();
 
 builder.Services.AddControllers();
 
@@ -157,3 +165,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// For testing
+public partial class Program { }

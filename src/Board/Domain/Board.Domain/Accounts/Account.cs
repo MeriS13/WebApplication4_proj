@@ -1,4 +1,5 @@
-﻿using Board.Domain.Comments;
+﻿using Board.Domain.Answers;
+using Board.Domain.Comments;
 using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,10 @@ namespace Board.Domain.Accounts
         /// </summary>
         public DateTime Created { get; set; }
 
-         
+        /// <summary>
+        /// Электронный адрес.
+        /// </summary>
+        public string Email { get; set; }
 
 
         /// <summary>
@@ -50,5 +54,10 @@ namespace Board.Domain.Accounts
         /// Список комментов
         /// </summary>
         public virtual List<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Список ответов
+        /// </summary>
+        public virtual List<Answer> Answers { get; set; }
     }
 }

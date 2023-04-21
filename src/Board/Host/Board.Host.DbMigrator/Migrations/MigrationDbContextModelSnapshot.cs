@@ -31,6 +31,11 @@ namespace Board.Host.DbMigrator.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -49,6 +54,40 @@ namespace Board.Host.DbMigrator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Account");
+                });
+
+            modelBuilder.Entity("Board.Domain.Answers.Answer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(800)
+                        .HasColumnType("character varying(800)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccId");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Board.Domain.Categories.Category", b =>
@@ -159,6 +198,25 @@ namespace Board.Host.DbMigrator.Migrations
                     b.ToTable("Post");
                 });
 
+            modelBuilder.Entity("Board.Domain.Answers.Answer", b =>
+                {
+                    b.HasOne("Board.Domain.Accounts.Account", "Account")
+                        .WithMany("Answers")
+                        .HasForeignKey("AccId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Board.Domain.Comments.Comment", "Comment")
+                        .WithMany("Answers")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Comment");
+                });
+
             modelBuilder.Entity("Board.Domain.Categories.Category", b =>
                 {
                     b.HasOne("Board.Domain.ParentCategories.ParentCategory", "ParentCategory")
@@ -210,6 +268,8 @@ namespace Board.Host.DbMigrator.Migrations
 
             modelBuilder.Entity("Board.Domain.Accounts.Account", b =>
                 {
+                    b.Navigation("Answers");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Posts");
@@ -218,6 +278,11 @@ namespace Board.Host.DbMigrator.Migrations
             modelBuilder.Entity("Board.Domain.Categories.Category", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("Board.Domain.Comments.Comment", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Board.Domain.ParentCategories.ParentCategory", b =>

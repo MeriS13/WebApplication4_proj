@@ -13,10 +13,7 @@ namespace Board.Contracts.ParentCategory;
 /// </summary>
 public class CreateParentCategoryDto 
 {
-    /// <summary>
-    /// Идентификатор.
-    /// </summary>
-    public Guid Id { get; set; }
+    
 
     /// <summary>
     /// Наименование.

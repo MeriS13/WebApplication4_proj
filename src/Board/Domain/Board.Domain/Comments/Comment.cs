@@ -1,4 +1,5 @@
 ﻿using Board.Domain.Accounts;
+using Board.Domain.Answers;
 using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
@@ -53,4 +54,9 @@ public class Comment
     /// Аккаунт
     /// </summary>
     public virtual Account Account { get; set; }
+
+    /// <summary>
+    /// Список ответов
+    /// </summary>
+    public virtual List<Answer> Answers { get; set; }
 }

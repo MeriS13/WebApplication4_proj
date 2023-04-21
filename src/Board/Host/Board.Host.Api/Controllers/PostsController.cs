@@ -16,6 +16,7 @@ namespace Board.Host.Api.Controllers;
 
 [ApiController]
 [Route(template: "posts-controller")]
+[AllowAnonymous]
 public class PostsController : ControllerBase
 {
     private readonly IPostService _postService;
@@ -103,15 +104,8 @@ public class PostsController : ControllerBase
         await _postService.DeleteById(id, cancellationToken);
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
-    /*
-    [HttpGet("{id:Guid}")]
-    public async Task<IActionResult> GetCommentsById(Guid id, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Запрос списка комментариев для категории");
-        var result = _postService.GetAllCommentsByIdAsync(id, cancellationToken);
-        return await Task.Run(() => Ok(result));//!!!!//?status code
-    }
-    */
+    
+
 
     /// <summary>
     /// Получить список постов по идентификатору категории.
@@ -142,26 +136,41 @@ public class PostsController : ControllerBase
         return await Task.Run(() => Ok(result));
     }
 
-    //Либо юзер-сеты, либо вынести в отдельный контроллер и модели
-    //NEW--------------------------------------------------------------------
-    /*
-    [HttpPatch]
-    [AllowAnonymous]
-    public async Task<IActionResult> AddToFavorites(Guid postId, CancellationToken cancellationToken)
+    /// <summary>
+    /// Получить список постов, относящихся к определенной родительской категории по ее Id
+    /// </summary>
+    /// <param name="ParCatId"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> токен отмены операции </param>
+    /// <returns> Список постов </returns>
+    [HttpGet("GetAllPostsByParentCategoryId")]
+    [Authorize]
+    public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Добавление поста в избранное по идентификатору");
-        var result = _postService.AddToFavorites(postId, cancellationToken);
-        return Ok(result);
-    }
+        _logger.LogInformation("Запрос списка постов по Id родительской категории для категории, к которой относится пост");
+        var result = _postService.GetAllPostsByParentCategoryId(ParCatId, cancellationToken);
+        return await Task.Run(() => Ok(result));
 
-    [HttpPatch]
-    [AllowAnonymous]
-    public async Task<IActionResult> DeleteFromFavorites(Guid postId, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Добавление поста в избранное по идентификатору");
-        var result = _postService.DeleteFromFavorites(postId, cancellationToken);
-        return Ok();
     }
-    */
+        //Либо юзер-сеты, либо вынести в отдельный контроллер и модели
+        //NEW--------------------------------------------------------------------
+        /*
+        [HttpPatch]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddToFavorites(Guid postId, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Добавление поста в избранное по идентификатору");
+            var result = _postService.AddToFavorites(postId, cancellationToken);
+            return Ok(result);
+        }
 
-}
+        [HttpPatch]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteFromFavorites(Guid postId, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Добавление поста в избранное по идентификатору");
+            var result = _postService.DeleteFromFavorites(postId, cancellationToken);
+            return Ok();
+        }
+        */
+
+    }

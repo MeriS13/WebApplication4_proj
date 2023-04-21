@@ -34,19 +34,11 @@ public class UpdatePostDto
     /// </summary>
     public bool IsFavorite { get; set; }
 
-    /// <summary>
-    /// Дата создания объявления
-    /// </summary>
-    [DateValidation]
-    public DateTime CreationDate { get; set; }
 
     /// <summary>
     /// Идентификатор категории
     /// </summary>
     public Guid CategoryId { get; set; }
 
-    /// <summary>
-    /// Идентификатор пользователя, добавившего объявления
-    /// </summary>
-    public Guid AccountId { get; set; }
+
 }

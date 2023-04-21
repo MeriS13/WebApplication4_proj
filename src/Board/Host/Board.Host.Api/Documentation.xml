@@ -38,6 +38,35 @@
             <param name="cancellation">Токен отмены.</param>
             <returns> Модель аккаунта </returns>
         </member>
+        <member name="T:Board.Host.Api.Controllers.AnswerController">
+            <summary>
+            Контроллер для работы с ответами
+            </summary>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.AnswerController.CreateByCommentIdAsync(Board.Contracts.Answers.CreateAnswerDto,System.Threading.CancellationToken)">
+            <summary>
+            Создать ответ к комменту по идентификаору коммента.
+            </summary>
+            <param name="dto"> Модель создания ответа. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Идентификаор созданного ответа. </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.AnswerController.DeleteById(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удаление ответа по его идентификатору
+            </summary>
+            <param name="id"> Идентификатор ответа. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> - </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.AnswerController.GetAnswersOnCommentsById(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получение списка ответов к комментарию.
+            </summary>
+            <param name="commentId"> Идентификатор комментария. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Список ответов. </returns>
+        </member>
         <member name="T:Board.Host.Api.Controllers.CategoryController">
             <summary>
             Контроллер для работы с категориями
@@ -76,13 +105,36 @@
             <param name="cancellationToken"> Токен отмены операции </param>
             <returns> Список категорий </returns>
         </member>
-        <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CommentDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CreateCommentDto,System.Threading.CancellationToken)">
             <summary>
-            Добавление комментария к посту по его идентификатору
+            Добавление комментария к посту по идентификатору поста
             </summary>
             <param name="dto"> Модель комментария </param>
             <param name="cancellationToken"> Токен отмены операции </param>
-            <returns></returns>
+            <returns> Идентификатор созданного коммента </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CommentsController.DeleteByCommentId(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Удаление комментария по его идентификатору
+            </summary>
+            <param name="id"> Идентификатор комментария </param>
+            <param name="cancellationToken"> Токен отмены операции </param>
+            <returns> Статус код</returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CommentsController.GetCommentsOnPostById(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+             Получение списка комментариев к посту по идентификатору поста.
+            </summary>
+            <param name="postId"> Идентификатор поста. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Список комментов. </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CommentsController.GetCommentsCarrentUser(System.Threading.CancellationToken)">
+            <summary>
+            Получение комментариев текущего пользователя (по Id через клеймы).
+            </summary>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Список комментариев. </returns>
         </member>
         <member name="T:Board.Host.Api.Controllers.FileController">
             <summary>
@@ -225,6 +277,14 @@
             Получить список постов текущего пользователя
             </summary>
             <param name="cancellationToken"></param>
+            <returns> Список постов </returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.PostsController.GetAllPostsByParentCategoryId(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получить список постов, относящихся к определенной родительской категории по ее Id
+            </summary>
+            <param name="ParCatId"> Идентификатор родительской категории </param>
+            <param name="cancellationToken"> токен отмены операции </param>
             <returns> Список постов </returns>
         </member>
     </members>

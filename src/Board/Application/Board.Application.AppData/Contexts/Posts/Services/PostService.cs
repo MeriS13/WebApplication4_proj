@@ -12,7 +12,7 @@ using System.Data;
 using System.Security.Claims;
 
 
-//Остановилась тут. Надо написать маппинг для моделек и смотреть репозиторий . потом коментами рд
+
 
 namespace Board.Application.AppData.Contexts.Posts.Services;
 
@@ -22,10 +22,6 @@ public class PostService : IPostService
     private readonly IPostRepository _postRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    /// <summary>
-    /// Конструктор
-    /// </summary>
-    /// <param name="postService"> интерфейс сервиса </param>
     public PostService(IPostRepository repository, IHttpContextAccessor httpContextAccessor)
     {
         _postRepository = repository;
@@ -33,13 +29,13 @@ public class PostService : IPostService
     }
 
     /// <inheritdoc/>
-    public Task<Guid> CreatePostAsync(CreatePostDto dto, CancellationToken cancellationToken)
+    public async Task<Guid> CreatePostAsync(CreatePostDto dto, CancellationToken cancellationToken)
     {
         //получение идентификатора пользователя из контекста 
         var claims = _httpContextAccessor.HttpContext.User.Claims;
         var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-        if (string.IsNullOrWhiteSpace(claimId)) return null;
+        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception ("Функция недоступна.");
 
         var UserId = Guid.Parse(claimId);
         //end
@@ -53,28 +49,13 @@ public class PostService : IPostService
             CreationDate = DateTime.UtcNow,
             AccountId = UserId,
         };
-        return _postRepository.AddPostAsync(entity, cancellationToken);
+        return await _postRepository.AddPostAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public  Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        /*
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!!!");
-        var UserId = Guid.Parse(claimId);
-        //end
-
-        var entity = await _postRepository.GetByIdAsync(id, cancellationToken);
-        if (entity == null)
-        {
-            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-        }
-
-        if (entity.AccountId != id) throw new Exception("Текущий пользователь не может удалить пост другого пользователя.");
-        */
+        // Вся логика и обработка исключений в репозитории, т.к. тут оно не работает
         return _postRepository.DeleteById(id, cancellationToken);
     }
 
@@ -95,6 +76,7 @@ public class PostService : IPostService
                 CategoryId = entity.CategoryId,
                 IsFavorite = entity.IsFavorite,
                 CreationDate = entity.CreationDate,
+                AccountId = entity.AccountId,
             });
             
         }
@@ -118,30 +100,12 @@ public class PostService : IPostService
             CategoryId = entity.CategoryId,
             IsFavorite = entity.IsFavorite,
             CreationDate = entity.CreationDate,
+            AccountId = entity.AccountId,
         };
         return result;
     }
 
-    /*/// <inheritdoc/>
-    public async Task<List<CommentDto>> GetAllCommentsByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        //получаем список домен.моделек комментов
-        List<Comment> entities = _postRepository.GetCommentsByIdAsync(id, cancellationToken).ToList();
-        List<CommentDto> result = new();
-        int i = 0;
-        foreach (var entity in entities)
-        {
-            result.Add(new CommentDto
-            {
-                Id = entity.Id,
-                CreationDate = entity.CreationDate,
-                PostId = entity.PostId,
-                Content = entity.Content,
-                UserName = entity.UserName,
-            });
-        }
-        return result;
-    }*/
+  
 
     /// <inheritdoc/> все ок
     public async Task<PostDto> UpdateAsync(Guid id, UpdatePostDto dto, CancellationToken cancellationToken)
@@ -165,13 +129,13 @@ public class PostService : IPostService
         //Преобразуем модель обновления к доменной
         var entity = new Post
         {
-            Id = id,
+            Id = existingPost.Id,
             Name = dto.Name,
             Description = dto.Description,
             IsFavorite = dto.IsFavorite,
-            CreationDate = dto.CreationDate,
+            CreationDate = DateTime.UtcNow,
             CategoryId = dto.CategoryId,
-            AccountId = UserId,
+            AccountId = existingPost.AccountId,
         };
         //отдаем обновленную доменную в репозиторий, там она обновляется в бд, возвращается она же
         var newModel = await _postRepository.UpdateAsync(id, entity, cancellationToken);
@@ -184,6 +148,7 @@ public class PostService : IPostService
             IsFavorite = newModel.IsFavorite,
             CreationDate = newModel.CreationDate,
             CategoryId = newModel.CategoryId,
+            AccountId=newModel.AccountId,
         };
         return newDto;
     }
@@ -204,6 +169,7 @@ public class PostService : IPostService
                 Description = entity.Description,
                 CategoryId = entity.CategoryId,
                 IsFavorite = entity.IsFavorite,
+                AccountId = entity.AccountId,
             });
         }
         return result;
@@ -233,6 +199,29 @@ public class PostService : IPostService
                 Description = entity.Description,
                 CategoryId = entity.CategoryId,
                 IsFavorite = entity.IsFavorite,
+                AccountId = entity.AccountId,
+            });
+        }
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
+    {
+        //получаем список домен.моделек постов
+        List<Post> entities = _postRepository.GetAllPostsByParentCategoryId(ParCatId, cancellationToken).ToList();
+        List<PostDto> result = new();
+        foreach (var entity in entities)
+        {
+            result.Add(new PostDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                CreationDate = entity.CreationDate,
+                Description = entity.Description,
+                CategoryId = entity.CategoryId,
+                IsFavorite = entity.IsFavorite,
+                AccountId = entity.AccountId,
             });
         }
         return result;
