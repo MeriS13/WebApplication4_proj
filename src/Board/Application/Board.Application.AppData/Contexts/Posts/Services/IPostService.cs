@@ -1,11 +1,6 @@
-﻿using Board.Contracts.Comments;
+﻿
 using Board.Contracts.Posts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Board.Application.AppData.Contexts.Posts.Services;
 
@@ -56,17 +51,6 @@ public interface IPostService
     /// <returns> - </returns>
     Task DeleteById(Guid id, CancellationToken cancellationToken);
 
-    /*
-    /// <summary>
-    /// Получение комментариев, относящихся к объявлению.
-    /// </summary>
-    /// <param name="id"> Идентификатор объявления </param>
-    /// <param name="cancellationToken"> Токен отмены операции </param>
-    /// <returns> Список комментариев </returns>
-    Task<List<CommentDto>> GetAllCommentsByIdAsync(Guid id, CancellationToken cancellationToken);
-    */
-
-
     /// <summary>
     /// Получение списка постов, относящихся к категории.
     /// </summary>
@@ -82,5 +66,12 @@ public interface IPostService
     /// <returns> Список постов </returns>
     Task<List<PostDto>> GetUserPosts(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Получение списка постов по идентификатору родительской категории
+    /// </summary>
+    /// <param name="ParCatId"> Идентификатор родительской категории </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Список моделей постов </returns>
+    Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken);
 }
 

@@ -13,18 +13,20 @@ namespace Board.Contracts.Comments;
 /// </summary>
 public class CommentDto 
 {
+    
     /// <summary>
     /// Имя юзера, оставившего комментарий.
     /// </summary>
     [Required(ErrorMessage = "Имя пользователя не указано")]
     [StringLength(50, ErrorMessage = "Имя пользователя слишком длинное")]
     [ForbiddenWordsValidation]
-    public string UserName { get; set; }
+    public string UserName { get; set; } 
 
     /// <summary>
     /// Идентификатор коммента
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } 
+
 
     /// <summary>
     /// Идентификатор поста, к которому относится коммент
@@ -39,14 +41,17 @@ public class CommentDto
     [ForbiddenWordsValidation]
     public string Content { get; set; }
 
+    
     /// <summary>
     /// Дата создания
     /// </summary>
     [DateValidation]
     public DateTime CreationDate { get; set; }
+    
 
     /// <summary>
     /// Идентификатор пользователя, добавившего объявления
     /// </summary>
     public Guid AccId { get; set; }
+    
 }

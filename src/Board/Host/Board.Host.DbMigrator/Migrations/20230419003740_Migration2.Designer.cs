@@ -3,6 +3,7 @@ using System;
 using Board.Host.DbMigrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Board.Host.DbMigrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    partial class MigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230419003740_Migration2")]
+    partial class Migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,11 +33,6 @@ namespace Board.Host.DbMigrator.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -65,25 +63,24 @@ namespace Board.Host.DbMigrator.Migrations
                     b.Property<Guid>("AccId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AccountId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("CommentId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(800)
-                        .HasColumnType("character varying(800)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccId");
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("CommentId");
 
@@ -202,9 +199,7 @@ namespace Board.Host.DbMigrator.Migrations
                 {
                     b.HasOne("Board.Domain.Accounts.Account", "Account")
                         .WithMany("Answers")
-                        .HasForeignKey("AccId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("Board.Domain.Comments.Comment", "Comment")
                         .WithMany("Answers")

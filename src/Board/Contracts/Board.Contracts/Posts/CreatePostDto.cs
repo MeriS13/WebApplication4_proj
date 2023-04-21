@@ -35,11 +35,6 @@ public class CreatePostDto
     /// </summary>
     public bool IsFavorite { get; set; }
 
-    /// <summary>
-    /// Дата создания объявления
-    /// </summary>
-    [DateValidation]
-    public DateTime CreationDate { get; set; }
 
     /// <summary>
     /// Идентификатор категории

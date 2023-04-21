@@ -6,6 +6,7 @@ using Board.Domain.Posts;
 using Board.Infrastructure.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,10 @@ public class PostRepository : IPostRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Guid> AddPostAsync(Post dto, CancellationToken cancellationToken)
+    public async Task<Guid> AddPostAsync(Post model, CancellationToken cancellationToken)
     {
-        await _repository.AddAsync(dto, cancellationToken);
-        return dto.Id;
+        await _repository.AddAsync(model, cancellationToken);
+        return model.Id;
     }
 
     /// <inheritdoc/>
@@ -41,12 +42,17 @@ public class PostRepository : IPostRepository
         var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!!!");
         var UserId = Guid.Parse(claimId);
+        var claimName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
 
         //Получение доменной модели поста и обработка исключений
         var entity = await _repository.GetByIdAsync(id, cancellationToken);
-        if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-        if (entity.AccountId != id) throw new Exception("Текущий пользователь не может удалить пост другого пользователя.");
 
+        if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+        if (entity.AccountId != id && claimName != "Admin")
+        {
+            throw new Exception("Текущий пользователь не может удалить пост другого пользователя.");
+        }
 
         await _repository.DeleteByIdAsync(id, cancellationToken);
     }
@@ -82,7 +88,7 @@ public class PostRepository : IPostRepository
         //Получение доменной модели поста и обработка исключений
         var entity = await _repository.GetByIdAsync(id, cancellationToken);
         if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-        if (entity.AccountId != id) throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
+        if (entity.AccountId != UserId) throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
 
 
         var model = await _repository.UpdateAsync(id, dto, cancellationToken);
@@ -93,5 +99,15 @@ public class PostRepository : IPostRepository
     public IQueryable<Post> GetUserPosts(Guid UserId, CancellationToken cancellationToken)
     {
         return _repository.GetAll(cancellationToken).Include(u => u.Account).Where(u => u.AccountId == UserId);
+    }
+
+    /// <inheritdoc/>
+    public IQueryable<Post> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
+    {
+        
+        //получаем связанные данные по навигацион.св-ву. Получаем список доменных моделек постов
+        return _repository.GetAll(cancellationToken)
+            .Include(u => u.Category.ParentCategory).Where(u => u.Category.ParentCategory.Id == ParCatId);
+
     }
 }

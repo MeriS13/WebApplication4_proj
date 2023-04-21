@@ -33,7 +33,8 @@ public class AccountService : IAccountService
             Name = accountDto.Login,
             Login = accountDto.Login,
             Password = accountDto.Password,
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            Email = accountDto.Email,
         };
 
         //Проверка наличия пользователя. Если найден - ошибка(такой юзер уже есть), если нет - добавляем
@@ -114,6 +115,7 @@ public class AccountService : IAccountService
         {
             Id = user.Id,
             Login = user.Login,
+            Email = user.Email,
 
         };
 

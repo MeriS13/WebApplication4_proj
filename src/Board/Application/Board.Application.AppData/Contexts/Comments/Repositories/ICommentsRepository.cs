@@ -32,12 +32,12 @@ public interface ICommentsRepository
     /// <param name="postId"> Идентификатор поста. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментов </returns>
-    Task<List<Comment>> GetCommentsOnPostByIdAsync(Guid postId, CancellationToken cancellationToken);
+    IQueryable<Comment> GetCommentsOnPostByIdAsync(Guid postId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Получить комментарии, оставленные текущим пользователем.
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментов </returns>
-    Task<List<Comment>> GetCommentsCarrentUserByIdAsync(CancellationToken cancellationToken);
+    IQueryable<Comment> GetCommentsCarrentUserByIdAsync(CancellationToken cancellationToken);
 }

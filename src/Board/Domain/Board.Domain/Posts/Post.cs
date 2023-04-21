@@ -1,4 +1,5 @@
 ﻿using Board.Domain.Accounts;
+using Board.Domain.Answers;
 using Board.Domain.Categories;
 using Board.Domain.Comments;
 
@@ -63,5 +64,6 @@ public class Post
     /// Аккаунт
     /// </summary>
     public virtual Account Account { get; set; }
+
 
 }

@@ -18,7 +18,7 @@ public interface ICommentsService
     /// <param name="dto"> Модель создания комментария. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Идентификатор созданного коммента. </returns>
-    Task<Guid> CreateByPostIdAsync (CommentDto dto, CancellationToken cancellationToken);
+    Task<Guid> CreateByPostIdAsync (CreateCommentDto dto, CancellationToken cancellationToken);
 
     /// <summary>
     ///  Удаление комментария по идентификатору.
