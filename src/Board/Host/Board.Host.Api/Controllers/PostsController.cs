@@ -53,7 +53,7 @@ public class PostsController : ControllerBase
     /// <param name="id">Идентификатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Модель объявления.</returns>
-    [HttpGet("лалала")]
+    [HttpGet("{id:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -113,7 +113,7 @@ public class PostsController : ControllerBase
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("{CategoryId:Guid}")]
+    [HttpGet("CategoryId{id:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
