@@ -60,6 +60,7 @@ namespace Board.Api.Tests
             var httpClient = _webApplicationFactory.CreateClient();
             var id = Guid.Parse("d5d57071-5a64-4461-af51-de55676ea625");
 
+            var fordelete  = 0;
             // Act
             var response = await httpClient.GetAsync($"posts-controller/{id}");
 
@@ -70,5 +71,5 @@ namespace Board.Api.Tests
 
 
     }
-    
+    //проверка переключения ветки гитхаб
 }
