@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  board.host.api:
+    image: ${DOCKER_REGISTRY-}boardhostapi
+    build:
+      context: .
+      dockerfile: src/Board/Host/Board.Host.Api/Dockerfile
+
+  board.host.dbmigrator:
+    image: ${DOCKER_REGISTRY-}boardhostdbmigrator
+    build:
+      context: .
+      dockerfile: src/Board/Host/Board.Host.DbMigrator/Dockerfile
+

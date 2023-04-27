@@ -33,6 +33,9 @@ using Board.Application.AppData.Contexts.Comments.Services;
 using Board.Application.AppData.Contexts.Answers.Repositories;
 using Board.Infrastructure.DataAccess.Contexts.Answers.Repositories;
 using Board.Application.AppData.Contexts.Answers.Services;
+using Board.Application.AppData.Contexts.Files.Repositories;
+using Board.Infrastructure.DataAccess.Contexts.Files.Repository;
+using Board.Application.AppData.Contexts.Files.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +56,7 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
 
 //Добавление сервисов 
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
@@ -62,6 +66,7 @@ builder.Services.AddScoped<IParentCategoryService, ParentCategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<IAnswerService, AnswerService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddControllers();
 

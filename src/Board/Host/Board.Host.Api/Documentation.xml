@@ -140,19 +140,23 @@
             <summary>
             Контроллер для работы с файлами.
             </summary>
+            <response code="500">Произошла внутренняя ошибка.</response>
         </member>
-        <member name="M:Board.Host.Api.Controllers.FileController.#ctor(Microsoft.Extensions.Logging.ILogger{Board.Host.Api.Controllers.FileController})">
+        <member name="M:Board.Host.Api.Controllers.FileController.#ctor(Board.Application.AppData.Contexts.Files.Services.IFileService,Microsoft.Extensions.Logging.ILogger{Board.Host.Api.Controllers.FileController})">
             <summary>
             Инициализирует экземпляр <see cref="T:Board.Host.Api.Controllers.FileController"/>
             </summary>
+            <param name="fileService">Сервис работы с файлами.</param>
             <param name="logger">Сервис логирования.</param>
         </member>
-        <member name="M:Board.Host.Api.Controllers.FileController.GetInfoById(System.String,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.FileController.GetInfoById(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Получение информации о файле по идентификатору.
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="200">Запрос выполнен успешно.</response>
+            <response code="404">Файл с указанным идентификатором не найден.</response>
             <returns>Информация о файле.</returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
@@ -161,21 +165,27 @@
             </summary>
             <param name="file">Файл.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="201">Файл успешно загружен.</response>
+            <response code="400">Модель данных запроса невалидна.</response>
         </member>
-        <member name="M:Board.Host.Api.Controllers.FileController.Download(System.String,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.FileController.Download(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Скачивание файла по идентификатору.
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="200">Запрос выполнен успешно.</response>
+            <response code="404">Файл с указанным идентификатором не найден.</response>
             <returns>Файл в виде потока.</returns>
         </member>
-        <member name="M:Board.Host.Api.Controllers.FileController.Delete(System.String,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.FileController.Delete(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Удаление файла по идентификатору.
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="403">Доступ запрещён.</response>
+            <response code="404">Файл с указанным идентификатором не найден.</response>
         </member>
         <member name="T:Board.Host.Api.Controllers.ParentCategoryController">
             <summary>

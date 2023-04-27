@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-Board.Host.DbMigrator-24c6e8a3-a51c-4a7d-a265-88858d1502c0</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
   </ItemGroup>
 
   <ItemGroup>

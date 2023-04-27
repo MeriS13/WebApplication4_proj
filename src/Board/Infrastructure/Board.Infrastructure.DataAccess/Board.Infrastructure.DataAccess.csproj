@@ -7,10 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Contexts\Users\**" />
+    <EmbeddedResource Remove="Contexts\Users\**" />
+    <None Remove="Contexts\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Contexts\Accounts\Configuration\" />
     <Folder Include="Contexts\Comments\Repository\" />
     <Folder Include="Contexts\Posts\Repositories\" />
-    <Folder Include="Contexts\Users\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
