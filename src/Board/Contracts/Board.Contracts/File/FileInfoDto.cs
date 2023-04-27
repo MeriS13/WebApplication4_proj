@@ -1,14 +1,14 @@
 ﻿namespace Board.Contracts.File
 {
     /// <summary>
-    /// Модель информации о файле. (***скопировано***)
+    /// Модель информации о файле.
     /// </summary>
     public class FileInfoDto
     {
         /// <summary>
         /// Идентификатор файла.
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Наименование файла.

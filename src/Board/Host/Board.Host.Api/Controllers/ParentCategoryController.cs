@@ -19,7 +19,7 @@ public class ParentCategoryController : ControllerBase
     private readonly ILogger<CategoryController> _logger;
     private readonly IParentCategoryService _parent_categoryService;
 
-    public ParentCategoryController(ICategoryService categoryService, IParentCategoryService parent_categoryService, ILogger<CategoryController> logger)
+    public ParentCategoryController(IParentCategoryService parent_categoryService, ILogger<CategoryController> logger)
     {
         _parent_categoryService = parent_categoryService;
         _logger = logger;
