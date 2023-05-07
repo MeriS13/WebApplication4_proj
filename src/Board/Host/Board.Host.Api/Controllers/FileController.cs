@@ -37,31 +37,39 @@ public class FileController : ControllerBase
     /// </summary>
     /// <param name="id">Идентификатор файла.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <response code="200">Запрос выполнен успешно.</response>
-    /// <response code="404">Файл с указанным идентификатором не найден.</response>
     /// <returns>Информация о файле.</returns>
     [HttpGet("{id}/info")]
-    [ProducesResponseType(typeof(FileInfoDto), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetInfoById(Guid id, CancellationToken cancellationToken)
     {
         var result = await _fileService.GetInfoByIdAsync(id, cancellationToken);
         return result == null ? NotFound() : Ok(result);
     }
 
+
+    /// <summary>
+    /// Получение информации о файле по идентификатору.
+    /// </summary>
+    /// <param name="id">Идентификатор файла.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns>Информация о файле.</returns>
+    [HttpGet("/info-by/{postId}")]
+    public async Task<IActionResult> GetAllByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+    {
+        var result = await _fileService.GetAllByPostIdAsync(postId, cancellationToken);
+        return result == null ? NotFound() : Ok(result);
+    }
+
+
+
     /// <summary>
     /// Загрузка файла в систему.
     /// </summary>
     /// <param name="file">Файл.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <response code="201">Файл успешно загружен.</response>
-    /// <response code="400">Модель данных запроса невалидна.</response>
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
-    //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = long.MaxValue)]
     [DisableRequestSizeLimit]
-    public async Task<IActionResult> Upload(IFormFile file, CancellationToken cancellationToken)
+    public async Task<IActionResult> Upload(IFormFile file, Guid postId,  CancellationToken cancellationToken)
     {
         var bytes = await GetBytesAsync(file, cancellationToken);
         var fileDto = new FileDto
@@ -71,7 +79,7 @@ public class FileController : ControllerBase
             Name = file.FileName
             
         };
-        var result = await _fileService.UploadAsync(fileDto, cancellationToken);
+        var result = await _fileService.UploadAsync(fileDto, postId, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
     }
 
@@ -80,11 +88,8 @@ public class FileController : ControllerBase
     /// </summary>
     /// <param name="id">Идентификатор файла.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <response code="200">Запрос выполнен успешно.</response>
-    /// <response code="404">Файл с указанным идентификатором не найден.</response>
     /// <returns>Файл в виде потока.</returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Download(Guid id, CancellationToken cancellationToken)
     {
@@ -105,11 +110,7 @@ public class FileController : ControllerBase
     /// </summary>
     /// <param name="id">Идентификатор файла.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <response code="403">Доступ запрещён.</response>
-    /// <response code="404">Файл с указанным идентификатором не найден.</response>
     [HttpDelete("{id}")]
-    //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status403Forbidden)]
-    //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         await _fileService.DeleteAsync(id, cancellationToken);

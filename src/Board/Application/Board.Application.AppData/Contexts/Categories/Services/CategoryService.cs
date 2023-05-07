@@ -6,6 +6,7 @@ using Board.Contracts.Category;
 using Board.Contracts.Posts;
 using Board.Domain.Categories;
 using Board.Domain.Posts;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Board.Application.AppData.Contexts.Categories.Services;
@@ -15,10 +16,12 @@ namespace Board.Application.AppData.Contexts.Categories.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
+    //private readonly IMemoryCache _memoryCache;
 
-    public CategoryService(ICategoryRepository categoryRepository)
+    public CategoryService(ICategoryRepository categoryRepository) //,IMemoryCache memoryCache)
     {
         _categoryRepository = categoryRepository;
+        //_memoryCache = memoryCache;
     }
 
 
@@ -53,6 +56,8 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> 
     public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
+
+
         //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
         //элементы списка - смаппленные модели к dto и возвращаем 
         List<Category> entities = _categoryRepository.GetAll(cancellationToken).ToList();
@@ -69,8 +74,9 @@ public class CategoryService : ICategoryService
         }
         if (result.IsNullOrEmpty())
         {
-            throw new Exception("Нет категорий :( ");
+            throw new Exception("Категории не существуют :( ");
         }
+
 
         return result;
     }
@@ -80,6 +86,7 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> 
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        
         var entity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
         if(entity == null)
         {
@@ -94,6 +101,8 @@ public class CategoryService : ICategoryService
             ParentId = (Guid)entity.ParentId,
 
         };
+
+
         return result;
     }
 

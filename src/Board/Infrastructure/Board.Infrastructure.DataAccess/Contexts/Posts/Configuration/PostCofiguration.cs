@@ -25,7 +25,8 @@ public class PostCofiguration : IEntityTypeConfiguration<Post>
 
         builder.HasMany(s => s.Comments).WithOne(s => s.Post).
         HasForeignKey(c => c.PostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                
 
+        builder.HasMany(s => s.Files).WithOne(s => s.Post).
+        HasForeignKey(c => c.PostId).IsRequired().OnDelete(DeleteBehavior.Cascade);
     }
 }

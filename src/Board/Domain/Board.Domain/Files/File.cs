@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Board.Domain.Posts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,5 +41,17 @@ namespace Board.Domain.Files
         /// Время создания.
         /// </summary>
         public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Идентификатор объявления, к которому относится файл
+        /// </summary>
+        public Guid PostId { get; set; }
+
+
+
+        /// <summary>
+        /// Пост, к которому относится файл
+        /// </summary>
+        public virtual Post Post { get; set; }
     }
 }

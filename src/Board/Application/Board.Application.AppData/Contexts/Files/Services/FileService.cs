@@ -1,11 +1,15 @@
 ﻿using Board.Application.AppData.Contexts.Files.Repositories;
 using Board.Contracts.File;
 using Board.Domain.Files;
+using Board.Domain.Posts;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Board.Application.AppData.Contexts.Files.Services
 {
@@ -57,14 +61,15 @@ namespace Board.Application.AppData.Contexts.Files.Services
                 Id = model.Id,
                 Length = model.Length,
                 ContentType = model.ContentType,
-                Name = model.Name
+                Name = model.Name,
+                PostId = model.PostId,
             };
 
             return dto;
         }
 
         /// <inheritdoc/>
-        public Task<Guid> UploadAsync(FileDto dto, CancellationToken cancellationToken)
+        public Task<Guid> UploadAsync(FileDto dto, Guid postId, CancellationToken cancellationToken)
         {
 
             var file = new Board.Domain.Files.File
@@ -73,9 +78,35 @@ namespace Board.Application.AppData.Contexts.Files.Services
                 ContentType = dto.ContentType,
                 Created = DateTime.UtcNow,
                 Name = dto.Name,
-                Length = dto.Content.Length
+                Length = dto.Content.Length,
+                PostId = postId
             };
             return _fileRepository.UploadAsync(file, cancellationToken);
+        }
+
+
+        /// <inheritdoc/>
+        public async Task<List<FileInfoDto>> GetAllByPostIdAsync(Guid postId, CancellationToken cancellationToken)
+        {
+            List<Domain.Files.File> models =  _fileRepository.GetAllByPostId(postId, cancellationToken).ToList();
+            if (models.IsNullOrEmpty())
+            {
+                throw new Exception("Введеный идентификатор не соответствует ни одному файлу!");
+            }
+            List<FileInfoDto> dtolist = new();
+            foreach(var model in models)
+            {
+                dtolist.Add(new FileInfoDto
+                {
+                    Id = model.Id,
+                    Length = model.Length,
+                    ContentType = model.ContentType,
+                    Name = model.Name,
+                    PostId = model.PostId,
+                });
+            }
+
+            return dtolist;
         }
     }
 }

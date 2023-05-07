@@ -155,18 +155,22 @@
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
-            <response code="200">Запрос выполнен успешно.</response>
-            <response code="404">Файл с указанным идентификатором не найден.</response>
             <returns>Информация о файле.</returns>
         </member>
-        <member name="M:Board.Host.Api.Controllers.FileController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.FileController.GetAllByPostIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получение информации о файле по идентификатору.
+            </summary>
+            <param name="id">Идентификатор файла.</param>
+            <param name="cancellationToken">Токен отмены.</param>
+            <returns>Информация о файле.</returns>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.FileController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.Guid,System.Threading.CancellationToken)">
             <summary>
             Загрузка файла в систему.
             </summary>
             <param name="file">Файл.</param>
             <param name="cancellationToken">Токен отмены.</param>
-            <response code="201">Файл успешно загружен.</response>
-            <response code="400">Модель данных запроса невалидна.</response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Download(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -174,8 +178,6 @@
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
-            <response code="200">Запрос выполнен успешно.</response>
-            <response code="404">Файл с указанным идентификатором не найден.</response>
             <returns>Файл в виде потока.</returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Delete(System.Guid,System.Threading.CancellationToken)">
@@ -184,8 +186,6 @@
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
-            <response code="403">Доступ запрещён.</response>
-            <response code="404">Файл с указанным идентификатором не найден.</response>
         </member>
         <member name="T:Board.Host.Api.Controllers.ParentCategoryController">
             <summary>

@@ -5,6 +5,12 @@
     /// </summary>
     public class FileInfoDto
     {
+
+        /// <summary>
+        /// Идентификатор объявления, к которому относится файл
+        /// </summary>
+        public Guid PostId { get; set; }
+
         /// <summary>
         /// Идентификатор файла.
         /// </summary>
