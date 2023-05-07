@@ -39,5 +39,13 @@ namespace Board.Application.AppData.Contexts.Files.Repositories
         /// <param name="id">Идентификатор файла.</param>
         /// <param name="cancellationToken">Токен отмены.</param>        
         Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Получение списка моделей информации о файлах, принадлежащих объявлению по его идентификатору
+        /// </summary>
+        /// <param name="postId"> Идентификатор объявления </param>
+        /// <param name="cancellationToken"> Токен отмены операции</param>
+        /// <returns></returns>
+        IQueryable<Domain.Files.File> GetAllByPostId(Guid postId, CancellationToken cancellationToken);
     }
 }

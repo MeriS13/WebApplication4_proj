@@ -12,6 +12,10 @@ namespace Board.Contracts.File
     public class FileDto
     {
         /// <summary>
+        /// Идентификатор объявления, к которому относится файл
+        /// </summary>
+        public Guid PostId { get; set; }
+        /// <summary>
         /// Имя файла.
         /// </summary>
         public string Name { get; set; }

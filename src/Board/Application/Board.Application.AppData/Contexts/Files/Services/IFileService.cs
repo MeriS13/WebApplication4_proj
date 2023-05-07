@@ -23,10 +23,11 @@ namespace Board.Application.AppData.Contexts.Files.Services
         /// <summary>
         /// Загрузка файла в систему.
         /// </summary>
-        /// <param name="model">Модель файла.</param>
-        /// <param name="cancellationToken">Токен отмены.</param>
-        /// <returns>Идентификатор загруженного файла.</returns>
-        Task<Guid> UploadAsync(FileDto model, CancellationToken cancellationToken);
+        /// <param name="model"> Модель файла. </param>
+        /// <param name="cancellationToken"> Токен отмены. </param>
+        /// <param name="postId"> Идентификатор объявления, к которому относится файл </param>
+        /// <returns> Идентификатор загруженного файла. </returns>
+        Task<Guid> UploadAsync(FileDto model, Guid postId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Скачивание файла.
@@ -42,5 +43,13 @@ namespace Board.Application.AppData.Contexts.Files.Services
         /// <param name="id">Идентификатор файла.</param>
         /// <param name="cancellationToken">Токен отмены.</param>        
         Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Получение списка моделей информации о файлах, принадлежащих объявлению по его идентификатору
+        /// </summary>
+        /// <param name="postId"> Идентификатор объявления </param>
+        /// <param name="cancellationToken"> Токен отмены операции</param>
+        /// <returns></returns>
+        Task<List<FileInfoDto>> GetAllByPostIdAsync(Guid postId, CancellationToken cancellationToken);
     }
 }

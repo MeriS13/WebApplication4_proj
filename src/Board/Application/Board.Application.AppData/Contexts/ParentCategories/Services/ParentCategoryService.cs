@@ -4,6 +4,7 @@ using Board.Contracts.Category;
 using Board.Contracts.ParentCategory;
 using Board.Domain.Categories;
 using Board.Domain.ParentCategories;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,34 +19,50 @@ namespace Board.Application.AppData.Contexts.ParentCategories.Services;
 public class ParentCategoryService : IParentCategoryService
 {
     private readonly IParentCategoryRepository _parentCategoryRepository;
+    private readonly IMemoryCache _memoryCache;
 
-    public ParentCategoryService(IParentCategoryRepository parentCategoryRepository)
+    public const string parCatKey = "ParentCategoryKey";
+
+    public ParentCategoryService(IParentCategoryRepository parentCategoryRepository, IMemoryCache memoryCache)
     {
         _parentCategoryRepository = parentCategoryRepository;
+        _memoryCache = memoryCache;
     }
 
     /// <inheritdoc/>
     public async Task<List<ParentCategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
+        
+        if (_memoryCache.TryGetValue(parCatKey, out List<ParentCategoryDto>  result))
+        {
+            return result;
+        }
+
         //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
         //элементы списка - смаппленные модели к dto и возвращаем 
-        List<ParentCategory> entities = _parentCategoryRepository.GetAll(cancellationToken).ToList();
-        List<ParentCategoryDto> result = new();
+        var entities = _parentCategoryRepository.GetAll(cancellationToken).ToList();
+        List<ParentCategoryDto> result2 = new List<ParentCategoryDto>();    
         foreach (var entity in entities)
         {
-            result.Add(new ParentCategoryDto
+            result2.Add(new ParentCategoryDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
             });
         }
 
-        if (result.IsNullOrEmpty())
+        if (result2.IsNullOrEmpty())
         {
             throw new Exception("Нет категорий :( ");
         }
 
-        return result;
+        var options = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        };
+         _memoryCache.Set(parCatKey, result2, options);
+
+        return result2;
     }
 
     /// <inheritdoc/>
@@ -75,6 +92,7 @@ public class ParentCategoryService : IParentCategoryService
     /// <inheritdoc/>
     public async Task<ParentCategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+
         var entity = await _parentCategoryRepository.GetByIdAsync(id, cancellationToken);
         if (entity == null)
         {

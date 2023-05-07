@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Board.Infrastructure.Repository;
-//using Board.Application.AppData.Contexts.Comments;
 using Board.Application.AppData.Contexts.Categories.Services;
 using Board.Infrastructure.DataAccess.Contexts.Categories.Repository;
 using Board.Application.AppData.Contexts.Categories.Repositories;
@@ -47,6 +46,9 @@ builder.Services.AddDbContext<BoardDbContext>((Action<IServiceProvider, DbContex
     .Configure((DbContextOptionsBuilder<BoardDbContext>) dbOptions)));
 
 builder.Services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<BoardDbContext>()));
+
+
+builder.Services.AddMemoryCache();
 
 //Добавления репозитория
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -161,6 +163,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 

@@ -35,7 +35,7 @@ public class ParentCategoryController : ControllerBase
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка категорий.");
-        var result = _parent_categoryService.GetAllAsync(cancellationToken);
+        var result = await _parent_categoryService.GetAllAsync(cancellationToken);
         return await Task.Run(() => Ok(result));
     }
 

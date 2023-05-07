@@ -2,6 +2,7 @@
 using Board.Domain.Answers;
 using Board.Domain.Categories;
 using Board.Domain.Comments;
+using Board.Domain.Files;
 
 namespace Board.Domain.Posts;
 
@@ -11,6 +12,10 @@ namespace Board.Domain.Posts;
 
 public class Post
 {
+    /// <summary>
+    /// Цена
+    /// </summary>
+    //public int Price { get; set; }
 
     /// <summary>
     /// Наименование.
@@ -64,6 +69,12 @@ public class Post
     /// Аккаунт
     /// </summary>
     public virtual Account Account { get; set; }
+
+
+    /// <summary>
+    /// Массив файлов
+    /// </summary>
+    public virtual List<Files.File> Files { get; set; }
 
 
 }

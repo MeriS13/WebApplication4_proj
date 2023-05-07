@@ -45,7 +45,7 @@ public class ParentCategoryRepository : IParentCategoryRepository
     /// <inheritdoc/>
     public IQueryable<ParentCategory> GetAll(CancellationToken cancellationToken)
     {
-        return _repository.GetAll(cancellationToken);
+        return  _repository.GetAll(cancellationToken);
     }
 
     /// <inheritdoc/>
