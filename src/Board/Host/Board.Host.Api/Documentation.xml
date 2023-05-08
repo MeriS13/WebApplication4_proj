@@ -45,7 +45,7 @@
         </member>
         <member name="M:Board.Host.Api.Controllers.AnswerController.CreateByCommentIdAsync(Board.Contracts.Answers.CreateAnswerDto,System.Threading.CancellationToken)">
             <summary>
-            Создать ответ к комменту по идентификаору коммента.
+            Создать ответ к комментарию.
             </summary>
             <param name="dto"> Модель создания ответа. </param>
             <param name="cancellationToken"> Токен отмены операции. </param>
@@ -53,7 +53,7 @@
         </member>
         <member name="M:Board.Host.Api.Controllers.AnswerController.DeleteById(System.Guid,System.Threading.CancellationToken)">
             <summary>
-            Удаление ответа по его идентификатору
+            Удаление ответа по его идентификатору.
             </summary>
             <param name="id"> Идентификатор ответа. </param>
             <param name="cancellationToken"> Токен отмены операции. </param>
@@ -159,17 +159,18 @@
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.GetAllByPostIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
-            Получение информации о файле по идентификатору.
+            Получение списка файлов, относящихся к объявлению по его Id
             </summary>
-            <param name="id">Идентификатор файла.</param>
-            <param name="cancellationToken">Токен отмены.</param>
-            <returns>Информация о файле.</returns>
+            <param name="postId"> Идентификатор объявления.</param>
+            <param name="cancellationToken"> Токен отмены. </param>
+            <returns> Информация о файле. </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.Guid,System.Threading.CancellationToken)">
             <summary>
             Загрузка файла в систему.
             </summary>
             <param name="file">Файл.</param>
+            <param name="postId"> Идентификатор объявления. </param>
             <param name="cancellationToken">Токен отмены.</param>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Download(System.Guid,System.Threading.CancellationToken)">

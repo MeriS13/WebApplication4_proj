@@ -53,18 +53,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     /// <inheritdoc />
     public async Task<TEntity> UpdateAsync(Guid id, TEntity model, CancellationToken cancellationToken)
     {
-        // orig
-        /*if (await db.Students.FindAsync(id) is Student found)
-    {
-        db.Students.Entry(found).State = EntityState.Detached;
-        db.Students.Update(incoming);
-        await db.SaveChangesAsync();
-    }*/
-        // old
-        /*if (model == null) throw new ArgumentNullException(nameof(model));
-        DbSet.Update(model);
-        await DbContext.SaveChangesAsync(cancellationToken);
-        return model;*/
+
         if (model == null) throw new ArgumentNullException(nameof(model));
         if (await DbSet.FindAsync(id) is TEntity foundModel)
         {

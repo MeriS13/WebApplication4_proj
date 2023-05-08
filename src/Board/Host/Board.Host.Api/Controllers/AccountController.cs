@@ -12,7 +12,8 @@ namespace Board.Host.Api.Controllers;
 /// </summary>
 
 [ApiController]
-[Route("[controller]")]
+//[Route("[controller]")]
+[Route(template: "account")]
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;

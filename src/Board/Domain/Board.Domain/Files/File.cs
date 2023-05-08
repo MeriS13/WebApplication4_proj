@@ -1,7 +1,9 @@
-﻿using Board.Domain.Posts;
+﻿using Board.Domain.Accounts;
+using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,11 +49,21 @@ namespace Board.Domain.Files
         /// </summary>
         public Guid PostId { get; set; }
 
+        /// <summary>
+        /// Идентификатор пользователя добавившего изображения
+        /// </summary>
+        public Guid AccountId { get; set; }
+
 
 
         /// <summary>
         /// Пост, к которому относится файл
         /// </summary>
         public virtual Post Post { get; set; }
+
+        /// <summary>
+        /// Аккаунт пользователя, которому принадлежит объявление
+        /// </summary>
+        public virtual Account Account { get; set; }
     }
 }

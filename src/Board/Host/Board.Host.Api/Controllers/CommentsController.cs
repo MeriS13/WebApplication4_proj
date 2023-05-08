@@ -7,7 +7,7 @@ using System.Net;
 namespace Board.Host.Api.Controllers;
 
 [ApiController]
-[Route(template: "comments-controller")]
+[Route(template: "comments")]
 [AllowAnonymous]
 public class CommentsController : ControllerBase
 {
@@ -57,7 +57,7 @@ public class CommentsController : ControllerBase
     /// <param name="postId"> Идентификатор поста. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментов. </returns>
-    [HttpGet("GetCommentsOnPostById")]
+    [HttpGet("GetComments/{postId:Guid}")]
     public async Task<IActionResult> GetCommentsOnPostById(Guid postId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Получение списка комментариев к посту по идентификатору поста.");

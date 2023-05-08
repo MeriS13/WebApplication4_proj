@@ -13,7 +13,7 @@ namespace Board.Host.Api.Controllers;
 /// </summary>
 
 [ApiController]
-[Route(template: "categories-controller")]
+[Route(template: "categories")]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
@@ -30,7 +30,7 @@ public class CategoryController : ControllerBase
     /// Получить список категорий.
     /// </summary>
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос категорий.");
@@ -41,7 +41,7 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Получить категорию по идентификатору.
     /// </summary>
-    [HttpGet("GetById")]
+    [HttpGet("GetById/{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -53,7 +53,7 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Создать новую категорию.
     /// </summary>
-    [HttpPost]
+    [HttpPost("Create")]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateCategoryDto dto, CancellationToken cancellationToken)
     {
@@ -77,7 +77,7 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Удалить категорию по идентификатору.
     /// </summary>
-    [HttpDelete("DeleteById")]
+    [HttpDelete("{id:Guid}")]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
@@ -92,7 +92,7 @@ public class CategoryController : ControllerBase
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список категорий </returns>
-    [HttpGet("GetCategoriesByParentId")]
+    [HttpGet("GetCategories/{parentId:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
     {

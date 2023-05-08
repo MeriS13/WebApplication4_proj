@@ -12,7 +12,7 @@ namespace Board.Host.Api.Controllers;
 /// </summary>
 /// <response code="500">Произошла внутренняя ошибка.</response>
 [ApiController]
-[Route(template: "files-controller")]
+[Route(template: "files")]
 [Produces("application/json")]
 [AllowAnonymous]
 //[ProducesResponseType(typeof(ErrorDto), StatusCodes.Status500InternalServerError)]
@@ -47,12 +47,12 @@ public class FileController : ControllerBase
 
 
     /// <summary>
-    /// Получение информации о файле по идентификатору.
+    /// Получение списка файлов, относящихся к объявлению по его Id
     /// </summary>
-    /// <param name="id">Идентификатор файла.</param>
-    /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns>Информация о файле.</returns>
-    [HttpGet("/info-by/{postId}")]
+    /// <param name="postId"> Идентификатор объявления.</param>
+    /// <param name="cancellationToken"> Токен отмены. </param>
+    /// <returns> Информация о файле. </returns>
+    [HttpGet("GetAll/{postId:Guid}")]
     public async Task<IActionResult> GetAllByPostIdAsync(Guid postId, CancellationToken cancellationToken)
     {
         var result = await _fileService.GetAllByPostIdAsync(postId, cancellationToken);
@@ -65,6 +65,7 @@ public class FileController : ControllerBase
     /// Загрузка файла в систему.
     /// </summary>
     /// <param name="file">Файл.</param>
+    /// <param name="postId"> Идентификатор объявления. </param>
     /// <param name="cancellationToken">Токен отмены.</param>
     [HttpPost]
     [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = long.MaxValue)]
