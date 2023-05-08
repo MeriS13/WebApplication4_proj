@@ -15,6 +15,12 @@ namespace Board.Contracts.File
         /// Идентификатор объявления, к которому относится файл
         /// </summary>
         public Guid PostId { get; set; }
+
+        /// <summary>
+        /// Идентификатор пользователя добавившего изображения
+        /// </summary>
+        public Guid AccountId { get; set; }
+
         /// <summary>
         /// Имя файла.
         /// </summary>

@@ -59,5 +59,10 @@ namespace Board.Domain.Accounts
         /// Список ответов
         /// </summary>
         public virtual List<Answer> Answers { get; set; }
+
+        /// <summary>
+        /// Список моделек файлов 
+        /// </summary>
+        public virtual List<Domain.Files.File> Files { get; set; }
     }
 }

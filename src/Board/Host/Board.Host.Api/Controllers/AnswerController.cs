@@ -14,7 +14,7 @@ namespace Board.Host.Api.Controllers;
 
 
 [ApiController]
-[Route(template: "answer-controller")]
+[Route(template: "answer")]
 [AllowAnonymous]
 public class AnswerController : ControllerBase
 {
@@ -29,13 +29,13 @@ public class AnswerController : ControllerBase
 
 
     /// <summary>
-    /// Создать ответ к комменту по идентификаору коммента.
+    /// Создать ответ к комментарию.
     /// </summary>
     /// <param name="dto"> Модель создания ответа. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Идентификаор созданного ответа. </returns>
     [Authorize]
-    [HttpPost("CreateByCommentId")]
+    [HttpPost("CreateAnswer")]
     public async Task<IActionResult> CreateByCommentIdAsync([FromBody] CreateAnswerDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Добавление .");
@@ -47,7 +47,7 @@ public class AnswerController : ControllerBase
 
 
     /// <summary>
-    /// Удаление ответа по его идентификатору
+    /// Удаление ответа по его идентификатору.
     /// </summary>
     /// <param name="id"> Идентификатор ответа. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
@@ -70,7 +70,7 @@ public class AnswerController : ControllerBase
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список ответов. </returns>
     [Authorize]
-    [HttpGet("GetAnswersOnCommentsById")]
+    [HttpGet("GetAnswers/{CommentId}")]
     public async Task<IActionResult> GetAnswersOnCommentsById(Guid commentId, CancellationToken cancellationToken)
     {
         //_logger.LogInformation("Получение списка комментариев к посту по идентификатору поста.");
@@ -78,13 +78,6 @@ public class AnswerController : ControllerBase
         return await Task.Run(() => Ok(result));
     }
 
-    /* Подумать как получить список комментов со списками ответов к нему 
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> GetAllMessageByPostId(Guid postId, CancellationToken cancellationToken)
-    {
+    // Подумать как получить список комментов со списками ответов к нему 
 
-        return await Task.Run(() => Ok(result));
-    }
-    */
 }

@@ -15,7 +15,7 @@ namespace Board.Host.Api.Controllers;
 ///</summary>
 
 [ApiController]
-[Route(template: "posts-controller")]
+[Route(template: "posts")]
 [AllowAnonymous]
 public class PostsController : ControllerBase
 {
@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet(template: "get-posts")]
+    [HttpGet(template: "GetPosts/all")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
@@ -53,7 +53,7 @@ public class PostsController : ControllerBase
     /// <param name="id">Идентификатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Модель объявления.</returns>
-    [HttpGet("{id:Guid}")]
+    [HttpGet("GetPost/{postId:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -85,7 +85,7 @@ public class PostsController : ControllerBase
     /// <param name="dto">Модель обновления объявления.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Модель обновлённого объявления.</returns>
-    [HttpPut("{id:Guid}")]
+    [HttpPut("Update/{id:Guid}")]
     [Authorize]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostDto dto, CancellationToken cancellationToken)
     {
@@ -97,14 +97,14 @@ public class PostsController : ControllerBase
     /// Удаление объявления по параметру id
     /// </summary>
     /// <returns> StatusCode </returns>
-    [HttpDelete("{id:Guid}")]
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
         await _postService.DeleteById(id, cancellationToken);
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
-    
+
 
 
     /// <summary>
@@ -113,7 +113,7 @@ public class PostsController : ControllerBase
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("CategoryId{id:Guid}")]
+    [HttpGet("GetPosts/{categoryId:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
@@ -127,7 +127,7 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns> Список постов </returns>
-    [HttpGet]
+    [HttpGet("GetPosts/currentUser")]
     [Authorize]
     public async Task<IActionResult> GetUserPostsAsync(CancellationToken cancellationToken)
     {
@@ -142,7 +142,7 @@ public class PostsController : ControllerBase
     /// <param name="ParCatId"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("GetAllPostsByParentCategoryId")]
+    [HttpGet("GetPosts/{parentCategoryId:Guid}")]
     [Authorize]
     public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {
@@ -151,26 +151,5 @@ public class PostsController : ControllerBase
         return await Task.Run(() => Ok(result));
 
     }
-        //Либо юзер-сеты, либо вынести в отдельный контроллер и модели
-        //NEW--------------------------------------------------------------------
-        /*
-        [HttpPatch]
-        [AllowAnonymous]
-        public async Task<IActionResult> AddToFavorites(Guid postId, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Добавление поста в избранное по идентификатору");
-            var result = _postService.AddToFavorites(postId, cancellationToken);
-            return Ok(result);
-        }
-
-        [HttpPatch]
-        [AllowAnonymous]
-        public async Task<IActionResult> DeleteFromFavorites(Guid postId, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Добавление поста в избранное по идентификатору");
-            var result = _postService.DeleteFromFavorites(postId, cancellationToken);
-            return Ok();
-        }
-        */
 
     }

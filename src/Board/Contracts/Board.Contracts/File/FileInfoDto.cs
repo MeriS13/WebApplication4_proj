@@ -12,6 +12,11 @@
         public Guid PostId { get; set; }
 
         /// <summary>
+        /// Идентификатор пользователя добавившего изображения
+        /// </summary>
+        public Guid AccountId { get; set; }
+
+        /// <summary>
         /// Идентификатор файла.
         /// </summary>
         public Guid Id { get; set; }

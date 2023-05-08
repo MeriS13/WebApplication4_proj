@@ -1,12 +1,16 @@
 ﻿using Board.Application.AppData.Contexts.Files.Repositories;
+using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Contracts.File;
+using Board.Contracts.Posts;
 using Board.Domain.Files;
 using Board.Domain.Posts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -16,13 +20,17 @@ namespace Board.Application.AppData.Contexts.Files.Services
     public class FileService : IFileService
     {
         private readonly IFileRepository _fileRepository;
+        private readonly IPostRepository _postRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// Инициализация экземпляра <see cref="FileService"/>.
         /// </summary>        
-        public FileService(IFileRepository fileRepository)
+        public FileService(IFileRepository fileRepository, IHttpContextAccessor httpContextAccessor, IPostRepository postRepository)
         {
             _fileRepository = fileRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _postRepository = postRepository;
         }
 
 
@@ -42,7 +50,9 @@ namespace Board.Application.AppData.Contexts.Files.Services
             {
                 Content = model.Content,
                 ContentType = model.ContentType,
-                Name = model.Name
+                Name = model.Name,
+                AccountId = model.AccountId, //?
+                PostId = model.PostId,      //?
             };
 
             return dto;
@@ -63,25 +73,48 @@ namespace Board.Application.AppData.Contexts.Files.Services
                 ContentType = model.ContentType,
                 Name = model.Name,
                 PostId = model.PostId,
+                AccountId=model.AccountId,
             };
 
             return dto;
         }
 
-        /// <inheritdoc/>
-        public Task<Guid> UploadAsync(FileDto dto, Guid postId, CancellationToken cancellationToken)
+        public IPostRepository Get_postRepository()
         {
+            return _postRepository;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Guid> UploadAsync(FileDto dto, Guid postId, CancellationToken cancellationToken)
+        {
+            //получение идентификатора и имени пользователя из контекста 
+            var claims = _httpContextAccessor.HttpContext.User.Claims;
+            var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!");
+            var UserId = Guid.Parse(claimId);
+
+            //
+
+            //нужно чтобы человек мог загрузить файл только к тому посту, который ему принадлежит 
+
+            Post postdto = await _postRepository.GetByIdAsync(postId, cancellationToken);
+            if (postdto == null) { throw new Exception("Не существует объявления с введенным идентификатором"); };
+
+            var accId = postdto.AccountId;
+
+            if (accId != UserId) throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
 
             var file = new Board.Domain.Files.File
             {
                 Content = dto.Content,
                 ContentType = dto.ContentType,
-                Created = DateTime.UtcNow,
                 Name = dto.Name,
                 Length = dto.Content.Length,
-                PostId = postId
+                Created = DateTime.UtcNow,
+                PostId = postId,
+                AccountId = UserId,
             };
-            return _fileRepository.UploadAsync(file, cancellationToken);
+            return await _fileRepository.UploadAsync(file, cancellationToken);
         }
 
 
@@ -103,6 +136,7 @@ namespace Board.Application.AppData.Contexts.Files.Services
                     ContentType = model.ContentType,
                     Name = model.Name,
                     PostId = model.PostId,
+                    AccountId = model.AccountId,
                 });
             }
 

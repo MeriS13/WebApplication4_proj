@@ -13,7 +13,7 @@ namespace Board.Host.Api.Controllers;
 /// </summary>
 
 [ApiController]
-[Route(template: "parent_categories-controller")]
+[Route(template: "parent_categories")]
 public class ParentCategoryController : ControllerBase
 {
     private readonly ILogger<CategoryController> _logger;
@@ -30,7 +30,7 @@ public class ParentCategoryController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список родительских категорий</returns>
-    [HttpGet]
+    [HttpGet("GetAll")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
@@ -46,7 +46,7 @@ public class ParentCategoryController : ControllerBase
     /// <param name="dto"> Модель создания родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Идентификатор созданной категории </returns>
-    [HttpPost]
+    [HttpPost()]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateParentCategoryDto dto, CancellationToken cancellationToken)
     {
@@ -61,7 +61,7 @@ public class ParentCategoryController : ControllerBase
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
-    [HttpGet("lalala")]
+    [HttpGet("GetCategory/{categoryid:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
@@ -76,7 +76,7 @@ public class ParentCategoryController : ControllerBase
     /// <param name="id"> Идентификатор род.категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Результат выполнения </returns>
-    [HttpDelete("lalala2")]
+    [HttpDelete]
     [Authorize(Policy = "Admin")]
     public async Task<IActionResult> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {

@@ -53,21 +53,7 @@ public class FileRepository : IFileRepository
     /// <inheritdoc/>
     public async Task<Guid> UploadAsync(Domain.Files.File model, CancellationToken cancellationToken)
     {
-        /*
-        //получение идентификатора и имени пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!");
-
-        var UserId = Guid.Parse(claimId);
-        var claimName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        // получение идентификатора пользователя, которому принадлежит пост, к которому добавляется объявление
         
-        var accId = 
-
-        if (accId != UserId) throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
-        */
         await _repository.AddAsync(model, cancellationToken);
         return model.Id;
     }
