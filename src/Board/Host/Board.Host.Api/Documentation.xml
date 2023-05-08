@@ -248,8 +248,10 @@
             <summary>
             Получить объявление по идентификатору.
             </summary>
-            <param name="id">Идентификатор.</param>
+            <param name="postId">Идентификатор.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="200"> Объявление успешно получено. </response>
+            <response code="404"> Нет объявления с введенным идентификатором или произошла внутренняя ошибка. </response>
             <returns>Модель объявления.</returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.CreatePost(Board.Contracts.Posts.CreatePostDto,System.Threading.CancellationToken)">
@@ -257,7 +259,9 @@
              Сохраняет новое объявление 
             </summary>
             <param name="dto"> Модель создания объявления </param>
-             <param name="cancellationToken">Токен отмены операции</param>
+            <param name="cancellationToken">Токен отмены операции</param>
+            <response code="401"> Пользователь не авторизован. </response>
+            <response code="201"> Объявление успешно сохранено. </response>
             <returns> Модель созданного объявления </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.Update(System.Guid,Board.Contracts.Posts.UpdatePostDto,System.Threading.CancellationToken)">

@@ -16,7 +16,7 @@ namespace Board.Host.Api.Controllers;
 
 [ApiController]
 [Route(template: "posts")]
-[AllowAnonymous]
+//[AllowAnonymous]
 public class PostsController : ControllerBase
 {
     private readonly IPostService _postService;
@@ -40,6 +40,8 @@ public class PostsController : ControllerBase
     /// <returns> Список постов </returns>
     [HttpGet(template: "GetPosts/all")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос объявлений");
@@ -50,15 +52,19 @@ public class PostsController : ControllerBase
     /// <summary>
     /// Получить объявление по идентификатору.
     /// </summary>
-    /// <param name="id">Идентификатор.</param>
+    /// <param name="postId">Идентификатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
+    /// <response code="200"> Объявление успешно получено. </response>
+    /// <response code="404"> Нет объявления с введенным идентификатором или произошла внутренняя ошибка. </response>
     /// <returns>Модель объявления.</returns>
-    [HttpGet("GetPost/{postId:Guid}")]
+    [HttpGet("GetById{postId:Guid}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetById(Guid postId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос получение объявления по идентификатору");
-        var result = await _postService.GetByIdAsync(id, cancellationToken);
+        var result = await _postService.GetByIdAsync(postId, cancellationToken);
         return await Task.Run(() => Ok(result));
     }
 
@@ -66,11 +72,15 @@ public class PostsController : ControllerBase
     /// Сохраняет новое объявление 
     ///</summary>
     ///<param name="dto"> Модель создания объявления </param>
-    /// <param name="cancellationToken">Токен отмены операции</param>
+    ///<param name="cancellationToken">Токен отмены операции</param>
+    ///<response code="401"> Пользователь не авторизован. </response>
+    ///<response code="201"> Объявление успешно сохранено. </response>
     ///<returns> Модель созданного объявления </returns>
 
     [HttpPost]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation(message: $"Сохранение объявления {JsonConvert.SerializeObject(dto)}");
@@ -113,7 +123,7 @@ public class PostsController : ControllerBase
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("GetPosts/{categoryId:Guid}")]
+    [HttpGet("GetByCategoryId/{CategoryId:Guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
@@ -127,7 +137,7 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns> Список постов </returns>
-    [HttpGet("GetPosts/currentUser")]
+    [HttpGet("GetPostByCurrentUser")]
     [Authorize]
     public async Task<IActionResult> GetUserPostsAsync(CancellationToken cancellationToken)
     {
@@ -142,7 +152,7 @@ public class PostsController : ControllerBase
     /// <param name="ParCatId"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("GetPosts/{parentCategoryId:Guid}")]
+    [HttpGet("GetPostsByParentCategoryId/{parentCategoryId:Guid}")]
     [Authorize]
     public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {

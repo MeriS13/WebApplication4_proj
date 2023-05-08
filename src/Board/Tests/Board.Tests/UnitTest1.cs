@@ -2,6 +2,7 @@ using Board.Application.AppData.Contexts.Categories.Repositories;
 using Board.Application.AppData.Contexts.Categories.Services;
 using Board.Contracts.Category;
 using Board.Domain.Categories;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using Shouldly;
@@ -30,6 +31,8 @@ public class CategoryServiceTests
         Guid id = Guid.Parse("09258252-083B-439A-931E-828E7F1B4F17");
         _output.WriteLine($"Id: {id}");
 
+        Mock<IMemoryCache> memoryCache = new Mock<IMemoryCache>();
+
         // Arrange
         // фейковый токен о.о.
         CancellationToken token = new CancellationToken(false);
@@ -40,7 +43,7 @@ public class CategoryServiceTests
         // установка поведения репозитория - метода GetByIdAsync. принимает описанные параметры и возвращ. expected
         categoryRepositoryMock.Setup(x => x.GetByIdAsync(id, token)).ReturnsAsync(() => expected);
         //создаем сервис, принимающий в качестве параметра Mock, т.е. имитацию работы репозитория
-        CategoryService service = new CategoryService(categoryRepositoryMock.Object);
+        CategoryService service = new CategoryService(categoryRepositoryMock.Object, memoryCache.Object);
 
         // Act
         //проверка
@@ -65,11 +68,13 @@ public class CategoryServiceTests
 
         CancellationToken token = new CancellationToken(false);
 
+        Mock<IMemoryCache> memoryCache = new Mock<IMemoryCache>();
+
         Mock<ICategoryRepository> categoryRepositoryMock = new Mock<ICategoryRepository>();
 
         categoryRepositoryMock.Setup(x => x.GetByIdAsync(id, token)).ReturnsAsync(() => null);
 
-        CategoryService service = new CategoryService(categoryRepositoryMock.Object);
+        CategoryService service = new CategoryService(categoryRepositoryMock.Object, memoryCache.Object);
 
         Action testCode = () => { service.GetByIdAsync(id, token); };
 
@@ -89,6 +94,7 @@ public class CategoryServiceTests
     [ClassData(typeof(CategoryIdTestData))]
     public async Task Category_Create_Success(List<Category> List)
     {
+
         string name = "test_name";
         //Arrange
         _output.WriteLine($"Name: {name}");
@@ -108,12 +114,13 @@ public class CategoryServiceTests
 
         CancellationToken token = new CancellationToken(false);
 
+        Mock<IMemoryCache> memoryCache = new Mock<IMemoryCache>();
         Mock<ICategoryRepository> categoryRepositoryMock = new Mock<ICategoryRepository>();
 
         var expected =  List.FirstOrDefault(x => x.Name == name);
         categoryRepositoryMock.Setup(x => x.AddAsync(model, token)).ReturnsAsync(() => model.Id);
 
-        CategoryService service = new CategoryService(categoryRepositoryMock.Object);
+        CategoryService service = new CategoryService(categoryRepositoryMock.Object, memoryCache.Object);
 
         //Act
         var result = service.CreateAsync(dto, token);
@@ -150,6 +157,7 @@ public class CategoryServiceTests
 
         CancellationToken token = new CancellationToken(false);
 
+        Mock<IMemoryCache> memoryCache = new Mock<IMemoryCache>();
         Mock<ICategoryRepository> categoryRepositoryMock = new Mock<ICategoryRepository>();
 
         var expected = (List.FirstOrDefault(x => x.Name == name) == null)
@@ -159,30 +167,12 @@ public class CategoryServiceTests
                          
         categoryRepositoryMock.Setup(x => x.AddAsync(model, token)).ReturnsAsync(() => expected);
 
-        CategoryService service = new CategoryService(categoryRepositoryMock.Object);
+        CategoryService service = new CategoryService(categoryRepositoryMock.Object, memoryCache.Object);
 
-        //Act
-        //var result = service.CreateAsync(dto, token);
-        //(result1) ? result2 =
-        //Exception($"Категория с названием '{dto.Name}' уже существует!");
-        //Assert
-
-        //expected.
-        //result.ShouldBeOfType<Task<Guid>>();
-        //////Action testCode = () => { service.CreateAsync(dto, token); };
 
         // Act
         var result =  service.CreateAsync(dto, token);
-        /////////////var result = Record.Exception(testCode);
-        //Action result = () => service.CreateAsync(dto, token);
-        //Assert
 
-        //Exception exception = Assert.Throws<Exception>(result);
-        //The thrown exception can be used for even more detailed assertions.
-        //Assert.Equal($"Категория с названием '{dto.Name}' уже существует!", exception.Message);
-        //Assert.Throws<Exception>(() => $"Категория с названием '{dto.Name}' уже существует!")  ;
-        //Assert.NotNull(result);
-        //Assert.IsType<Exception>(result);
         result.ShouldBeOfType<Task<Guid>>();
 
         expected.ShouldBeEquivalentTo(Guid.Parse("00000000-0000-0000-0000-000000000000"));
