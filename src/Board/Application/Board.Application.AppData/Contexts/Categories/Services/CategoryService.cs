@@ -1,11 +1,6 @@
-﻿using Board.Application.AppData.Contexts.Accounts.Repositories;
-using Board.Application.AppData.Contexts.Categories.Repositories;
-using Board.Application.AppData.Contexts.Posts.Repositories;
-using Board.Contracts.Accounts;
+﻿using Board.Application.AppData.Contexts.Categories.Repositories;
 using Board.Contracts.Category;
-using Board.Contracts.Posts;
 using Board.Domain.Categories;
-using Board.Domain.Posts;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,12 +11,14 @@ namespace Board.Application.AppData.Contexts.Categories.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
-    //private readonly IMemoryCache _memoryCache;
+    private readonly IMemoryCache _memoryCache;
 
-    public CategoryService(ICategoryRepository categoryRepository) //,IMemoryCache memoryCache)
+    public const string CategoryKey = "CategoryKey";
+
+    public CategoryService(ICategoryRepository categoryRepository,IMemoryCache memoryCache)
     {
         _categoryRepository = categoryRepository;
-        //_memoryCache = memoryCache;
+        _memoryCache = memoryCache;
     }
 
 
@@ -56,15 +53,18 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> 
     public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-
+        if (_memoryCache.TryGetValue(CategoryKey, out List<CategoryDto> result))
+        {
+            return result;
+        }
 
         //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
         //элементы списка - смаппленные модели к dto и возвращаем 
         List<Category> entities = _categoryRepository.GetAll(cancellationToken).ToList();
-        List<CategoryDto> result = new();
+        List<CategoryDto> result2 = new();
         foreach (var entity in entities)
         {
-            result.Add(new CategoryDto
+            result2.Add(new CategoryDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -72,13 +72,18 @@ public class CategoryService : ICategoryService
 
             });
         }
-        if (result.IsNullOrEmpty())
+
+        if (result2.IsNullOrEmpty()) { throw new Exception("Нет категорий :( "); };
+        
+         
+
+        var options = new MemoryCacheEntryOptions
         {
-            throw new Exception("Категории не существуют :( ");
-        }
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        };
+        _memoryCache.Set(CategoryKey, result2, options);
 
-
-        return result;
+        return result2;
     }
 
     

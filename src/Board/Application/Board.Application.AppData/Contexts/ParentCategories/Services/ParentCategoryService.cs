@@ -1,18 +1,13 @@
-﻿using Board.Application.AppData.Contexts.Categories.Repositories;
-using Board.Application.AppData.Contexts.ParentCategories.Repository;
-using Board.Contracts.Category;
+﻿using Board.Application.AppData.Contexts.ParentCategories.Repository;
 using Board.Contracts.ParentCategory;
-using Board.Domain.Categories;
 using Board.Domain.ParentCategories;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Board.Application.AppData.Contexts.ParentCategories.Services;
+
+
 
 /// <inheritdoc cref="IParentCategoryService"/>
 

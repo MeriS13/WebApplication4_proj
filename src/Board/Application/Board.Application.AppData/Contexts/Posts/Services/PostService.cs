@@ -34,9 +34,6 @@ public class PostService : IPostService
         //получение идентификатора пользователя из контекста 
         var claims = _httpContextAccessor.HttpContext.User.Claims;
         var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception ("Функция недоступна.");
-
         var UserId = Guid.Parse(claimId);
         //end
 
