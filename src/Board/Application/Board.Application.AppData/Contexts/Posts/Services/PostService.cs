@@ -87,6 +87,7 @@ public class PostService : IPostService
         if (entity == null)
         {
             throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+            //return StatusCodes.Status404NotFound(PostDto);
         }
 
         var result = new PostDto

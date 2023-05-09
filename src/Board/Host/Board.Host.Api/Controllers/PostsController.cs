@@ -55,12 +55,12 @@ public class PostsController : ControllerBase
     /// <param name="postId">Идентификатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <response code="200"> Объявление успешно получено. </response>
-    /// <response code="404"> Нет объявления с введенным идентификатором или произошла внутренняя ошибка. </response>
+    /// <response code="404"> Нет объявления с введенным идентификатором. </response>
     /// <returns>Модель объявления.</returns>
     [HttpGet("GetById{postId:Guid}")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid postId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос получение объявления по идентификатору");
