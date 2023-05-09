@@ -251,7 +251,7 @@
             <param name="postId">Идентификатор.</param>
             <param name="cancellationToken">Токен отмены.</param>
             <response code="200"> Объявление успешно получено. </response>
-            <response code="404"> Нет объявления с введенным идентификатором или произошла внутренняя ошибка. </response>
+            <response code="404"> Нет объявления с введенным идентификатором. </response>
             <returns>Модель объявления.</returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.CreatePost(Board.Contracts.Posts.CreatePostDto,System.Threading.CancellationToken)">
