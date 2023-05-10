@@ -1,18 +1,12 @@
 ﻿using Board.Application.AppData.Contexts.Comments.Repositories;
-using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Contracts.Comments;
-using Board.Contracts.Posts;
 using Board.Domain.Comments;
-using Board.Domain.Posts;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Board.Application.AppData.Contexts.Comments.Services;
+
+
 
 /// <inheritdoc cref="ICommentsService"/>
 public class CommentsService : ICommentsService
@@ -27,25 +21,31 @@ public class CommentsService : ICommentsService
     }
 
 
+    // Метод для получения идентификатора текущего авторизованного пользователя из контекста
+    public Guid GetCurrentUserId()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        return Guid.Parse(claimId);
+    }
+    // Метод для получения имени текущего авторизованного пользователя из контекста
+    public string GetCurrentUserName()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        return claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    }
+
+
     ///<inheritdoc/>
     public async Task<Guid> CreateByPostIdAsync(CreateCommentDto dto, CancellationToken cancellationToken)
     {
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var claimName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception ("Данная функция недоступна.");
-
-        var UserId = Guid.Parse(claimId);
-
         // Преобр из дто в доменную модель
         var entity = new Comment
         {
-            UserName = claimName,
+            UserName = GetCurrentUserName(),
             Content = dto.Content,
             CreationDate = DateTime.UtcNow,
-            AccId = UserId,
+            AccId = GetCurrentUserId(),
             PostId = dto.PostId,
         };
 
@@ -54,18 +54,18 @@ public class CommentsService : ICommentsService
 
 
     ///<inheritdoc/>
-    public Task DeleteByCommentId(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteByCommentId(Guid id, CancellationToken cancellationToken)
     {
-
-        return _commentsRepository.DeleteByCommentId(id, cancellationToken);
+        await _commentsRepository.DeleteByCommentId(id, cancellationToken);
     }
 
 
     ///<inheritdoc/>
-    public async Task<List<CommentDto>> GetCommentsCarrentUserByIdAsync(CancellationToken cancellationToken)
+    public async Task<List<CommentDto>> GetCommentsCurrentUserByIdAsync(CancellationToken cancellationToken)
     {
 
-        List<Comment> entities = _commentsRepository.GetCommentsCarrentUserByIdAsync(cancellationToken).ToList();
+        List<Comment> entities = _commentsRepository
+            .GetCommentsCurrentUserByIdAsync(GetCurrentUserId(), cancellationToken).ToList();
         List<CommentDto> result = new();
 
         foreach (var entity in entities)

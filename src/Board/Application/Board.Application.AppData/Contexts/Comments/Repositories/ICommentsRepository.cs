@@ -1,4 +1,5 @@
 ﻿using Board.Contracts.Comments;
+using Board.Domain.Answers;
 using Board.Domain.Comments;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,15 @@ public interface ICommentsRepository
     /// Получить комментарии, оставленные текущим пользователем.
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <param name="id"> Идентификатор текущего пользователя </param>
     /// <returns> Список комментов </returns>
-    IQueryable<Comment> GetCommentsCarrentUserByIdAsync(CancellationToken cancellationToken);
+    IQueryable<Comment> GetCommentsCurrentUserByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Получение комментария по его идентификатору
+    /// </summary>
+    /// <param name="id"> Идентификатор комментария </param>
+    /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <returns> Доменная модель комментария </returns>
+    Task<Comment> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

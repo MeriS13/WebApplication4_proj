@@ -20,12 +20,10 @@ public class AnswerRepository : IAnswerRepository
 {
 
     private readonly IRepository<Answer> _repository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AnswerRepository(IRepository<Answer> repository, IHttpContextAccessor httpContextAccessor)
+    public AnswerRepository(IRepository<Answer> repository)
     {
         _repository = repository;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <inheritdoc/>
@@ -38,24 +36,6 @@ public class AnswerRepository : IAnswerRepository
     /// <inheritdoc/>
     public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!!!");
-
-        var UserId = Guid.Parse(claimId);
-        var claimName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        //Получение доменной модели и обработка исключений
-        var entity = await _repository.GetByIdAsync(id, cancellationToken);
-
-        if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему комментарию!");
-        if (entity.AccId != UserId && claimName != "Admin")
-        {
-            throw new Exception("Текущий пользователь не может удалить комментарий другого пользователя.");
-        }
-
         await _repository.DeleteByIdAsync(id, cancellationToken);
     }
 
@@ -63,5 +43,11 @@ public class AnswerRepository : IAnswerRepository
     public IQueryable<Answer> GetAnswersOnCommentsById(Guid commentId, CancellationToken cancellationToken)
     {
         return _repository.GetAll(cancellationToken).Include(u => u.Comment).Where(u => u.CommentId == commentId);
+    }
+
+    /// <inheritdoc/>
+    public async Task<Answer> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _repository.GetByIdAsync(id, cancellationToken);
     }
 }
