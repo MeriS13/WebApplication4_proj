@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Security.Claims;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 
 
@@ -28,14 +29,24 @@ public class PostService : IPostService
         _httpContextAccessor = httpContextAccessor;
     }
 
+    // Метод для получения идентификатора текущего авторизованного пользователя из контекста
+    public Guid GetCurrentUserId()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        return  Guid.Parse(claimId);
+    }
+    // Метод для получения имени текущего авторизованного пользователя из контекста
+    public string GetCurrentUserName()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        return claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    }
+    
+
     /// <inheritdoc/>
     public async Task<Guid> CreatePostAsync(CreatePostDto dto, CancellationToken cancellationToken)
     {
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var UserId = Guid.Parse(claimId);
-        //end
 
         var entity = new Post
         {
@@ -44,23 +55,28 @@ public class PostService : IPostService
             CategoryId = dto.CategoryId,
             IsFavorite = dto.IsFavorite,
             CreationDate = DateTime.UtcNow,
-            AccountId = UserId,
+            AccountId = GetCurrentUserId()
         };
         return await _postRepository.AddPostAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public  Task DeleteById(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        // Вся логика и обработка исключений в репозитории, т.к. тут оно не работает
-        return _postRepository.DeleteById(id, cancellationToken);
+        var existingPost = await _postRepository.GetByIdAsync(id, cancellationToken);
+
+        if (existingPost == null)
+            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
+
+        if (existingPost.AccountId != GetCurrentUserId())
+            throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
+        
+        await _postRepository.DeleteById(id, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task<List<PostDto>> GetAll(CancellationToken cancellationToken)
     {
-        //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
-        //элементы списка - смаппленные модели к dto и возвращаем 
         List<Post> entities = _postRepository.GetAll(cancellationToken).ToList();
         List<PostDto> result = new();
         foreach (var entity in entities)
@@ -85,10 +101,8 @@ public class PostService : IPostService
     {
         var entity = await _postRepository.GetByIdAsync(id, cancellationToken);
         if (entity == null)
-        {
             throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-            //return StatusCodes.Status404NotFound(PostDto);
-        }
+
 
         var result = new PostDto
         {
@@ -108,23 +122,15 @@ public class PostService : IPostService
     /// <inheritdoc/> все ок
     public async Task<PostDto> UpdateAsync(Guid id, UpdatePostDto dto, CancellationToken cancellationToken)
     {
-        //обработка исключения (проверка наличия пользователя в бд)
+        //Обработка исключений
         var existingPost = await _postRepository.GetByIdAsync(id, cancellationToken);
         if (existingPost == null)
-        {
             throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-        }
 
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (existingPost.AccountId != GetCurrentUserId()) 
+            throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
 
-        if (string.IsNullOrWhiteSpace(claimId)) return null;
-
-        var UserId = Guid.Parse(claimId);
-        //end
-
-        //Преобразуем модель обновления к доменной
+        //Преобразуем dto-модель обновления к доменной
         var entity = new Post
         {
             Id = existingPost.Id,
@@ -135,9 +141,10 @@ public class PostService : IPostService
             CategoryId = dto.CategoryId,
             AccountId = existingPost.AccountId,
         };
-        //отдаем обновленную доменную в репозиторий, там она обновляется в бд, возвращается она же
+
         var newModel = await _postRepository.UpdateAsync(id, entity, cancellationToken);
-        //преобразуем обновленную доменную к модели категории
+
+        //преобразуем обновленную доменную к модели dto
         var newDto = new PostDto
         {
             Id = newModel.Id,
@@ -154,7 +161,6 @@ public class PostService : IPostService
     /// <inheritdoc/> все ок
     public async Task<List<PostDto>> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
-        //получаем список домен.моделек постов
         List<Post> entities = _postRepository.GetAllPostsByCategoryId(CategoryId, cancellationToken).ToList();
         List<PostDto> result = new();
         foreach (var entity in entities)
@@ -176,16 +182,8 @@ public class PostService : IPostService
     /// <inheritdoc/>
     public async Task<List<PostDto>> GetUserPosts(CancellationToken cancellationToken)
     {
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-        if (string.IsNullOrWhiteSpace(claimId)) return null;
-
-        var UserId = Guid.Parse(claimId);
-        //end
-
-        List<Post> entities = _postRepository.GetUserPosts(UserId, cancellationToken).ToList();
+        List<Post> entities = _postRepository.GetUserPosts(GetCurrentUserId(), cancellationToken).ToList();
         List<PostDto> result = new();
         foreach (var entity in entities)
         {
@@ -206,7 +204,6 @@ public class PostService : IPostService
     /// <inheritdoc/>
     public async Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {
-        //получаем список домен.моделек постов
         List<Post> entities = _postRepository.GetAllPostsByParentCategoryId(ParCatId, cancellationToken).ToList();
         List<PostDto> result = new();
         foreach (var entity in entities)

@@ -41,6 +41,6 @@ public interface ICommentsService
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментов </returns>
-    Task<List<CommentDto>> GetCommentsCarrentUserByIdAsync (CancellationToken cancellationToken);
+    Task<List<CommentDto>> GetCommentsCurrentUserByIdAsync (CancellationToken cancellationToken);
 
 }

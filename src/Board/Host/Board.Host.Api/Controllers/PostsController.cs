@@ -153,7 +153,7 @@ public class PostsController : ControllerBase
     /// <param name="cancellationToken"> токен отмены операции </param>
     /// <returns> Список постов </returns>
     [HttpGet("GetPostsByParentCategoryId/{parentCategoryId:Guid}")]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка постов по Id родительской категории для категории, к которой относится пост");

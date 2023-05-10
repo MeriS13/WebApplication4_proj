@@ -17,12 +17,10 @@ namespace Board.Infrastructure.DataAccess.Contexts.Files.Repository;
 public class FileRepository : IFileRepository
 {
     private readonly IRepository<Domain.Files.File> _repository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FileRepository(IRepository<Domain.Files.File> repository, IHttpContextAccessor httpContextAccessor)
+    public FileRepository(IRepository<Domain.Files.File> repository)
     {
         _repository = repository;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <inheritdoc/>

@@ -33,4 +33,12 @@ public interface IAnswerRepository
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список ответов.(Доменных моделек) </returns>
     IQueryable<Answer> GetAnswersOnCommentsById(Guid commentId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Получение ответа по его идентификатору
+    /// </summary>
+    /// <param name="id"> Идентификатор ответа </param>
+    /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <returns> Доменная модель ответа </returns>
+    Task<Answer> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

@@ -27,31 +27,50 @@ public class AnswerService : IAnswerService
         _httpContextAccessor = httpContextAccessor;
     }
 
+
+    // Метод для получения идентификатора текущего авторизованного пользователя из контекста
+    public Guid GetCurrentUserId()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        return Guid.Parse(claimId);
+    }
+    // Метод для получения имени текущего авторизованного пользователя из контекста
+    public string GetCurrentUserName()
+    {
+        var claims = _httpContextAccessor.HttpContext.User.Claims;
+        return claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    }
+
+
     /// <inheritdoc/>
     public async Task<Guid> CreateByCommentIdAsync(CreateAnswerDto dto, CancellationToken cancellationToken)
     {
-        //получение идентификатора пользователя из контекста 
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var claimName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        var UserId = Guid.Parse(claimId);
 
         var model = new Answer
         {
-            UserName = claimName,
-            AccId = UserId,
+            UserName = GetCurrentUserName(),
+            AccId = GetCurrentUserId(),
             Content = dto.Content,
             CommentId = dto.CommentId,
             CreationDate = DateTime.UtcNow,
         };
+
         return await _answerRepository.CreateByCommentIdAsync(model, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public Task DeleteById(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        return _answerRepository.DeleteByIdAsync(id, cancellationToken);
+        var entity = await _answerRepository.GetByIdAsync(id, cancellationToken);
+
+        if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему комментарию!");
+        if (entity.AccId != GetCurrentUserId() && GetCurrentUserName() != "Admin")
+        {
+            throw new Exception("Текущий пользователь не может удалить комментарий другого пользователя.");
+        }
+
+        await _answerRepository.DeleteByIdAsync(id, cancellationToken);
     }
 
     /// <inheritdoc/>

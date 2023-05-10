@@ -72,10 +72,10 @@ public class CommentsController : ControllerBase
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментариев. </returns>
     [HttpGet]
-    public async Task<IActionResult> GetCommentsCarrentUser(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetCommentsCurrentUser(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Получение комментариев текущего пользователя (по Id через клеймы).");
-        var result = await _commentsService.GetCommentsCarrentUserByIdAsync(cancellationToken);
+        var result = await _commentsService.GetCommentsCurrentUserByIdAsync(cancellationToken);
         return await Task.Run(() => Ok(result));
     }
 
