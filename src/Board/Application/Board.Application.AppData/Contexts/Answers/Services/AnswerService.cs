@@ -1,7 +1,9 @@
 ﻿using Board.Application.AppData.Contexts.Answers.Repositories;
 using Board.Application.AppData.Contexts.Comments.Repositories;
+using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Contracts.Answers;
 using Board.Contracts.Comments;
+using Board.Contracts.Posts;
 using Board.Domain.Answers;
 using Board.Domain.Comments;
 using Microsoft.AspNetCore.Http;
@@ -62,14 +64,7 @@ public class AnswerService : IAnswerService
     /// <inheritdoc/>
     public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await _answerRepository.GetByIdAsync(id, cancellationToken);
-
-        if (entity == null) throw new Exception("Введеный идентификатор не принадлежит ни одному существующему комментарию!");
-        if (entity.AccId != GetCurrentUserId() && GetCurrentUserName() != "Admin")
-        {
-            throw new Exception("Текущий пользователь не может удалить комментарий другого пользователя.");
-        }
-
+   
         await _answerRepository.DeleteByIdAsync(id, cancellationToken);
     }
 
@@ -91,6 +86,26 @@ public class AnswerService : IAnswerService
                 CommentId=entity.CommentId,
             });
         }
+        return result;
+    }
+
+    public async Task<AnswerDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var entity = await _answerRepository.GetByIdAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var result = new AnswerDto
+        {
+            UserName = entity.UserName,
+            Content = entity.Content,
+            AccId=entity.AccId,
+            CommentId=entity.CommentId,
+            CreationDate=entity.CreationDate,
+            Id = entity.Id
+        };
         return result;
     }
 }

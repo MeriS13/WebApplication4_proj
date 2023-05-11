@@ -13,6 +13,20 @@ namespace Board.Application.AppData.Contexts.Posts.Services;
 public interface IPostService
 {
     /// <summary>
+    /// Метод для получения Id текущего пользователя из контекста
+    /// </summary>
+    /// <returns> Id текущего пользователя </returns>
+    Guid GetCurrentUserId();
+
+    /// <summary>
+    /// Метод для получения имени текущего пользователя из контекста
+    /// </summary>
+    /// <returns> Имя текущего пользователя </returns>
+    string GetCurrentUserName();
+
+
+
+    /// <summary>
     /// Создание поста(объявления).
     /// </summary>
     /// <param name="dto">Модель создания поста</param>

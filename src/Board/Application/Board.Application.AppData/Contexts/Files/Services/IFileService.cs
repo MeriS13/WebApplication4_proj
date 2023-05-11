@@ -13,6 +13,19 @@ namespace Board.Application.AppData.Contexts.Files.Services
     public interface IFileService
     {
         /// <summary>
+        /// Метод для получения Id текущего пользователя из контекста
+        /// </summary>
+        /// <returns> Id текущего пользователя </returns>
+        Guid GetCurrentUserId();
+
+        /// <summary>
+        /// Метод для получения имени текущего пользователя из контекста
+        /// </summary>
+        /// <returns> Имя текущего пользователя </returns>
+        string GetCurrentUserName();
+
+
+        /// <summary>
         /// Получение информации о файле по его идентификатору.
         /// </summary>
         /// <param name="id">Идентификатор файла.</param>

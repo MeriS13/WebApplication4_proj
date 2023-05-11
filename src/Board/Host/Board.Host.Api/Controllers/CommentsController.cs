@@ -1,4 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Comments.Services;
+using Board.Contracts.Answers;
 using Board.Contracts.Comments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace Board.Host.Api.Controllers;
 
 [ApiController]
 [Route(template: "comments")]
-[AllowAnonymous]
+//[AllowAnonymous]
 public class CommentsController : ControllerBase
 {
     private readonly ICommentsService _commentsService;
@@ -26,13 +27,18 @@ public class CommentsController : ControllerBase
     /// <param name="dto"> Модель комментария </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Идентификатор созданного коммента </returns>
+    /// <response code="401"> Пользователь не авторизован. </response>
+    /// <response code="201"> Ответ сохранён. </response>
     [HttpPost]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateByPostId([FromBody] CreateCommentDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Добавление комментария к посту по идентификатору поста.");
+
         var result = await _commentsService.CreateByPostIdAsync(dto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
-        //return Ok();
     }
 
 
@@ -42,10 +48,27 @@ public class CommentsController : ControllerBase
     /// <param name="id"> Идентификатор комментария </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Статус код</returns>
-    [HttpDelete]
+    /// <response code="204"> Комментарий успешно удалено. </response>
+    /// <response code="404"> Нет комментария с введенным идентификатором. </response>
+    /// <response code="403"> Нельзя удалить комментарий другого пользователя. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
+    [HttpDelete("{id:Guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteByCommentId(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Удаление комментария по идентификатору.");
+
+        var existingcomment = await _commentsService.GetByIdAsync(id, cancellationToken);
+        if(existingcomment == null) 
+            return StatusCode((int)HttpStatusCode.NotFound);
+
+        if (existingcomment.AccId != _commentsService.GetCurrentUserId() || _commentsService.GetCurrentUserName() != "Admin")
+            return StatusCode((int)HttpStatusCode.Forbidden);
+
         await _commentsService.DeleteByCommentId(id, cancellationToken);
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
@@ -57,11 +80,20 @@ public class CommentsController : ControllerBase
     /// <param name="postId"> Идентификатор поста. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментов. </returns>
+    /// <response code="200"> Список комментариев </response>
+    /// <response code="204"> Нет комментариев или неверный идентификатор объявления. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpGet("GetComments/{postId:Guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCommentsOnPostById(Guid postId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Получение списка комментариев к посту по идентификатору поста.");
+
         var result = await _commentsService.GetCommentsOnPostByIdAsync(postId, cancellationToken);
+        if(result == null) return StatusCode((int)HttpStatusCode.NoContent);
         return await Task.Run(() => Ok(result));
     }
 
@@ -71,11 +103,22 @@ public class CommentsController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментариев. </returns>
+    /// <response code="200"> Список комментариев </response>
+    /// <response code="204"> Нет комментариев. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpGet]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCommentsCurrentUser(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Получение комментариев текущего пользователя (по Id через клеймы).");
+        _logger.LogInformation("Получение комментариев текущего пользователя.");
+
         var result = await _commentsService.GetCommentsCurrentUserByIdAsync(cancellationToken);
+        if (result == null) 
+            return StatusCode((int)HttpStatusCode.NoContent);
+
         return await Task.Run(() => Ok(result));
     }
 

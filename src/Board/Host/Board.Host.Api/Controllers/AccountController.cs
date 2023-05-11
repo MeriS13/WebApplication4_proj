@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Board.Host.Api.Controllers;
 
@@ -12,7 +13,6 @@ namespace Board.Host.Api.Controllers;
 /// </summary>
 
 [ApiController]
-//[Route("[controller]")]
 [Route(template: "account")]
 public class AccountController : ControllerBase
 {
@@ -35,8 +35,11 @@ public class AccountController : ControllerBase
     /// <param name="dto">Модель регистрации аккаунта.</param>
     /// <param name="cancellation">Токен отмены.</param>
     /// <returns>Модель зарегистрированного аккаунта.</returns>
+    /// <response code="201"> Пользователь зарегестрирован. </response>
+    /// <response code="400"> Введенные данные содержат запрещенные слова. </response>
     [HttpPost("register")]
     [ProducesResponseType(typeof(AccountDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<IActionResult> RegisterAccount([FromBody] CreateAccountDto dto, CancellationToken cancellation)
     {
@@ -52,13 +55,16 @@ public class AccountController : ControllerBase
     /// <param name="dto">Модель входа в аккаунт.</param>
     /// <param name="cancellation">Токен отмены.</param>
     /// <returns>Модель с данными входа.</returns>
+    /// <response code="200"> Аутентификация прошла успешно. </response>
     [HttpPost("login")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Login([FromBody] LoginAccountDto dto, CancellationToken cancellation)
     {
         _logger.LogInformation("Вход в аккаунт.");
 
         var result = await _accountService.LoginAsync(dto, cancellation);
+        if (result == null) return StatusCode((int)HttpStatusCode.BadRequest);
 
         return await Task.Run(() => Ok(result), cancellation);
     }
@@ -68,8 +74,12 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellation">Токен отмены.</param>
     /// <returns> Модель аккаунта </returns>
+    /// <response code="200"> Информация об аккаунте. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpPost("GetUserInfo")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<AccountDto> GetUserInfo(CancellationToken cancellation)
     {
         var result = await _accountService.GetCurrentAsync(cancellation);
