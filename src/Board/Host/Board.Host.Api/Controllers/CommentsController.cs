@@ -90,7 +90,7 @@ public class CommentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCommentsOnPostById(Guid postId, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Получение списка комментариев к посту по идентификатору поста.");
+        _logger.LogInformation("Получение списка комментариев к объявлению по идентификатору объявления.");
 
         var result = await _commentsService.GetCommentsOnPostByIdAsync(postId, cancellationToken);
         if(result == null) return StatusCode((int)HttpStatusCode.NoContent);

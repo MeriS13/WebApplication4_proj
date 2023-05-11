@@ -64,7 +64,6 @@ public class AccountController : ControllerBase
         _logger.LogInformation("Вход в аккаунт.");
 
         var result = await _accountService.LoginAsync(dto, cancellation);
-        if (result == null) return StatusCode((int)HttpStatusCode.BadRequest);
 
         return await Task.Run(() => Ok(result), cancellation);
     }
@@ -82,6 +81,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<AccountDto> GetUserInfo(CancellationToken cancellation)
     {
+        _logger.LogInformation("Получение информации об аккаунте.");
         var result = await _accountService.GetCurrentAsync(cancellation);
 
         return result;

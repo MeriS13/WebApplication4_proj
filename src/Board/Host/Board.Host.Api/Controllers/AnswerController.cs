@@ -35,17 +35,21 @@ public class AnswerController : ControllerBase
     /// <param name="dto"> Модель создания ответа. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Идентификаор созданного ответа. </returns>
-    ///<response code="401"> Пользователь не авторизован. </response>
-    ///<response code="201"> Ответ сохранён. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
+    /// <response code="201"> Ответ сохранён. </response>
+    /// <response code="404"> Введенный идентификатор не принадлежит ни одному комментарию. </response>
     [Authorize]
     [HttpPost("CreateAnswer")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateByCommentIdAsync([FromBody] CreateAnswerDto dto, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Добавление .");
+        _logger.LogInformation("Добавление комментария по идентификатору объявления.");
 
         var result = await _answerService.CreateByCommentIdAsync(dto, cancellationToken);
+
+        if(result == Guid.Empty) return NotFound();
         return StatusCode((int)HttpStatusCode.Created, result);
     }
 
@@ -68,7 +72,7 @@ public class AnswerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Delete .");
+        _logger.LogInformation("Удаление комментария по идентификатору.");
 
         var answerdto = await _answerService.GetByIdAsync(id, cancellationToken);
         if (answerdto == null)
@@ -98,7 +102,7 @@ public class AnswerController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAnswersOnCommentsById(Guid commentId, CancellationToken cancellationToken)
     {
-        //_logger.LogInformation("Получение списка комментариев к посту по идентификатору поста.");
+        _logger.LogInformation("Получение списка комментариев к объявлению по идентификатору объявления.");
         var result = await _answerService.GetAnswersOnCommentsById(commentId, cancellationToken);
         if(result == null) return StatusCode((int)HttpStatusCode.NoContent);
         return await Task.Run(() => Ok(result));
