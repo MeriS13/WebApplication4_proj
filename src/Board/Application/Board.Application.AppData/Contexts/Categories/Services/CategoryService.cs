@@ -35,9 +35,7 @@ public class CategoryService : ICategoryService
         // Обработка исключения
         var existingCategory = await _categoryRepository.FindWhere(category => category.Name == dto.Name, cancellationToken);
         if (existingCategory != null)
-        {
-            throw new Exception($"Категория с названием '{dto.Name}' уже существует!");
-        }
+            return Guid.Parse("00000000-0000-0000-0000-000000000000");
 
         return await _categoryRepository.AddAsync(entity, cancellationToken);
     }
@@ -61,6 +59,8 @@ public class CategoryService : ICategoryService
         //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
         //элементы списка - смаппленные модели к dto и возвращаем 
         List<Category> entities = _categoryRepository.GetAll(cancellationToken).ToList();
+        if (entities.IsNullOrEmpty()) return null;
+
         List<CategoryDto> result2 = new();
         foreach (var entity in entities)
         {
@@ -72,16 +72,13 @@ public class CategoryService : ICategoryService
 
             });
         }
-
-        if (result2.IsNullOrEmpty()) { throw new Exception("Нет категорий :( "); };
-        
-         
-
+ 
         var options = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
         };
         _memoryCache.Set(CategoryKey, result2, options);
+        
 
         return result2;
     }
@@ -91,14 +88,12 @@ public class CategoryService : ICategoryService
     ///<inheritdoc /> 
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        
         var entity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
         if(entity == null)
         {
-            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
+            return null;
         }
 
-        //маппим доменную модельку в модель dto
         var result = new CategoryDto
         {
             Id = entity.Id,
@@ -106,7 +101,6 @@ public class CategoryService : ICategoryService
             ParentId = (Guid)entity.ParentId,
 
         };
-
 
         return result;
     }
@@ -116,9 +110,8 @@ public class CategoryService : ICategoryService
     {
         var existingCategory = await _categoryRepository.GetByIdAsync(id, cancellationToken);
         if (existingCategory == null)
-        {
-            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
-        }
+            return null;
+        
 
         //Преобразуем модель обновления к доменной
         var entity = new Category
@@ -156,10 +149,6 @@ public class CategoryService : ICategoryService
             });
         }
 
-        if (result.IsNullOrEmpty())
-        {
-            throw new Exception("По указанному идентификатору родительской категории не найдены категории.");
-        }
         return result;
 
     }

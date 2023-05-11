@@ -33,9 +33,9 @@ public class ParentCategoryService : IParentCategoryService
             return result;
         }
 
-        //Получаем список доменных моделей, создаем список dto-моделей, в цикле добавляем
-        //элементы списка - смаппленные модели к dto и возвращаем 
         var entities = _parentCategoryRepository.GetAll(cancellationToken).ToList();
+        if (entities.IsNullOrEmpty()) return null;
+
         List<ParentCategoryDto> result2 = new List<ParentCategoryDto>();    
         foreach (var entity in entities)
         {
@@ -45,12 +45,7 @@ public class ParentCategoryService : IParentCategoryService
                 Name = entity.Name,
             });
         }
-
-        if (result2.IsNullOrEmpty())
-        {
-            throw new Exception("Нет категорий :( ");
-        }
-
+                
         var options = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
@@ -89,10 +84,7 @@ public class ParentCategoryService : IParentCategoryService
     {
 
         var entity = await _parentCategoryRepository.GetByIdAsync(id, cancellationToken);
-        if (entity == null)
-        {
-            throw new Exception("Введеный идентификатор не принадлежит ни одной существующей категории!");
-        }
+        if (entity == null) return null;
 
         var result = new ParentCategoryDto
         {

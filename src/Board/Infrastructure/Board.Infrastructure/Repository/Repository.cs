@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Board.Infrastructure.Repository;
 
@@ -69,7 +65,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var model = await DbSet.FindAsync(id, cancellationToken);
-        if (model == null) throw new ArgumentNullException($"Неверный идентификатор");
+        
         DbSet.Remove(model);
         await DbContext.SaveChangesAsync(cancellationToken);
     }

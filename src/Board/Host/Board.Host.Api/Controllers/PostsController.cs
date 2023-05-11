@@ -11,7 +11,6 @@ namespace Board.Host.Api.Controllers;
 
 ///<summary>
 ///Api-контроллер для работы с постами(объявлениями) 
-/// имеет логгер
 ///</summary>
 
 [ApiController]
@@ -37,11 +36,13 @@ public class PostsController : ControllerBase
     /// Получение списка обьявлений
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <response code="200"> Список объявлений успешно получен. </response>
+    /// <response code="204"> Список объявлений пуст. </response>
     /// <returns> Список постов </returns>
     [HttpGet(template: "GetPosts/all")]
     [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос объявлений");
@@ -55,12 +56,12 @@ public class PostsController : ControllerBase
     /// <param name="postId">Идентификатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <response code="200"> Объявление успешно получено. </response>
-    /// <response code="404"> Нет объявления с введенным идентификатором. </response>
+    /// <response code="204"> Нет объявления с введенным идентификатором. </response>
     /// <returns>Модель объявления.</returns>
     [HttpGet("GetById{postId:Guid}")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetById(Guid postId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос получение объявления по идентификатору");
@@ -76,7 +77,6 @@ public class PostsController : ControllerBase
     ///<response code="401"> Пользователь не авторизован. </response>
     ///<response code="201"> Объявление успешно сохранено. </response>
     ///<returns> Модель созданного объявления </returns>
-
     [HttpPost]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -89,16 +89,31 @@ public class PostsController : ControllerBase
     }
 
     /// <summary>
-    /// Частично обновить объявление.
+    /// Обновить объявление.
     /// </summary>
     /// <param name="id">Идентификатор.</param>
     /// <param name="dto">Модель обновления объявления.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    /// <returns>Модель обновлённого объявления.</returns>
+    /// <returns> Модель обновлённого объявления. </returns>
+    /// <response code="201"> Объявление успешно изменено. </response>
+    /// <response code="404"> Нет объявления с введенным идентификатором. </response>
+    /// <response code="403"> Нельзя редактировать объявление созданное другим пользователем. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpPut("Update/{id:Guid}")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostDto dto, CancellationToken cancellationToken)
     {
+        var postdto = await _postService.GetByIdAsync(id, cancellationToken);
+
+        if (postdto == null)
+            return StatusCode((int)HttpStatusCode.NotFound);
+        if (postdto.AccountId != _postService.GetCurrentUserId())
+            return StatusCode((int)HttpStatusCode.Forbidden);
+
         var result = await _postService.UpdateAsync(id, dto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
     }
@@ -107,10 +122,25 @@ public class PostsController : ControllerBase
     /// Удаление объявления по параметру id
     /// </summary>
     /// <returns> StatusCode </returns>
+    /// <response code="204"> Объявление успешно удалено. </response>
+    /// <response code="404"> Нет объявления с введенным идентификатором. </response>
+    /// <response code="403"> Нельзя удалить объявление созданное другим пользователем. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpDelete]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
+        var postdto = await _postService.GetByIdAsync(id, cancellationToken);
+
+        if (postdto == null) 
+            return StatusCode((int)HttpStatusCode.NotFound);
+        if (postdto.AccountId != _postService.GetCurrentUserId())
+            return StatusCode((int)HttpStatusCode.Forbidden);
+
         await _postService.DeleteById(id, cancellationToken);
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
@@ -122,13 +152,20 @@ public class PostsController : ControllerBase
     /// </summary>  где-то в сервисе преобразование не происходит
     /// <param name="CategoryId"> Идентификатор категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <response code="200"> Список объявлений </response>
+    /// <response code="204"> Нет объявлений или неверный идентификатор категории. </response>
     /// <returns> Список постов </returns>
     [HttpGet("GetByCategoryId/{CategoryId:Guid}")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка постов для категории");
+
         var result = _postService.GetAllPostsByCategoryId(CategoryId, cancellationToken);
+
+        if (result == null) return StatusCode((int)HttpStatusCode.NoContent);
         return await Task.Run(() => Ok(result));
     }
 
@@ -137,12 +174,22 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns> Список постов </returns>
+    /// <response code="200"> Список объявлений </response>
+    /// <response code="204"> Нет объявлений или неверный идентификатор родительской категории. </response>
+    /// <response code="401"> Пользователь не авторизован. </response>
     [HttpGet("GetPostByCurrentUser")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetUserPostsAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка постов для текущего аккаунта");
+
+
         var result = _postService.GetUserPosts(cancellationToken);
+        if (result == null) return StatusCode((int)HttpStatusCode.NoContent);
+
         return await Task.Run(() => Ok(result));
     }
 
@@ -152,8 +199,12 @@ public class PostsController : ControllerBase
     /// <param name="ParCatId"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> токен отмены операции </param>
     /// <returns> Список постов </returns>
-    [HttpGet("GetPostsByParentCategoryId/{parentCategoryId:Guid}")]
+    /// <response code="200"> Список объявлений </response>
+    /// <response code="204"> Нет объявлений или неверный идентификатор родительской категории. </response>
+    [HttpGet("GetPostsByParentCategoryId/{ParCatId:Guid}")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Запрос списка постов по Id родительской категории для категории, к которой относится пост");

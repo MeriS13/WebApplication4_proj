@@ -30,6 +30,7 @@ public class CreateAnswerDto
     /// <summary>
     /// Идентификатор коммента или ответа, к которому относится ответ
     /// </summary>
+    /// [Required]
     public Guid CommentId { get; set; }
 
 

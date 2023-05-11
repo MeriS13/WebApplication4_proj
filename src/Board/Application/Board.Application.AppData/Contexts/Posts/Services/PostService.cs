@@ -63,14 +63,6 @@ public class PostService : IPostService
     /// <inheritdoc/>
     public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        var existingPost = await _postRepository.GetByIdAsync(id, cancellationToken);
-
-        if (existingPost == null)
-            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-
-        if (existingPost.AccountId != GetCurrentUserId())
-            throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
-        
         await _postRepository.DeleteById(id, cancellationToken);
     }
 
@@ -101,8 +93,9 @@ public class PostService : IPostService
     {
         var entity = await _postRepository.GetByIdAsync(id, cancellationToken);
         if (entity == null)
-            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-
+        {
+            return null;
+        }
 
         var result = new PostDto
         {
@@ -122,24 +115,20 @@ public class PostService : IPostService
     /// <inheritdoc/> все ок
     public async Task<PostDto> UpdateAsync(Guid id, UpdatePostDto dto, CancellationToken cancellationToken)
     {
+        
         //Обработка исключений
-        var existingPost = await _postRepository.GetByIdAsync(id, cancellationToken);
-        if (existingPost == null)
-            throw new Exception("Введеный идентификатор не принадлежит ни одному существующему объявлению!");
-
-        if (existingPost.AccountId != GetCurrentUserId()) 
-            throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
+        var post = await _postRepository.GetByIdAsync(id, cancellationToken);
 
         //Преобразуем dto-модель обновления к доменной
         var entity = new Post
         {
-            Id = existingPost.Id,
+            Id = post.Id,
             Name = dto.Name,
             Description = dto.Description,
             IsFavorite = dto.IsFavorite,
             CreationDate = DateTime.UtcNow,
             CategoryId = dto.CategoryId,
-            AccountId = existingPost.AccountId,
+            AccountId = post.AccountId,
         };
 
         var newModel = await _postRepository.UpdateAsync(id, entity, cancellationToken);
@@ -158,7 +147,7 @@ public class PostService : IPostService
         return newDto;
     }
 
-    /// <inheritdoc/> все ок
+    /// <inheritdoc/> норм
     public async Task<List<PostDto>> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
         List<Post> entities = _postRepository.GetAllPostsByCategoryId(CategoryId, cancellationToken).ToList();

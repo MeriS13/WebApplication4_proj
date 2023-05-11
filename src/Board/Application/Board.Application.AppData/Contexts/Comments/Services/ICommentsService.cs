@@ -1,4 +1,5 @@
-﻿using Board.Contracts.Comments;
+﻿using Board.Contracts.Answers;
+using Board.Contracts.Comments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,19 @@ namespace Board.Application.AppData.Contexts.Comments.Services;
 /// </summary>
 public interface ICommentsService
 {
+    /// <summary>
+    /// Метод для получения Id текущего пользователя из контекста
+    /// </summary>
+    /// <returns> Id текущего пользователя </returns>
+    Guid GetCurrentUserId();
+
+    /// <summary>
+    /// Метод для получения имени текущего пользователя из контекста
+    /// </summary>
+    /// <returns> Имя текущего пользователя </returns>
+    string GetCurrentUserName();
+
+
     /// <summary>
     /// Создание комментария.
     /// </summary>
@@ -43,4 +57,11 @@ public interface ICommentsService
     /// <returns> Список комментов </returns>
     Task<List<CommentDto>> GetCommentsCurrentUserByIdAsync (CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Получение комментария по идентификатору.
+    /// </summary>
+    /// <param name="id"> Идентификатор </param>
+    /// <param name="cancellationToken"> Токен отмены операции </param>
+    /// <returns> Модель комментария </returns>
+    Task<CommentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

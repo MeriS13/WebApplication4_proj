@@ -1,4 +1,6 @@
-﻿using Board.Application.AppData.Contexts.Comments.Repositories;
+﻿using Board.Application.AppData.Contexts.Answers.Repositories;
+using Board.Application.AppData.Contexts.Comments.Repositories;
+using Board.Contracts.Answers;
 using Board.Contracts.Comments;
 using Board.Domain.Comments;
 using Microsoft.AspNetCore.Http;
@@ -102,6 +104,26 @@ public class CommentsService : ICommentsService
                 AccId = entity.AccId,
             });
         }
+        return result;
+    }
+
+    public async Task<CommentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var entity = await _commentsRepository.GetByIdAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var result = new CommentDto
+        {
+            AccId = entity.AccId,
+            UserName = entity.UserName,
+            Content = entity.Content,
+            PostId = entity.PostId,
+            CreationDate = entity.CreationDate,
+            Id = entity.Id,
+        };
         return result;
     }
 }

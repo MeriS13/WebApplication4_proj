@@ -22,6 +22,8 @@
             <param name="dto">Модель регистрации аккаунта.</param>
             <param name="cancellation">Токен отмены.</param>
             <returns>Модель зарегистрированного аккаунта.</returns>
+            <response code="201"> Пользователь зарегестрирован. </response>
+            <response code="400"> Введенные данные содержат запрещенные слова. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.AccountController.Login(Board.Contracts.Accounts.LoginAccountDto,System.Threading.CancellationToken)">
             <summary>
@@ -30,6 +32,7 @@
             <param name="dto">Модель входа в аккаунт.</param>
             <param name="cancellation">Токен отмены.</param>
             <returns>Модель с данными входа.</returns>
+            <response code="200"> Аутентификация прошла успешно. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.AccountController.GetUserInfo(System.Threading.CancellationToken)">
             <summary>
@@ -37,6 +40,8 @@
             </summary>
             <param name="cancellation">Токен отмены.</param>
             <returns> Модель аккаунта </returns>
+            <response code="200"> Информация об аккаунте. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="T:Board.Host.Api.Controllers.AnswerController">
             <summary>
@@ -44,12 +49,14 @@
             </summary>
         </member>
         <member name="M:Board.Host.Api.Controllers.AnswerController.CreateByCommentIdAsync(Board.Contracts.Answers.CreateAnswerDto,System.Threading.CancellationToken)">
-            <summary>
-            Создать ответ к комментарию.
-            </summary>
-            <param name="dto"> Модель создания ответа. </param>
-            <param name="cancellationToken"> Токен отмены операции. </param>
-            <returns> Идентификаор созданного ответа. </returns>
+             <summary>
+             Создать ответ к комментарию.
+             </summary>
+             <param name="dto"> Модель создания ответа. </param>
+             <param name="cancellationToken"> Токен отмены операции. </param>
+             <returns> Идентификаор созданного ответа. </returns>
+            <response code="401"> Пользователь не авторизован. </response>
+            <response code="201"> Ответ сохранён. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.AnswerController.DeleteById(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -58,6 +65,10 @@
             <param name="id"> Идентификатор ответа. </param>
             <param name="cancellationToken"> Токен отмены операции. </param>
             <returns> - </returns>
+            <response code="204"> Ответ успешно удалено. </response>
+            <response code="404"> Нет ответа с введенным идентификатором. </response>
+            <response code="403"> Нельзя удалить ответ другого пользователя. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.AnswerController.GetAnswersOnCommentsById(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -66,6 +77,9 @@
             <param name="commentId"> Идентификатор комментария. </param>
             <param name="cancellationToken"> Токен отмены операции. </param>
             <returns> Список ответов. </returns>
+            <response code="200"> Список ответов </response>
+            <response code="204"> Нет ответов или неверный идентификатор комментария. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="T:Board.Host.Api.Controllers.CategoryController">
             <summary>
@@ -76,26 +90,57 @@
             <summary>
             Получить список категорий.
             </summary>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Список категорий. </returns>
+            <response code="200"> Список категорий </response>
+            <response code="204"> Нет категорий. </response> 
         </member>
-        <member name="M:Board.Host.Api.Controllers.CategoryController.GetById(System.Guid,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Получить категорию по идентификатору.
             </summary>
+            <param name="id"> Идентификатор категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Модель категории. </returns>
+            <response code="200"> Модель категории успешно получена. </response>
+            <response code="204"> Неверный идентификатор. </response>
         </member>
-        <member name="M:Board.Host.Api.Controllers.CategoryController.Create(Board.Contracts.Category.CreateCategoryDto,System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CategoryController.CreateAsync(Board.Contracts.Category.CreateCategoryDto,System.Threading.CancellationToken)">
             <summary>
             Создать новую категорию.
             </summary>
+            <param name="dto"> Модель создания категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Идентификатор созданной категории. </returns>
+            <response code="201"> категория успешно создана. </response>
+            <response code="400"> Категория с таким названием уже существует. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
         </member>
         <member name="M:Board.Host.Api.Controllers.CategoryController.Update(System.Guid,Board.Contracts.Category.UpdateCategoryDto,System.Threading.CancellationToken)">
             <summary>
             Обновить категорию.
             </summary>
+            <param name="id"> Идентификатор категории. </param>
+            <param name="dto"> Модель обновления категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> Модель категории. </returns>
+            <response code="200"> Категория успешно обновлена. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
+            <response code="204"> Нет категории или неверный идентификатор. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.CategoryController.DeleteById(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Удалить категорию по идентификатору.
             </summary>
+            <param name="id"> Идентификатор категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> StatusCode </returns>
+            <response code="404"> Нет категории с таким идентификатором. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
+            <response code="204"> Успешно удалено. </response> 
         </member>
         <member name="M:Board.Host.Api.Controllers.CategoryController.GetCategoriesByParentIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -104,6 +149,8 @@
             <param name="id"> Идентификатор родительской категории </param>
             <param name="cancellationToken"> Токен отмены операции </param>
             <returns> Список категорий </returns>
+            <response code="200"> Список категорий </response>
+            <response code="204"> Нет категорий или неверный идентификатор родительской категории. </response> 
         </member>
         <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CreateCommentDto,System.Threading.CancellationToken)">
             <summary>
@@ -112,6 +159,8 @@
             <param name="dto"> Модель комментария </param>
             <param name="cancellationToken"> Токен отмены операции </param>
             <returns> Идентификатор созданного коммента </returns>
+            <response code="401"> Пользователь не авторизован. </response>
+            <response code="201"> Ответ сохранён. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.CommentsController.DeleteByCommentId(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -120,6 +169,10 @@
             <param name="id"> Идентификатор комментария </param>
             <param name="cancellationToken"> Токен отмены операции </param>
             <returns> Статус код</returns>
+            <response code="204"> Комментарий успешно удалено. </response>
+            <response code="404"> Нет комментария с введенным идентификатором. </response>
+            <response code="403"> Нельзя удалить комментарий другого пользователя. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.CommentsController.GetCommentsOnPostById(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -128,19 +181,24 @@
             <param name="postId"> Идентификатор поста. </param>
             <param name="cancellationToken"> Токен отмены операции. </param>
             <returns> Список комментов. </returns>
+            <response code="200"> Список комментариев </response>
+            <response code="204"> Нет комментариев или неверный идентификатор объявления. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
-        <member name="M:Board.Host.Api.Controllers.CommentsController.GetCommentsCarrentUser(System.Threading.CancellationToken)">
+        <member name="M:Board.Host.Api.Controllers.CommentsController.GetCommentsCurrentUser(System.Threading.CancellationToken)">
             <summary>
             Получение комментариев текущего пользователя (по Id через клеймы).
             </summary>
             <param name="cancellationToken"> Токен отмены операции. </param>
             <returns> Список комментариев. </returns>
+            <response code="200"> Список комментариев </response>
+            <response code="204"> Нет комментариев. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="T:Board.Host.Api.Controllers.FileController">
             <summary>
             Контроллер для работы с файлами.
             </summary>
-            <response code="500">Произошла внутренняя ошибка.</response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.#ctor(Board.Application.AppData.Contexts.Files.Services.IFileService,Microsoft.Extensions.Logging.ILogger{Board.Host.Api.Controllers.FileController})">
             <summary>
@@ -156,6 +214,9 @@
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
             <returns>Информация о файле.</returns>
+            <response code="404"> Нет файла с введенным идентификатором. </response>
+            <response code="200"> Информация успешно получена. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.GetAllByPostIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -164,14 +225,13 @@
             <param name="postId"> Идентификатор объявления.</param>
             <param name="cancellationToken"> Токен отмены. </param>
             <returns> Информация о файле. </returns>
+            <response code="404"> Нет файлов или неверный идентификатор. </response>
+            <response code="200"> Информация успешно получена. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.Guid,System.Threading.CancellationToken)">
-            <summary>
-            Загрузка файла в систему.
-            </summary>
-            <param name="file">Файл.</param>
-            <param name="postId"> Идентификатор объявления. </param>
-            <param name="cancellationToken">Токен отмены.</param>
+            <response code="404"> Нет файлов или неверный идентификатор. </response>
+            <response code="401"> Пользователь не авторизован. </response>
+            <response code="201"> Файл успешно загружен. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Download(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -180,6 +240,8 @@
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
             <returns>Файл в виде потока.</returns>
+            <response code="404"> Нет файла с указанным идентификатором. </response>
+            <response code="200"> Файл готов к скачиванию. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.FileController.Delete(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -187,6 +249,10 @@
             </summary>
             <param name="id">Идентификатор файла.</param>
             <param name="cancellationToken">Токен отмены.</param>
+            <response code="204"> Файл успешно удалено. </response>
+            <response code="404"> Нет файла с введенным идентификатором. </response>
+            <response code="403"> Нельзя удалить файл другого пользователя. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="T:Board.Host.Api.Controllers.ParentCategoryController">
             <summary>
@@ -199,14 +265,13 @@
             </summary>
             <param name="cancellationToken"> Токен отмены операции </param>
             <returns> Список родительских категорий</returns>
+            <response code="200"> Список категорий </response>
+            <response code="204"> Нет категорий. </response> 
         </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.CreateAsync(Board.Contracts.ParentCategory.CreateParentCategoryDto,System.Threading.CancellationToken)">
-            <summary>
-            Создать новую категорию.
-            </summary>
-            <param name="dto"> Модель создания родительской категории </param>
-            <param name="cancellationToken"> Токен отмены операции </param>
-            <returns> Идентификатор созданной категории </returns>
+            <response code="201"> категория успешно создана. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
         </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -214,7 +279,9 @@
             </summary>
             <param name="id"> Идентификатор родительской категории </param>
             <param name="cancellationToken"> Токен отмены операции </param>
-            <returns></returns>
+            <returns> Модель категории. </returns>
+            <response code="200"> Модель категории успешно получена. </response>
+            <response code="204"> Неверный идентификатор. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.ParentCategoryController.DeleteByIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -222,12 +289,15 @@
             </summary>
             <param name="id"> Идентификатор род.категории </param>
             <param name="cancellationToken"> Токен отмены операции </param>
-            <returns> Результат выполнения </returns>
+            <returns> - </returns>
+            <response code="204"> Успешно удалено. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
+            <response code="404"> Нет категории с таким идентификатором. </response>
         </member>
         <member name="T:Board.Host.Api.Controllers.PostsController">
             <summary>
             Api-контроллер для работы с постами(объявлениями) 
-             имеет логгер
             </summary>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.#ctor(Microsoft.Extensions.Logging.ILogger{Board.Host.Api.Controllers.PostsController},Board.Application.AppData.Contexts.Posts.Services.IPostService)">
@@ -242,6 +312,8 @@
             Получение списка обьявлений
             </summary>
             <param name="cancellationToken"> Токен отмены операции </param>
+            <response code="200"> Список объявлений успешно получен. </response>
+            <response code="204"> Список объявлений пуст. </response>
             <returns> Список постов </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetById(System.Guid,System.Threading.CancellationToken)">
@@ -251,7 +323,7 @@
             <param name="postId">Идентификатор.</param>
             <param name="cancellationToken">Токен отмены.</param>
             <response code="200"> Объявление успешно получено. </response>
-            <response code="404"> Нет объявления с введенным идентификатором. </response>
+            <response code="204"> Нет объявления с введенным идентификатором. </response>
             <returns>Модель объявления.</returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.CreatePost(Board.Contracts.Posts.CreatePostDto,System.Threading.CancellationToken)">
@@ -266,18 +338,26 @@
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.Update(System.Guid,Board.Contracts.Posts.UpdatePostDto,System.Threading.CancellationToken)">
             <summary>
-            Частично обновить объявление.
+            Обновить объявление.
             </summary>
             <param name="id">Идентификатор.</param>
             <param name="dto">Модель обновления объявления.</param>
             <param name="cancellationToken">Токен отмены.</param>
-            <returns>Модель обновлённого объявления.</returns>
+            <returns> Модель обновлённого объявления. </returns>
+            <response code="201"> Объявление успешно изменено. </response>
+            <response code="404"> Нет объявления с введенным идентификатором. </response>
+            <response code="403"> Нельзя редактировать объявление созданное другим пользователем. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.DeleteById(System.Guid,System.Threading.CancellationToken)">
             <summary>
             Удаление объявления по параметру id
             </summary>
             <returns> StatusCode </returns>
+            <response code="204"> Объявление успешно удалено. </response>
+            <response code="404"> Нет объявления с введенным идентификатором. </response>
+            <response code="403"> Нельзя удалить объявление созданное другим пользователем. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetAllPostsByCategoryId(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -285,6 +365,8 @@
             </summary>  где-то в сервисе преобразование не происходит
             <param name="CategoryId"> Идентификатор категории </param>
             <param name="cancellationToken"> Токен отмены операции </param>
+            <response code="200"> Список объявлений </response>
+            <response code="204"> Нет объявлений или неверный идентификатор категории. </response>
             <returns> Список постов </returns>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetUserPostsAsync(System.Threading.CancellationToken)">
@@ -293,6 +375,9 @@
             </summary>
             <param name="cancellationToken"></param>
             <returns> Список постов </returns>
+            <response code="200"> Список объявлений </response>
+            <response code="204"> Нет объявлений или неверный идентификатор родительской категории. </response>
+            <response code="401"> Пользователь не авторизован. </response>
         </member>
         <member name="M:Board.Host.Api.Controllers.PostsController.GetAllPostsByParentCategoryId(System.Guid,System.Threading.CancellationToken)">
             <summary>
@@ -301,6 +386,8 @@
             <param name="ParCatId"> Идентификатор родительской категории </param>
             <param name="cancellationToken"> токен отмены операции </param>
             <returns> Список постов </returns>
+            <response code="200"> Список объявлений </response>
+            <response code="204"> Нет объявлений или неверный идентификатор родительской категории. </response>
         </member>
     </members>
 </doc>

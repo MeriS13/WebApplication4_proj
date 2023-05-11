@@ -34,6 +34,21 @@ namespace Board.Application.AppData.Contexts.Files.Services
         }
 
 
+        // Метод для получения идентификатора текущего авторизованного пользователя из контекста
+        public Guid GetCurrentUserId()
+        {
+            var claims = _httpContextAccessor.HttpContext.User.Claims;
+            var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return Guid.Parse(claimId);
+        }
+        // Метод для получения имени текущего авторизованного пользователя из контекста
+        public string GetCurrentUserName()
+        {
+            var claims = _httpContextAccessor.HttpContext.User.Claims;
+            return claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        }
+
+
 
         /// <inheritdoc/>
         public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -45,14 +60,14 @@ namespace Board.Application.AppData.Contexts.Files.Services
         public async Task<FileDto> DownloadAsync(Guid id, CancellationToken cancellationToken)
         {
             var model = await _fileRepository.DownloadAsync(id, cancellationToken);
-
+            if (model == null) return null;
             var dto = new FileDto
             {
                 Content = model.Content,
                 ContentType = model.ContentType,
                 Name = model.Name,
-                AccountId = model.AccountId, //?
-                PostId = model.PostId,      //?
+                AccountId = model.AccountId, 
+                PostId = model.PostId,      
             };
 
             return dto;
@@ -63,8 +78,8 @@ namespace Board.Application.AppData.Contexts.Files.Services
         {
             var model = await _fileRepository.GetInfoByIdAsync(id, cancellationToken);
             if(model==null) 
-            { 
-                throw new Exception("Введеный идентификатор не соответствует ни одному файлу!"); 
+            {
+                return null;
             }
             var dto = new FileInfoDto
             {
@@ -79,30 +94,19 @@ namespace Board.Application.AppData.Contexts.Files.Services
             return dto;
         }
 
-        public IPostRepository Get_postRepository()
-        {
-            return _postRepository;
-        }
-
         /// <inheritdoc/>
         public async Task<Guid> UploadAsync(FileDto dto, Guid postId, CancellationToken cancellationToken)
         {
-            //получение идентификатора и имени пользователя из контекста 
-            var claims = _httpContextAccessor.HttpContext.User.Claims;
-            var claimId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(claimId)) throw new Exception("ClaimId is null!");
-            var UserId = Guid.Parse(claimId);
 
-            //
-
-            //нужно чтобы человек мог загрузить файл только к тому посту, который ему принадлежит 
+            //проверка, чтобы человек мог загрузить файл только к тому посту, который ему принадлежит 
 
             Post postdto = await _postRepository.GetByIdAsync(postId, cancellationToken);
-            if (postdto == null) { throw new Exception("Не существует объявления с введенным идентификатором"); };
+            if (postdto == null) //{ throw new Exception("Не существует объявления с введенным идентификатором"); };
+                return Guid.Parse("00000000-0000-0000-0000-000000000000"); 
 
             var accId = postdto.AccountId;
-
-            if (accId != UserId) throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
+            if (accId != GetCurrentUserId()) 
+                throw new Exception("Текущий пользователь не может редактировать пост другого пользователя.");
 
             var file = new Board.Domain.Files.File
             {
@@ -112,7 +116,7 @@ namespace Board.Application.AppData.Contexts.Files.Services
                 Length = dto.Content.Length,
                 Created = DateTime.UtcNow,
                 PostId = postId,
-                AccountId = UserId,
+                AccountId = GetCurrentUserId(),
             };
             return await _fileRepository.UploadAsync(file, cancellationToken);
         }
@@ -123,9 +127,8 @@ namespace Board.Application.AppData.Contexts.Files.Services
         {
             List<Domain.Files.File> models =  _fileRepository.GetAllByPostId(postId, cancellationToken).ToList();
             if (models.IsNullOrEmpty())
-            {
-                throw new Exception("Введеный идентификатор не соответствует ни одному файлу!");
-            }
+                return null;
+
             List<FileInfoDto> dtolist = new();
             foreach(var model in models)
             {
