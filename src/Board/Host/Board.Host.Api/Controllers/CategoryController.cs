@@ -168,7 +168,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid parentId, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос родительской категории по идентификатору.");
+        _logger.LogInformation("Получить список категорий, относящихся к заданной родительской категории.");
         var result = await _categoryService.GetCategoriesByParentIdAsync(parentId, cancellationToken);
         return Ok(result);
     }

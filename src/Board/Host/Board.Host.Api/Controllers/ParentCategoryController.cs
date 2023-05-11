@@ -38,7 +38,7 @@ public class ParentCategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос списка категорий.");
+        _logger.LogInformation("Запрос списка родительских категорий.");
 
         var result = await _parent_categoryService.GetAllAsync(cancellationToken);
         if (result == null) return StatusCode((int)HttpStatusCode.NoContent);
@@ -65,7 +65,7 @@ public class ParentCategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateParentCategoryDto dto, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Создание новой категории.");
+        _logger.LogInformation("Создание новой родительской категории.");
 
         var result = await _parent_categoryService.CreateAsync(dto, cancellationToken);
 
@@ -87,7 +87,7 @@ public class ParentCategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос категории по идентификатору.");
+        _logger.LogInformation("Запрос родительской категории по идентификатору.");
 
         var result = await _parent_categoryService.GetByIdAsync(id, cancellationToken);
         if (result == null) return StatusCode((int)HttpStatusCode.NoContent);
@@ -112,7 +112,7 @@ public class ParentCategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Удаление категории по идентификатору.");
+        _logger.LogInformation("Удаление родительской категории по идентификатору.");
 
         var existingCategory = await _parent_categoryService.GetByIdAsync(id, cancellationToken);
         if (existingCategory == null) return StatusCode((int)HttpStatusCode.NotFound);

@@ -49,13 +49,14 @@ public class FileController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetInfoById(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Получение информации о файле по идентификатору.");
         var result = await _fileService.GetInfoByIdAsync(id, cancellationToken);
         return result == null ? NotFound() : Ok(result);
     }
 
 
     /// <summary>
-    /// Получение списка файлов, относящихся к объявлению по его Id
+    /// Получение списка файлов, относящихся к объявлению по его Id.
     /// </summary>
     /// <param name="postId"> Идентификатор объявления.</param>
     /// <param name="cancellationToken"> Токен отмены. </param>
@@ -68,6 +69,7 @@ public class FileController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllByPostIdAsync(Guid postId, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Получение списка файлов, относящихся к объявлению по его Id.");
         var result = await _fileService.GetAllByPostIdAsync(postId, cancellationToken);
         return result == null ? NotFound() : Ok(result);
     }
@@ -94,6 +96,7 @@ public class FileController : ControllerBase
     //[ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Upload(IFormFile file, Guid postId,  CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Загрузка файла в систему.");
         var bytes = await GetBytesAsync(file, cancellationToken);
         var fileDto = new FileDto
         {
@@ -123,6 +126,8 @@ public class FileController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Download(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Скачивание файла по идентификатору.");
+
         var result = await _fileService.DownloadAsync(id, cancellationToken);
 
         if (result == null)
@@ -151,6 +156,8 @@ public class FileController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Удаление файла по идентификатору.");
+
         var existingfile = await _fileService.GetInfoByIdAsync(id, cancellationToken);
         if (existingfile == null) 
             return NotFound();

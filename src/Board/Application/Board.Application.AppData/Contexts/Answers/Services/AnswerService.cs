@@ -22,11 +22,14 @@ public class AnswerService : IAnswerService
 
     private readonly IAnswerRepository _answerRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICommentsRepository _commentsRepository;
 
-    public AnswerService(IAnswerRepository answerRepository, IHttpContextAccessor httpContextAccessor)
+    public AnswerService(IAnswerRepository answerRepository, IHttpContextAccessor httpContextAccessor, 
+        ICommentsRepository commentsRepository)
     {
         _answerRepository = answerRepository;
         _httpContextAccessor = httpContextAccessor;
+        _commentsRepository = commentsRepository;
     }
 
 
@@ -48,6 +51,8 @@ public class AnswerService : IAnswerService
     /// <inheritdoc/>
     public async Task<Guid> CreateByCommentIdAsync(CreateAnswerDto dto, CancellationToken cancellationToken)
     {
+        Comment existing = await _commentsRepository.GetByIdAsync(dto.CommentId, cancellationToken);
+        if (existing == null) return Guid.Empty;
 
         var model = new Answer
         {

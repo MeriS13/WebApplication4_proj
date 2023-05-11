@@ -45,7 +45,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос объявлений");
+        _logger.LogInformation("Запрос списка всех объявлений");
         var result = _postService.GetAll(cancellationToken);
         return await Task.Run(() => Ok(result));
     }
@@ -107,6 +107,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostDto dto, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Запрос обновления объявления.");
         var postdto = await _postService.GetByIdAsync(id, cancellationToken);
 
         if (postdto == null)
@@ -134,6 +135,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Запрос на удаление объявления по идентификатору.");
         var postdto = await _postService.GetByIdAsync(id, cancellationToken);
 
         if (postdto == null) 
@@ -161,7 +163,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllPostsByCategoryId(Guid CategoryId, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос списка постов для категории");
+        _logger.LogInformation("Запрос списка постов относящихся к заданной категории");
 
         var result = _postService.GetAllPostsByCategoryId(CategoryId, cancellationToken);
 
@@ -184,7 +186,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetUserPostsAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Запрос списка постов для текущего аккаунта");
+        _logger.LogInformation("Запрос списка постов текущего аккаунта");
 
 
         var result = _postService.GetUserPosts(cancellationToken);
