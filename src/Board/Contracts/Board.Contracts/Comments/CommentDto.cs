@@ -13,14 +13,6 @@ namespace Board.Contracts.Comments;
 /// </summary>
 public class CommentDto 
 {
-    
-    /// <summary>
-    /// Имя юзера, оставившего комментарий.
-    /// </summary>
-    [Required(ErrorMessage = "Имя пользователя не указано")]
-    [StringLength(50, ErrorMessage = "Имя пользователя слишком длинное")]
-    [ForbiddenWordsValidation]
-    public string UserName { get; set; } 
 
     /// <summary>
     /// Идентификатор коммента
@@ -32,6 +24,13 @@ public class CommentDto
     /// Идентификатор поста, к которому относится коммент
     /// </summary>
     public Guid PostId { get; set; }
+
+
+    /// <summary>
+    /// Идентификатор коммента, к которому относится данные коммент (ответ)
+    /// </summary>
+    public Guid ParComId { get; set; }
+
 
     /// <summary>
     /// Содержание комментария.
@@ -45,7 +44,7 @@ public class CommentDto
     /// <summary>
     /// Дата создания
     /// </summary>
-    [DateValidation]
+    //[DateValidation]
     public DateTime CreationDate { get; set; }
     
 
@@ -53,5 +52,14 @@ public class CommentDto
     /// Идентификатор пользователя, добавившего объявления
     /// </summary>
     public Guid AccId { get; set; }
-    
+
+
+    /// <summary>
+    /// Имя юзера, оставившего комментарий.
+    /// </summary>
+    [Required(ErrorMessage = "Имя пользователя не указано")]
+    [StringLength(50, ErrorMessage = "Имя пользователя слишком длинное")]
+    [ForbiddenWordsValidation]
+    public string UserName { get; set; }
+
 }

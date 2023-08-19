@@ -1,6 +1,6 @@
-﻿using Board.Application.AppData.Contexts.Answers.Repositories;
+﻿
 using Board.Application.AppData.Contexts.Comments.Repositories;
-using Board.Contracts.Answers;
+
 using Board.Contracts.Comments;
 using Board.Domain.Comments;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +39,7 @@ public class CommentsService : ICommentsService
 
 
     ///<inheritdoc/>
-    public async Task<Guid> CreateByPostIdAsync(CreateCommentDto dto, CancellationToken cancellationToken)
+    public async Task<Guid> CreateCommentAsync(CreateCommentDto dto, CancellationToken cancellationToken)
     {
         // Преобр из дто в доменную модель
         var entity = new Comment
@@ -49,9 +49,10 @@ public class CommentsService : ICommentsService
             CreationDate = DateTime.UtcNow,
             AccId = GetCurrentUserId(),
             PostId = dto.PostId,
+            ParComId = Guid.Parse("00000000-0000-0000-0000-000000000000")
         };
 
-        return await _commentsRepository.CreateByPostIdAsync (entity, cancellationToken);
+        return await _commentsRepository.CreateCommentAsync (entity, cancellationToken);
     }
 
 
@@ -80,6 +81,7 @@ public class CommentsService : ICommentsService
                 Content = entity.Content,
                 PostId = entity.PostId,
                 AccId = entity.AccId,
+                ParComId = entity.ParComId,
             });
         }
         return result;
@@ -102,6 +104,7 @@ public class CommentsService : ICommentsService
                 Content = entity.Content,
                 PostId = entity.PostId,
                 AccId = entity.AccId,
+                ParComId = entity.ParComId,
             });
         }
         return result;
@@ -123,7 +126,51 @@ public class CommentsService : ICommentsService
             PostId = entity.PostId,
             CreationDate = entity.CreationDate,
             Id = entity.Id,
+            ParComId = entity.ParComId
         };
+        return result;
+    }
+
+
+    public async Task<Guid> CreateAnswer(CreateAnswerDto dto, CancellationToken cancellationToken)
+    {
+        //получаем комментарий, к которому создается ответ, чтобы получить у него Id поста
+        var parentComment = await _commentsRepository.GetByIdAsync(dto.ParComId, cancellationToken);
+
+        var entity = new Comment
+        {
+            AccId=GetCurrentUserId(),
+            UserName=GetCurrentUserName(),
+            Content = dto.Content,
+            PostId = parentComment.PostId,
+            CreationDate = DateTime.UtcNow,
+            ParComId = dto.ParComId,
+
+        };
+
+        return await _commentsRepository.CreateCommentAsync(entity, cancellationToken);
+    }
+
+
+    public async Task<List<CommentDto>> GetAnswersByCommentId(Guid commentId, CancellationToken cancellationToken)
+    {
+        List<Comment> entities =  _commentsRepository.GetAnswersByCommentId(commentId, cancellationToken).ToList();
+
+        List<CommentDto> result = new();
+
+        foreach (var entity in entities)
+        {
+            result.Add(new CommentDto
+            {
+                Id = entity.Id,
+                UserName = entity.UserName,
+                CreationDate = entity.CreationDate,
+                Content = entity.Content,
+                PostId = entity.PostId,
+                AccId = entity.AccId,
+                ParComId = entity.ParComId,
+            });
+        }
         return result;
     }
 }

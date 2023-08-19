@@ -18,10 +18,8 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.Property(a => a.UserName).IsRequired().HasMaxLength(50);
         builder.Property(a => a.Content).IsRequired().HasMaxLength(800);
         builder.Property(a => a.CreationDate).HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+        builder.Property(a => a.ParComId).IsRequired();
 
 
-
-        builder.HasMany(s => s.Answers).WithOne(s => s.Comment).
-        HasForeignKey(c => c.CommentId).IsRequired().OnDelete(DeleteBehavior.Cascade);
     }
 }

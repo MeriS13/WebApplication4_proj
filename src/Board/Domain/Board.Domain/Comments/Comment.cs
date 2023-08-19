@@ -1,5 +1,4 @@
 ﻿using Board.Domain.Accounts;
-using Board.Domain.Answers;
 using Board.Domain.Posts;
 using System;
 using System.Collections.Generic;
@@ -12,10 +11,6 @@ namespace Board.Domain.Comments;
 
 public class Comment
 {
-    /// <summary>
-    /// Имя юзера, оставившего комментарий.
-    /// </summary>
-    public string UserName { get; set; }
 
     /// <summary>
     /// Идентификатор коммента
@@ -23,9 +18,10 @@ public class Comment
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Дата создания
+    /// Идентификатор коммента, к которому относится данные коммент (ответ)
     /// </summary>
-    public DateTime CreationDate { get; set; }
+    public Guid ParComId { get; set; }
+
 
     /// <summary>
     /// Идентификатор поста, к которому относится коммент
@@ -38,9 +34,19 @@ public class Comment
     public string Content { get; set; }
 
     /// <summary>
+    /// Дата создания
+    /// </summary>
+    public DateTime CreationDate { get; set; }
+
+    /// <summary>
     /// Идентификатор пользователя, добавившего объявления
     /// </summary>
     public Guid AccId { get; set; }
+
+    /// <summary>
+    /// Имя юзера, оставившего комментарий.
+    /// </summary>
+    public string UserName { get; set; }
 
 
 
@@ -55,8 +61,5 @@ public class Comment
     /// </summary>
     public virtual Account Account { get; set; }
 
-    /// <summary>
-    /// Список ответов
-    /// </summary>
-    public virtual List<Answer> Answers { get; set; }
+
 }

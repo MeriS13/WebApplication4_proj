@@ -29,9 +29,6 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasMany(s => s.Comments).WithOne(s => s.Account).
         HasForeignKey(c => c.AccId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(s => s.Answers).WithOne(s => s.Account).
-        HasForeignKey(c => c.AccId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(s => s.Files).WithOne(s => s.Account).
         HasForeignKey(c => c.AccountId).IsRequired().OnDelete(DeleteBehavior.Cascade);
     }

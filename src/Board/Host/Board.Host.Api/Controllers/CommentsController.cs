@@ -1,5 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Comments.Services;
-using Board.Contracts.Answers;
+
 using Board.Contracts.Comments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ public class CommentsController : ControllerBase
     {
         _logger.LogInformation("Добавление комментария к посту по идентификатору поста.");
 
-        var result = await _commentsService.CreateByPostIdAsync(dto, cancellationToken);
+        var result = await _commentsService.CreateCommentAsync(dto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
     }
 
@@ -58,7 +58,7 @@ public class CommentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> DeleteByCommentId(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteByCommentIdAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Удаление комментария по идентификатору.");
 
@@ -99,7 +99,7 @@ public class CommentsController : ControllerBase
 
 
     /// <summary>
-    /// Получение комментариев текущего пользователя (по Id через клеймы).
+    /// Получение комментариев текущего пользователя.
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Список комментариев. </returns>
@@ -120,6 +120,20 @@ public class CommentsController : ControllerBase
             return StatusCode((int)HttpStatusCode.NoContent);
 
         return await Task.Run(() => Ok(result));
+    }
+
+    [HttpPost("CreateAnswer")]
+    public async Task<IActionResult> CreateAnswer(CreateAnswerDto dto, CancellationToken cancellationToken)
+    {
+        var result = await _commentsService.CreateAnswer(dto, cancellationToken);
+        return StatusCode((int)HttpStatusCode.Created, result);
+    }
+
+    [HttpGet("GetAnewers/{commentId:Guid}")]
+    public async Task<IActionResult> GetAnswersByCommentId(Guid commentId, CancellationToken cancellationToken)
+    {
+        var result = await _commentsService.GetAnswersByCommentId(commentId, cancellationToken);
+        return StatusCode((int)HttpStatusCode.OK, result);
     }
 
 }

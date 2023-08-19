@@ -11,7 +11,7 @@ namespace Board.Contracts.Category;
 /// <summary>
 /// Модель категории 
 /// </summary>
-public class CategoryDto
+public class CategoryInfoDto
 {
     /// <summary>
     /// Идентификатор.

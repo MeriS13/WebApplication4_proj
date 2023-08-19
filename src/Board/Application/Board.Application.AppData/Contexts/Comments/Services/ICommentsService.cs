@@ -1,4 +1,4 @@
-﻿using Board.Contracts.Answers;
+﻿
 using Board.Contracts.Comments;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ public interface ICommentsService
     /// <param name="dto"> Модель создания комментария. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Идентификатор созданного коммента. </returns>
-    Task<Guid> CreateByPostIdAsync (CreateCommentDto dto, CancellationToken cancellationToken);
+    Task<Guid> CreateCommentAsync (CreateCommentDto dto, CancellationToken cancellationToken);
 
     /// <summary>
     ///  Удаление комментария по идентификатору.
@@ -43,7 +43,7 @@ public interface ICommentsService
     Task DeleteByCommentId (Guid id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Получение комментариев е посту по идентификатору поста.
+    /// Получение комментариев к посту по идентификатору поста.
     /// </summary>
     /// <param name="postId"> Идентификатор поста. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
@@ -64,4 +64,12 @@ public interface ICommentsService
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Модель комментария </returns>
     Task<CommentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
+
+    Task<Guid> CreateAnswer (CreateAnswerDto dto, CancellationToken cancellationToken);  
+    
+
+    Task<List<CommentDto>> GetAnswersByCommentId (Guid commentId, CancellationToken cancellationToken);
+
+
 }

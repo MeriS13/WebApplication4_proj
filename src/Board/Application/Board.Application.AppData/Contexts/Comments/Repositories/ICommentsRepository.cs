@@ -1,5 +1,4 @@
 ﻿using Board.Contracts.Comments;
-using Board.Domain.Answers;
 using Board.Domain.Comments;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ public interface ICommentsRepository
     /// <param name="model"> Модель создания комментария. </param>
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Идентификатор созданного коммента. </returns>
-    Task<Guid> CreateByPostIdAsync(Comment model, CancellationToken cancellationToken);
+    Task<Guid> CreateCommentAsync(Comment model, CancellationToken cancellationToken);
 
     /// <summary>
     ///  Удаление комментария по идентификатору.
@@ -50,4 +49,8 @@ public interface ICommentsRepository
     /// <param name="cancellationToken"> Токен отмены операции. </param>
     /// <returns> Доменная модель комментария </returns>
     Task<Comment> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
+
+
+    IQueryable<Comment> GetAnswersByCommentId(Guid commentId, CancellationToken cancellationToken);
 }

@@ -140,7 +140,7 @@ public class PostsController : ControllerBase
 
         if (postdto == null) 
             return StatusCode((int)HttpStatusCode.NotFound);
-        if (postdto.AccountId != _postService.GetCurrentUserId())
+        if (postdto.AccountId != _postService.GetCurrentUserId() || _postService.GetCurrentUserName() != "Admin")
             return StatusCode((int)HttpStatusCode.Forbidden);
 
         await _postService.DeleteById(id, cancellationToken);
@@ -195,24 +195,6 @@ public class PostsController : ControllerBase
         return await Task.Run(() => Ok(result));
     }
 
-    /// <summary>
-    /// Получить список постов, относящихся к определенной родительской категории по ее Id
-    /// </summary>
-    /// <param name="ParCatId"> Идентификатор родительской категории </param>
-    /// <param name="cancellationToken"> токен отмены операции </param>
-    /// <returns> Список постов </returns>
-    /// <response code="200"> Список объявлений </response>
-    /// <response code="204"> Нет объявлений или неверный идентификатор родительской категории. </response>
-    [HttpGet("GetPostsByParentCategoryId/{ParCatId:Guid}")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Запрос списка постов по Id родительской категории для категории, к которой относится пост");
-        var result = _postService.GetAllPostsByParentCategoryId(ParCatId, cancellationToken);
-        return await Task.Run(() => Ok(result));
-
-    }
+    
 
     }

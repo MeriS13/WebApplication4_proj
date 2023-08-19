@@ -4,7 +4,6 @@ using Board.Domain.Categories;
 using Board.Infrastructure.DataAccess;
 using Board.Infrastructure.DataAccess;
 using Xunit;
-using Board.Domain.ParentCategories;
 using Board.Domain.Accounts;
 
 namespace Board.Api.Tests

@@ -65,7 +65,7 @@ public interface ICategoryRepository
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
-    IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
+    //IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Поиск категории по фильтру.
@@ -74,4 +74,14 @@ public interface ICategoryRepository
     /// <param name="cancellation"> Токен отмены операции </param>
     /// <returns> Доменную модель категории </returns>
     Task<Category> FindWhere(Expression<Func<Category, bool>> predicate, CancellationToken cancellation);
+
+    /// <summary>
+    /// Создание родительской категории.
+    /// </summary>
+    /// <param name="dto">Модель создания родительской категории</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Идентификатор созданной категории</returns>
+    //Task<Guid> CreateParCatAsync(CreateParCategoryDto dto, CancellationToken cancellationToken);
+
+    IQueryable<Category> GetParCatAsync(CancellationToken cancellationToken);
 }

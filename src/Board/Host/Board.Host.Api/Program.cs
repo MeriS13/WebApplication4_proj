@@ -14,9 +14,6 @@ using Board.Infrastructure.DataAccess.Contexts.Categories.Repository;
 using Board.Application.AppData.Contexts.Categories.Repositories;
 using Board.Application.AppData.Contexts.Posts.Repositories;
 using Board.Infrastructure.DataAccess.Contexts.Posts.Repositories;
-using Board.Application.AppData.Contexts.ParentCategories.Services;
-using Board.Application.AppData.Contexts.ParentCategories.Repository;
-using Board.Infrastructure.DataAccess.Contexts.ParentCategories.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -29,9 +26,6 @@ using System.Xml.Linq;
 using Board.Infrastructure.DataAccess.Contexts.Comments.Repository;
 using Board.Application.AppData.Contexts.Comments.Repositories;
 using Board.Application.AppData.Contexts.Comments.Services;
-using Board.Application.AppData.Contexts.Answers.Repositories;
-using Board.Infrastructure.DataAccess.Contexts.Answers.Repositories;
-using Board.Application.AppData.Contexts.Answers.Services;
 using Board.Application.AppData.Contexts.Files.Repositories;
 using Board.Infrastructure.DataAccess.Contexts.Files.Repository;
 using Board.Application.AppData.Contexts.Files.Services;
@@ -53,21 +47,17 @@ builder.Services.AddMemoryCache();
 //Добавления репозитория
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IParentCategoryRepository, ParentCategoryRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
-builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 
 //Добавление сервисов 
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IParentCategoryService, ParentCategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
-builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddControllers();

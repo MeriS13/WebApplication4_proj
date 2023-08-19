@@ -1,4 +1,5 @@
 ﻿using Board.Application.AppData.Contexts.Categories.Repositories;
+using Board.Contracts.Category;
 using Board.Contracts.Posts;
 using Board.Domain.Accounts;
 using Board.Domain.Categories;
@@ -61,11 +62,11 @@ public class CategoryRepository : ICategoryRepository
     }
 
     ///<inheritdoc/>
-    public IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken)
-    {
+    //public IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken)
+    //{
         
-        return _repository.GetAll(cancellationToken).Include(u => u.ParentCategory).Where(u => u.ParentId == id);
-    }
+     //   return _repository.GetAll(cancellationToken).Include(u => u.ParentCategory).Where(u => u.ParentId == id);
+    //}
 
     /// <inheritdoc/>
     public async Task<Category> FindWhere(Expression<Func<Category, bool>> predicate, CancellationToken cancellation)
@@ -76,4 +77,13 @@ public class CategoryRepository : ICategoryRepository
 
         return category;
     }
+
+
+    public IQueryable<Category> GetParCatAsync(CancellationToken cancellationToken)
+    {
+        var parentId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        return  _repository.GetAll(cancellationToken).Where(u => u.ParentId == parentId);
+    }
+
+   
 }

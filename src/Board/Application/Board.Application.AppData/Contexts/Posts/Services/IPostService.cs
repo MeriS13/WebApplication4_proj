@@ -86,6 +86,6 @@ public interface IPostService
     /// <param name="ParCatId"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список моделей постов </returns>
-    Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken);
+    //Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken);
 }
 
