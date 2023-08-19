@@ -43,7 +43,7 @@ public class CategoryController : ControllerBase
     {
         _logger.LogInformation("Запрос категорий.");
 
-        var result = _categoryService.GetAllAsync(cancellationToken);
+        var result = await _categoryService.GetAllAsync(cancellationToken);
 
         if(result == null) return StatusCode((int)HttpStatusCode.NoContent);
 
@@ -117,7 +117,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateAsync (Guid id, [FromBody] UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Обновление существующей категории.");
         var result = await _categoryService.UpdateAsync(id, dto, cancellationToken);
@@ -154,23 +154,19 @@ public class CategoryController : ControllerBase
         return StatusCode((int)HttpStatusCode.NoContent, null);
     }
 
-    /// <summary>
-    /// Получить список категорий, относящихся к заданной родительской категории.
-    /// </summary>
-    /// <param name="id"> Идентификатор родительской категории </param>
-    /// <param name="cancellationToken"> Токен отмены операции </param>
-    /// <returns> Список категорий </returns>
-    /// <response code="200"> Список категорий </response>
-    /// <response code="204"> Нет категорий или неверный идентификатор родительской категории. </response> 
-    [HttpGet("GetCategories/{parentId:Guid}")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid parentId, CancellationToken cancellationToken)
+
+    [HttpPost("CreateParCat")]
+    public async Task<IActionResult> CreateParCatAsync(CreateParCategoryDto dto, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Получить список категорий, относящихся к заданной родительской категории.");
-        var result = await _categoryService.GetCategoriesByParentIdAsync(parentId, cancellationToken);
-        return Ok(result);
+        var result = await _categoryService.CreateParCatAsync(dto, cancellationToken);
+        return StatusCode((int)HttpStatusCode.OK, result);
     }
 
+
+    [HttpGet("GetParcat")]
+    public async Task<IActionResult> GetParCatAsync(CancellationToken cancellationToken)
+    {
+        var result = await _categoryService.GetParCatAsync(cancellationToken);
+        return StatusCode((int)HttpStatusCode.OK, result);
+    }
 }

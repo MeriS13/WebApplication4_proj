@@ -74,11 +74,11 @@ public class PostRepository : IPostRepository
     }
 
     /// <inheritdoc/>
-    public IQueryable<Post> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
-    {
+    //public IQueryable<Post> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
+    //{
         //получаем связанные данные по навигацион.св-ву. Получаем список доменных моделек постов
-        return _repository.GetAll(cancellationToken)
-            .Include(u => u.Category.ParentCategory).Where(u => u.Category.ParentCategory.Id == ParCatId);
+    //    return _repository.GetAll(cancellationToken)
+   //         .Include(u => u.Category.ParentCategory).Where(u => u.Category.ParentCategory.Id == ParCatId);
 
-    }
+    //}
 }

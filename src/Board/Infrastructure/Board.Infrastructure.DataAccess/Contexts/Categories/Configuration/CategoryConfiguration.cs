@@ -19,6 +19,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Name).IsRequired().HasMaxLength(256);
+        builder.Property(a => a.ParentId).HasMaxLength(256);
 
         builder.HasMany(s => s.Posts).WithOne(s => s.Category).
             HasForeignKey(c => c.CategoryId).IsRequired().OnDelete(DeleteBehavior.Cascade);

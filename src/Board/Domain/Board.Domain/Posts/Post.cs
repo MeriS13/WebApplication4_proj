@@ -1,5 +1,4 @@
 ﻿using Board.Domain.Accounts;
-using Board.Domain.Answers;
 using Board.Domain.Categories;
 using Board.Domain.Comments;
 using Board.Domain.Files;
@@ -12,10 +11,6 @@ namespace Board.Domain.Posts;
 
 public class Post
 {
-    /// <summary>
-    /// Цена
-    /// </summary>
-    //public int Price { get; set; }
 
     /// <summary>
     /// Наименование.

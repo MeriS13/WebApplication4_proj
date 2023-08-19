@@ -18,26 +18,34 @@ public interface ICategoryService
     Task<Guid> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Создание родительской категории.
+    /// </summary>
+    /// <param name="dto">Модель создания родительской категории</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Идентификатор созданной категории</returns>
+    Task<Guid> CreateParCatAsync(CreateParCategoryDto dto, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Получение категории по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор категории</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>информация о категории</returns>
-    Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<CategoryInfoDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Получение списка категорий.
     /// </summary>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список категорий </returns>
-    Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken);
+    Task<List<CategoryInfoDto>> GetAllAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Обновление категории.
     /// </summary>
     /// <param name="dto"> Модель обновления категории </param>
     /// <param name="cancellationToken"> токен отмены операции </param>
-    Task<CategoryDto> UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken);
+    Task<CategoryInfoDto> UpdateAsync(Guid id, UpdateCategoryDto dto, CancellationToken cancellationToken);
 
     /// <summary>
     /// Удаление категории.
@@ -47,12 +55,17 @@ public interface ICategoryService
     /// <returns></returns>
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
+
+    Task<List<CategoryInfoDto>> GetParCatAsync (CancellationToken cancellationToken);
+
+
+
     /// <summary>
     /// Получение списка категорий, относящихся к одной родительской категории по идентификатору
     /// </summary>
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
-    Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken);
+    //Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken);
 }
 

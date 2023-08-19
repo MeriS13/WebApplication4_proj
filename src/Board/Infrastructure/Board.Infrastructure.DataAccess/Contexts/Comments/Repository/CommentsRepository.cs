@@ -57,4 +57,15 @@ public class CommentsRepository : ICommentsRepository
     {
         return await _repository.GetByIdAsync(id, cancellationToken);
     }
+
+    public async Task<Guid> CreateCommentAsync(Comment model, CancellationToken cancellationToken)
+    {
+        await _repository.AddAsync(model, cancellationToken);
+        return model.Id;
+    }
+
+    public IQueryable<Comment> GetAnswersByCommentId(Guid commentId, CancellationToken cancellationToken)
+    {
+        return _repository.GetAll(cancellationToken).Where(u => u.ParComId == commentId); 
+    }
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Board.Host.DbMigrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20230412124207_InitMigration2")]
-    partial class InitMigration2
+    [Migration("20230817124345_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,11 @@ namespace Board.Host.DbMigrator.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -54,6 +59,40 @@ namespace Board.Host.DbMigrator.Migrations
                     b.ToTable("Account");
                 });
 
+            modelBuilder.Entity("Board.Domain.Answers.Answer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(800)
+                        .HasColumnType("character varying(800)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccId");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("Answer");
+                });
+
             modelBuilder.Entity("Board.Domain.Categories.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -66,11 +105,10 @@ namespace Board.Host.DbMigrator.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<Guid>("ParentId")
+                        .HasMaxLength(256)
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("Category");
                 });
@@ -109,20 +147,44 @@ namespace Board.Host.DbMigrator.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("Board.Domain.ParentCategories.ParentCategory", b =>
+            modelBuilder.Entity("Board.Domain.Files.File", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ParentCategory");
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("Board.Domain.Posts.Post", b =>
@@ -162,15 +224,23 @@ namespace Board.Host.DbMigrator.Migrations
                     b.ToTable("Post");
                 });
 
-            modelBuilder.Entity("Board.Domain.Categories.Category", b =>
+            modelBuilder.Entity("Board.Domain.Answers.Answer", b =>
                 {
-                    b.HasOne("Board.Domain.ParentCategories.ParentCategory", "ParentCategory")
-                        .WithMany("Categories")
-                        .HasForeignKey("ParentId")
+                    b.HasOne("Board.Domain.Accounts.Account", "Account")
+                        .WithMany("Answers")
+                        .HasForeignKey("AccId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ParentCategory");
+                    b.HasOne("Board.Domain.Comments.Comment", "Comment")
+                        .WithMany("Answers")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("Board.Domain.Comments.Comment", b =>
@@ -183,6 +253,25 @@ namespace Board.Host.DbMigrator.Migrations
 
                     b.HasOne("Board.Domain.Posts.Post", "Post")
                         .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Board.Domain.Files.File", b =>
+                {
+                    b.HasOne("Board.Domain.Accounts.Account", "Account")
+                        .WithMany("Files")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Board.Domain.Posts.Post", "Post")
+                        .WithMany("Files")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -213,7 +302,11 @@ namespace Board.Host.DbMigrator.Migrations
 
             modelBuilder.Entity("Board.Domain.Accounts.Account", b =>
                 {
+                    b.Navigation("Answers");
+
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
 
                     b.Navigation("Posts");
                 });
@@ -223,14 +316,16 @@ namespace Board.Host.DbMigrator.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("Board.Domain.ParentCategories.ParentCategory", b =>
+            modelBuilder.Entity("Board.Domain.Comments.Comment", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Board.Domain.Posts.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

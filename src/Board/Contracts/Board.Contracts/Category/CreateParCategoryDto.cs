@@ -6,14 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Board.Contracts.ParentCategory;
+namespace Board.Contracts.Category;
 
-/// <summary>
-/// Модель создания родительской категории
-/// </summary>
-public class CreateParentCategoryDto 
+public class CreateParCategoryDto
 {
-    
+    /// <summary>
+    /// Идентификатор.
+    /// </summary>
+    //public Guid Id { get; set; }
+
+    /// <summary>
+    /// Идентификатор родительской категории.
+    /// </summary>
+    //public Guid ParentId { get; set; }
 
     /// <summary>
     /// Наименование.

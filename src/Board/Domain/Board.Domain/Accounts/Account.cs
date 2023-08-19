@@ -1,4 +1,4 @@
-﻿using Board.Domain.Answers;
+﻿
 using Board.Domain.Comments;
 using Board.Domain.Posts;
 using System;
@@ -55,10 +55,6 @@ namespace Board.Domain.Accounts
         /// </summary>
         public virtual List<Comment> Comments { get; set; }
 
-        /// <summary>
-        /// Список ответов
-        /// </summary>
-        public virtual List<Answer> Answers { get; set; }
 
         /// <summary>
         /// Список моделек файлов 

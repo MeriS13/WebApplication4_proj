@@ -1,5 +1,5 @@
 ﻿using Board.Domain.Posts;
-using Board.Domain.ParentCategories;
+
 
 namespace Board.Domain.Categories;
 
@@ -31,8 +31,5 @@ public class Category
     /// </summary>
     public virtual List<Post> Posts { get; set; }
 
-    /// <summary>
-    /// Родительская категория
-    /// </summary>
-    public virtual ParentCategory ParentCategory { get; set; }
+
 }

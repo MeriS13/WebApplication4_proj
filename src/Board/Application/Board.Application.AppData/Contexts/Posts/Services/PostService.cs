@@ -191,24 +191,6 @@ public class PostService : IPostService
     }
 
     /// <inheritdoc/>
-    public async Task<List<PostDto>> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken)
-    {
-        List<Post> entities = _postRepository.GetAllPostsByParentCategoryId(ParCatId, cancellationToken).ToList();
-        List<PostDto> result = new();
-        foreach (var entity in entities)
-        {
-            result.Add(new PostDto
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                CreationDate = entity.CreationDate,
-                Description = entity.Description,
-                CategoryId = entity.CategoryId,
-                IsFavorite = entity.IsFavorite,
-                AccountId = entity.AccountId,
-            });
-        }
-        return result;
-    }
+    
 }
 

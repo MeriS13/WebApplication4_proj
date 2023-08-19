@@ -74,5 +74,5 @@ public interface IPostRepository
     /// <param name="ParCatId"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns> Список доменных моделей постов </returns>
-    IQueryable<Post> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken);
+    //IQueryable<Post> GetAllPostsByParentCategoryId(Guid ParCatId, CancellationToken cancellationToken);
 }
