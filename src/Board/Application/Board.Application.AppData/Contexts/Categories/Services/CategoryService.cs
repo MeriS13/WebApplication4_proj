@@ -169,5 +169,25 @@ public class CategoryService : ICategoryService
     }
 
     ///<inheritdoc /> 
-    
+    public async Task<List<CategoryInfoDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var entities = _categoryRepository.GetCategoriesByParentId(id, cancellationToken);
+
+        if (entities.IsNullOrEmpty()) return null;
+
+        List<CategoryInfoDto> result = new();
+        foreach (var entity in entities)
+        {
+            result.Add(new CategoryInfoDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                ParentId = entity.ParentId,
+
+            });
+        }
+
+        return result;
+    }
+
 }

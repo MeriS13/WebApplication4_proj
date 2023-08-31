@@ -155,18 +155,63 @@ public class CategoryController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Создание родительской категории.
+    /// </summary>
+    /// <param name="dto"> Доменная модель родительской категории. </param>
+    /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <returns> StatusCode </returns>
+    /// <response code="201"> Родительская категория успешно создана. </response>
+    /// <response code="403"> Доступно для редактирования только пользователю Admin </response>
+    /// <response code="401"> Пользователь не авторизован. </response> 
     [HttpPost("CreateParCat")]
+    [Authorize(Policy = "Admin")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateParCatAsync(CreateParCategoryDto dto, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Запрос на создание родительской категории.");
         var result = await _categoryService.CreateParCatAsync(dto, cancellationToken);
+        return StatusCode((int)HttpStatusCode.Created, result);
+    }
+
+    /// <summary>
+    /// Получение списка родительских категорий.
+    /// </summary>
+    /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <returns> StatusCode </returns>
+    /// <response code="200"> Категория успешно обновлена. </response>
+    [HttpGet("GetParcat")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetParCatAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Запрос на получение списка родительских категорий.");
+        var result = await _categoryService.GetParCatAsync(cancellationToken);
+        //if (result == null) return StatusCode((int)HttpStatusCode.NotFound);
+
         return StatusCode((int)HttpStatusCode.OK, result);
     }
 
-
-    [HttpGet("GetParcat")]
-    public async Task<IActionResult> GetParCatAsync(CancellationToken cancellationToken)
+    /// <summary>
+    /// Получение списка категорий, принадлежащих к одной родительской категории.
+    /// </summary>
+    /// <param name="id"> Идентификтаор род.категории. </param>
+    /// <param name="cancellationToken"> Токен отмены операции. </param>
+    /// <returns> StatusCode </returns>
+    /// <response code="200"> Категория успешно обновлена. </response>
+    /// <response code="404"> Нет категории с таким идентификатором. </response>
+    [HttpGet("GetParCatById/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _categoryService.GetParCatAsync(cancellationToken);
+        _logger.LogInformation("Запрос списка категорий, относящихся к одной родительской категории.");
+
+        var result = await _categoryService.GetCategoriesByParentIdAsync(id, cancellationToken);
+        if (result == null) return StatusCode((int)HttpStatusCode.NotFound);
+
         return StatusCode((int)HttpStatusCode.OK, result);
     }
 }

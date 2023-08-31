@@ -62,11 +62,11 @@ public class CategoryRepository : ICategoryRepository
     }
 
     ///<inheritdoc/>
-    //public IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken)
-    //{
-        
-     //   return _repository.GetAll(cancellationToken).Include(u => u.ParentCategory).Where(u => u.ParentId == id);
-    //}
+    public IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken)
+    {
+
+        return _repository.GetAll(cancellationToken).Where(u => u.ParentId == id);
+    }
 
     /// <inheritdoc/>
     public async Task<Category> FindWhere(Expression<Func<Category, bool>> predicate, CancellationToken cancellation)
