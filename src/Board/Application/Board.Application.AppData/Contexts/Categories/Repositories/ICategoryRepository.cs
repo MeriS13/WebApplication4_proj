@@ -65,7 +65,7 @@ public interface ICategoryRepository
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
-    //IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
+    IQueryable<Category> GetCategoriesByParentId(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Поиск категории по фильтру.

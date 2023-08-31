@@ -66,6 +66,6 @@ public interface ICategoryService
     /// <param name="id"> Идентификатор родительской категории </param>
     /// <param name="cancellationToken"> Токен отмены операции </param>
     /// <returns></returns>
-    //Task<List<CategoryDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<List<CategoryInfoDto>> GetCategoriesByParentIdAsync(Guid id, CancellationToken cancellationToken);
 }
 

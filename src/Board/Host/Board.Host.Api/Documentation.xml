@@ -104,6 +104,35 @@
             <response code="401"> Пользователь не авторизован. </response> 
             <response code="204"> Успешно удалено. </response> 
         </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.CreateParCatAsync(Board.Contracts.Category.CreateParCategoryDto,System.Threading.CancellationToken)">
+            <summary>
+            Создание родительской категории.
+            </summary>
+            <param name="dto"> Доменная модель родительской категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> StatusCode </returns>
+            <response code="201"> Родительская категория успешно создана. </response>
+            <response code="403"> Доступно для редактирования только пользователю Admin </response>
+            <response code="401"> Пользователь не авторизован. </response> 
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetParCatAsync(System.Threading.CancellationToken)">
+            <summary>
+            Получение списка родительских категорий.
+            </summary>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> StatusCode </returns>
+            <response code="200"> Категория успешно обновлена. </response>
+        </member>
+        <member name="M:Board.Host.Api.Controllers.CategoryController.GetCategoriesByParentIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Получение списка категорий, принадлежащих к одной родительской категории.
+            </summary>
+            <param name="id"> Идентификтаор род.категории. </param>
+            <param name="cancellationToken"> Токен отмены операции. </param>
+            <returns> StatusCode </returns>
+            <response code="200"> Категория успешно обновлена. </response>
+            <response code="404"> Нет категории с таким идентификатором. </response>
+        </member>
         <member name="M:Board.Host.Api.Controllers.CommentsController.CreateByPostId(Board.Contracts.Comments.CreateCommentDto,System.Threading.CancellationToken)">
             <summary>
             Добавление комментария к посту по идентификатору поста
